@@ -1,0 +1,26 @@
+@font-face {
+  font-family: 'Dodo';
+  src: url('assets/dodo-rounded.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --dodo-color: #FF5F00;
+  --dodo-color-hover: #ff782b;
+  --background-color: #f5f5f9;
+}
+
+body, button {
+  background-color: var(--background-color);
+  width: 100%;
+  overflow-x: hidden;
+  font: 600 18px / 18px "Dodo", Courier New;
+}

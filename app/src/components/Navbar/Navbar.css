@@ -1,0 +1,42 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 130px;
+  margin-bottom: 130px;
+  flex: 1;
+  border-bottom: 1px solid rgb(212, 212, 212);
+
+  ul {
+    display: flex;
+    justify-content: space-around;
+    list-style: none;
+    gap: 25px;
+  }
+
+  a {
+    transition: 0.3s;
+    text-decoration: none;
+    color: black;
+  }
+
+  a:hover {
+    color: var(--dodo-color);
+  }
+}
+
+.navbar-button {
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: var(--dodo-color);
+  width: 115px;
+  height: 40px;
+  border-radius: 20px;
+  border: 0px;
+  color: white;
+}
+
+.navbar-button:hover {
+  background-color: var(--dodo-color-hover);
+}
