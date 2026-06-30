@@ -1,15 +1,33 @@
 .menu {
   background-color: white;
   border-radius: 60px;
-  padding: 40px 130px;
+  padding: 40px 160px;
+}
+
+.menu-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sidebar {
+  position: sticky;
+  width: 282px;
+  top: 140px;
 }
 
 .menu-navbar {
-
+  background-color: white;
+  position: sticky;
+  top: 60px;
+  padding: 10px 0px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 25px;
+  z-index: 90;
 
   ul {
     display: flex;
@@ -54,4 +72,65 @@
 
 .menu-navbar-more-button:hover {
   color: var(--dodo-color);
+}
+
+.menu-content {
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: start;
+  row-gap: 20px;
+  column-gap: 15px;
+}
+
+.menu-content-heading {
+  margin: 45px 0px;
+}
+
+.aside-img-container {
+
+  container-type: inline-size;
+  container-name: aside-img-container;
+
+  position: relative;
+  max-width: 282px;
+  width: 100%;
+
+  img {
+    max-width: 100%;
+    height: 365px;
+    border-radius: 40px;
+  }
+}
+
+.aside-img-text-block {
+  flex: 1;
+  flex-direction: column;
+  color: white;
+  position: absolute;
+  top: 25px;
+  left: 15px;
+  right: 15px;
+
+
+  .title {
+    font-size: 29px;
+  }
+
+  .description {
+    font-size: 15px;
+    margin-top: 5px;
+  }
+}
+
+@container aside-img-container (max-width: 240px) {
+  .aside-img-text-block {
+    .title {
+      font-size: 27px;
+    }
+
+    .description {
+      font-size: 12px;
+    }
+  }
 }
