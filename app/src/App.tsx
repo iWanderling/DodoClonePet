@@ -15,8 +15,9 @@ import './App.css'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />} errorElement={<ErrorPage />}>
-      <Route index element={<Main />} />
-      <Route path="/product/:product" element={<ProductPage />} />
+      <Route path="/" element={<Main />}>
+        <Route path="product/:product" element={<ProductPage />} />
+      </Route>
     </Route>
   )
 )

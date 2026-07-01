@@ -1,8 +1,18 @@
 import "./Main.css"
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
 import { useState, useEffect } from "react";
 
+interface ProductsData {
+  "pizzas": Product[],
+  "combos": Product[],
+  "romes": Product[],
+  "appetizers": Product[],
+  "coffee-and-tea": Product[],
+  "drinks": Product[],
+  "breakfasts": Product[],
+  "desserts": Product[]
+}
 
 interface Product {
   title: string,
@@ -10,13 +20,22 @@ interface Product {
   price: number
 }
 
+const MENU_SECTIONS: { id: keyof ProductsData, heading: string }[] = [
+  { id: "pizzas", heading: "Пиццы" },
+  { id: "combos", heading: "Комбо" },
+  { id: "romes", heading: "Римские пиццы" },
+  { id: "appetizers", heading: "Закуски" },
+  { id: "coffee-and-tea", heading: "Кофе и чай" },
+  { id: "drinks", heading: "Напитки" },
+  { id: "breakfasts", heading: "Завтраки" },
+  { id: "desserts", heading: "Десерты" },
+]
 
-async function get_data(source: string): Promise<Product[]> {
+async function get_data(source: string): Promise<ProductsData> {
   const response = await (fetch(source));
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
 }
-
 
 function MenuSection({ id, heading, data }: { id: string, heading: string, data: Product[] }) {
   return (
@@ -35,20 +54,18 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
   )
 }
 
-
 export default function Main() {
 
   const navigate = useNavigate();
-  const [pizzas, setPizzas] = useState<Product[]>([]);
+  const [menuData, setMenuData] = useState<ProductsData>();
 
   useEffect(() => {
-    const fetchPizzas = async () => {
+    const fetchMenuData = async () => {
       const data = await get_data("/data.json");
-      setPizzas(data);
-      console.log(data);
+      setMenuData(data);
     };
-    fetchPizzas();
-  }, [])
+    fetchMenuData();
+  }, []);
 
   return (
     <>
@@ -72,11 +89,13 @@ export default function Main() {
         <div className="menu-container">
 
           <div>
-            <MenuSection heading="Пиццы" id={"pizzas"} data={pizzas} />
-            <MenuSection heading="Комбо" id={"combos"} data={pizzas} />
-            <MenuSection heading="Римские пиццы" id={"rome"} data={pizzas} />
-            <MenuSection heading="Закуски" id={"snacks"} data={pizzas} />
-            <MenuSection heading="Кофе и чай" id={"coffee-and-tea"} data={pizzas} />
+            {menuData && MENU_SECTIONS.map((section) => {
+              const products = menuData[section.id] || [];
+
+              return (
+                <MenuSection key={section.id} heading={section.heading} id={section.id} data={products} />
+              )
+            })}
           </div>
 
           <aside className="sidebar">
@@ -89,8 +108,9 @@ export default function Main() {
             </div>
           </aside>
         </div>
-
       </main>
+
+      <Outlet />
     </>
   )
 }

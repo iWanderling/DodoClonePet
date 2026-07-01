@@ -1,57 +1,83 @@
-[
-  {
-    "title": "Том ям",
-    "price": 339,
-    "source": "images/pizzas/tom-yam.webp"
-  },
-  {
-    "title": "Пепперони",
-    "price": 319,
-    "source": "images/pizzas/pepperoni.webp"
-  },
-  {
-    "title": "Пепперони",
-    "price": 319,
-    "source": "images/pizzas/pepperoni.webp"
-  },
-  {
-    "title": "Чесночный цыплёнок",
-    "price": 259,
-    "source": "images/pizzas/garlic-chicken.webp"
-  },
-  {
-    "title": "Терияки",
-    "price": 339,
-    "source": "images/pizzas/teriyaki.webp"
-  },
-  {
-    "title": "Сырная",
-    "price": 259,
-    "source": "images/pizzas/cheese.webp"
-  },
-  {
-    "title": "Мясной микс",
-    "price": 589,
-    "source": "images/pizzas/meat-mix.webp"
-  },
-  {
-    "title": "Ветчина и сыр",
-    "price": 299,
-    "source": "images/pizzas/ham-cheese.webp"
-  },
-  {
-    "title": "Двойной цыплёнок",
-    "price": 309,
-    "source": "images/pizzas/double-chicken.webp"
-  },
-  {
-    "title": "Креветки и песто",
-    "price": 459,
-    "source": "images/pizzas/schrimps-pesto.webp"
-  },
-  {
-    "title": "Ветчина и грибы",
-    "price": 329,
-    "source": "images/pizzas/ham-mushrooms.webp"
-  }
-]
+{
+  "pizzas": [
+    {
+      "title": "Том ям",
+      "price": 339,
+      "source": "/images/pizzas/tom-yam.webp"
+    },
+    {
+      "title": "Пепперони",
+      "price": 319,
+      "source": "/images/pizzas/pepperoni.webp"
+    },
+    {
+      "title": "Пепперони",
+      "price": 319,
+      "source": "/images/pizzas/pepperoni.webp"
+    },
+    {
+      "title": "Чесночный цыплёнок",
+      "price": 259,
+      "source": "/images/pizzas/garlic-chicken.webp"
+    },
+    {
+      "title": "Терияки",
+      "price": 339,
+      "source": "/images/pizzas/teriyaki.webp"
+    },
+    {
+      "title": "Сырная",
+      "price": 259,
+      "source": "/images/pizzas/cheese.webp"
+    },
+    {
+      "title": "Мясной микс",
+      "price": 589,
+      "source": "/images/pizzas/meat-mix.webp"
+    },
+    {
+      "title": "Ветчина и сыр",
+      "price": 299,
+      "source": "/images/pizzas/ham-cheese.webp"
+    },
+    {
+      "title": "Двойной цыплёнок",
+      "price": 309,
+      "source": "/images/pizzas/double-chicken.webp"
+    },
+    {
+      "title": "Креветки и песто",
+      "price": 459,
+      "source": "/images/pizzas/schrimps-pesto.webp"
+    },
+    {
+      "title": "Ветчина и грибы",
+      "price": 329,
+      "source": "/images/pizzas/ham-mushrooms.webp"
+    }
+  ],
+  "combos": [
+    {
+      "title": "Пицца и напиток",
+      "price": 250,
+      "source": "/images/combos/pizza-n-drink.webp"
+    }
+  ],
+  "romes": [],
+  "appetizers": [],
+  "coffee-and-tea": [],
+  "drinks": [
+    {
+      "title": "Айс капучино",
+      "price": 229,
+      "source": "/images/drinks/ice-cappuccino.webp"
+    },
+    {
+      "title": "Кофе Карамельный капучино",
+      "price": 149,
+      "source": "/images/drinks/caramel-cappuccino.webp"
+    }
+  ],
+  "breakfasts": [],
+  "desserts": []
+}

@@ -1,0 +1,32 @@
+.modal-product-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height:100vh;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(1px);
+}
+
+.modal-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  width: 60vw;
+  height: 85vh;
+  border-radius: 23px;
+}
+
+.modal-card-product-img {
+  width: 420px;
+  height: 420px;
+  margin-left: 65px;
+}
+
