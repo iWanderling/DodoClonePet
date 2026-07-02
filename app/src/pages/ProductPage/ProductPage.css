@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height:100vh;
+  height: 100vh;
   z-index: 1000;
 
   display: flex;
@@ -25,8 +25,95 @@
 }
 
 .modal-card-product-img {
+  display: block;
   width: 420px;
   height: 420px;
   margin-left: 65px;
 }
 
+.modal-card-product-panel {
+  gap: 5px;
+  margin-right: 20px;
+  margin-top: 30px;
+  width: 340px;
+  display: flex;
+  align-self: start;
+  flex-direction: column;
+}
+
+.modal-card-product-panel-type {
+  color: rgb(166, 166, 166);
+  font-size: 15px;
+}
+
+.modal-card-product-panel-description {
+  font-size: 15px;
+  overflow-wrap: break-word;
+  line-height: 1.1;
+}
+
+.close-modal {
+  transition: 0.2s;
+  cursor: pointer;
+  margin-left: 5px;
+  width: 50px;
+  height: 50px;
+  border-radius: 35px;
+  background-color: var(--background-color);
+}
+
+.close-modal:hover {
+  background-color: rgb(168, 170, 178);
+}
+
+.button-option-panel {
+  margin-top: 3px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 30px;
+  background-color: rgb(238, 238, 238);
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.add-ingredients-panel {
+  margin-top: 20px;
+}
+
+.add-ingredients-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.add-ingredients-card {
+  transition: 0.2s;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+
+  img {
+    width: 88px;
+    height: 88px;
+  }
+
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.1);
+}
+
+.add-ingredients-card:hover {
+  box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.1);
+}
+
+.add-ingredients-card-title {
+  font-size: 13px;
+}
+
+.add-ingredients-card-price {
+  margin: 15px 0px;
+  font-size: 16px;
+}
