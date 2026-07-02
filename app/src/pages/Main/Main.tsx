@@ -61,7 +61,7 @@ export default function Main() {
 
   useEffect(() => {
     const fetchMenuData = async () => {
-      const data = await get_data("/data.json");
+      const data = await get_data("/products.json");
       setMenuData(data);
     };
     fetchMenuData();

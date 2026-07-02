@@ -39,6 +39,40 @@
   display: flex;
   align-self: start;
   flex-direction: column;
+
+  padding: 0;
+  overflow: hidden;
+  max-height: calc(85vh - 30px - 20px);
+}
+
+.modal-card-product-content {
+  padding: 15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.modal-card-product-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-card-product-content::-webkit-scrollbar-thumb {
+  background: rgb(234, 234, 234);
+  border-radius: 5px;
+}
+
+.button-cart {
+  cursor: pointer;
+  transition: 0.4s;
+  margin-top: 15px;
+  height: 55px;
+  border: none;
+  border-radius: 40px;
+  color: white;
+  background-color: var(--dodo-color);
+}
+
+.button-cart:hover {
+  background-color: rgb(249, 124, 52);
 }
 
 .modal-card-product-panel-type {
@@ -75,7 +109,12 @@
   height: 30px;
   background-color: rgb(238, 238, 238);
   border-radius: 20px;
-  font-size: 14px;
+
+  button {
+    font-size: 14px;
+    border: none;
+    border-radius: 20px;
+  }
 }
 
 .add-ingredients-panel {
@@ -90,6 +129,7 @@
 }
 
 .add-ingredients-card {
+  cursor: pointer;
   transition: 0.2s;
   border-radius: 15px;
   display: flex;
@@ -116,4 +156,9 @@
 .add-ingredients-card-price {
   margin: 15px 0px;
   font-size: 16px;
+}
+
+.card-product-content-block {
+  display: flex;
+  flex-direction: column;
 }

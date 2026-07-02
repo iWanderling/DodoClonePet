@@ -1,10 +1,10 @@
 {
   "pizzas": [
     {
-      "slug": "tom-yam",
-      "title": "Том ям",
-      "price": 339,
-      "source": "/images/pizzas/tom-yam.webp"
+      "slug": "arriva",
+      "title": "Аррива!",
+      "price": 519,
+      "source": "/images/pizzas/arriva.webp"
     }
   ],
   "combos": [],

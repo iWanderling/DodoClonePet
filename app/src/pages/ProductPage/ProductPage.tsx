@@ -1,6 +1,7 @@
 import "./ProductPage.css"
 import { useNavigate, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
+import { RemoveScroll } from "react-remove-scroll"
 
 interface ProductsData {
   "pizzas": Product[],
@@ -35,7 +36,7 @@ export default function ProductPage() {
 
   useEffect(() => {
     const fetchMenuData = async () => {
-      const data = await get_data("/data.json");
+      const data = await get_data("/products.json");
       setMenuData(Object.values(data).flat());
     };
     fetchMenuData();
@@ -57,57 +58,66 @@ export default function ProductPage() {
   return (
 
     <>
-      <div className="modal-product-page">
-        <div className="modal-card">
-          <img className="modal-card-product-img" src={dataset.source} alt="" />
-          <div className="modal-card-product-panel">
-            <h2>{dataset.title}</h2>
-            <div className="modal-card-product-panel-type">25 см, традиционное тесто 25, 380 г</div>
-            <div className="modal-card-product-panel-description">Увеличенная порция моцареллы, ветчина , пикантная пепперони , кубики брынзы , томаты , шампиньоны , итальянские травы , фирменный томатный соус</div>
-            <div className="button-option-panel">
-              <a>25 см</a>
-              <a>30 см</a>
-              <a>35 см</a>
-            </div>
-            <div className="button-option-panel">
-              <a>Традиционное</a>
-              <a>Тонкое</a>
-            </div>
-
-            <div className="add-ingredients-panel">
-              <h3>Добавить по вкусу</h3>
-              <div className="add-ingredients-grid">
-                <div className="add-ingredients-card">
-                  <img src="/images/ingredients/mozarella.png" />
-                  <span className="add-ingredients-card-title">Моцарелла</span>
-                  <span className="add-ingredients-card-price">149 Р</span>
+      <RemoveScroll>
+        <div className="modal-product-page">
+          <div className="modal-card">
+            <img className="modal-card-product-img" src={dataset.source} alt="" />
+            <div className="modal-card-product-panel">
+              <div className="modal-card-product-content">
+                <h2>{dataset.title}</h2>
+                <div className="modal-card-product-panel-type">25 см, традиционное тесто 25, 380 г</div>
+                <div className="modal-card-product-panel-description">Увеличенная порция моцареллы, ветчина , пикантная пепперони , кубики брынзы , томаты , шампиньоны , итальянские травы , фирменный томатный соус</div>
+                <div className="button-option-panel">
+                  <button>25 см</button>
+                  <button>30 см</button>
+                  <button>35 см</button>
                 </div>
-                <div className="add-ingredients-card">
-                  <img src="/images/ingredients/mozarella.png" />
-                  <span className="add-ingredients-card-title">Моцарелла</span>
-                  <span className="add-ingredients-card-price">149 Р</span>
+                <div className="button-option-panel">
+                  <button>Традиционное</button>
+                  <button>Тонкое</button>
                 </div>
-                <div className="add-ingredients-card">
-                  <img src="/images/ingredients/mozarella.png" />
-                  <span className="add-ingredients-card-title">Моцарелла</span>
-                  <span className="add-ingredients-card-price">149 Р</span>
-                </div>
-                <div className="add-ingredients-card">
-                  <img src="/images/ingredients/mozarella.png" />
-                  <span className="add-ingredients-card-title">Моцарелла</span>
-                  <span className="add-ingredients-card-price">149 Р</span>
-                </div>
-                <div className="add-ingredients-card">
-                  <img src="/images/ingredients/mozarella.png" />
-                  <span className="add-ingredients-card-title">Моцарелла</span>
-                  <span className="add-ingredients-card-price">149 Р</span>
+                <div className="add-ingredients-panel">
+                  <h3>Добавить по вкусу</h3>
+                  <div className="add-ingredients-grid">
+                    <div className="add-ingredients-card">
+                      <img src="/images/ingredients/pizza/mozarella.png" />
+                      <span className="add-ingredients-card-title">Моцарелла</span>
+                      <span className="add-ingredients-card-price">149 Р</span>
+                    </div>
+                    <div className="add-ingredients-card">
+                      <img src="/images/ingredients/pizza/mozarella.png" />
+                      <span className="add-ingredients-card-title">Моцарелла</span>
+                      <span className="add-ingredients-card-price">149 Р</span>
+                    </div>
+                    <div className="add-ingredients-card">
+                      <img src="/images/ingredients/pizza/mozarella.png" />
+                      <span className="add-ingredients-card-title">Моцарелла</span>
+                      <span className="add-ingredients-card-price">149 Р</span>
+                    </div>
+                    <div className="add-ingredients-card">
+                      <img src="/images/ingredients/pizza/mozarella.png" />
+                      <span className="add-ingredients-card-title">Моцарелла</span>
+                      <span className="add-ingredients-card-price">149 Р</span>
+                    </div>
+                    <div className="add-ingredients-card">
+                      <img src="/images/ingredients/pizza/mozarella.png" />
+                      <span className="add-ingredients-card-title">Моцарелла</span>
+                      <span className="add-ingredients-card-price">149 Р</span>
+                    </div>
+                    <div className="add-ingredients-card">
+                      <img src="/images/ingredients/pizza/mozarella.png" />
+                      <span className="add-ingredients-card-title">Моцарелла</span>
+                      <span className="add-ingredients-card-price">149 Р</span>
+                    </div>
+                  </div>
                 </div>
               </div>
+              <button className="button-cart">В корзину за 615 Р</button>
             </div>
           </div>
+          <button className="close-modal" onClick={() => navigate("/")}>✖</button>
         </div>
-        <button className="close-modal" onClick={() => navigate("/")}>✖</button>
-      </div>
+      </RemoveScroll>
     </>
   )
 }
