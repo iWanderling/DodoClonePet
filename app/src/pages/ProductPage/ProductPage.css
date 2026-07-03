@@ -135,6 +135,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   background-color: rgb(255, 255, 255);
 
   img {
@@ -150,7 +151,9 @@
 }
 
 .add-ingredients-card-title {
+  padding: 0 5px;
   font-size: 13px;
+  line-height: 1.4;
 }
 
 .add-ingredients-card-price {

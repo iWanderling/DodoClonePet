@@ -21,7 +21,18 @@ interface Product {
   price: number
 }
 
-async function get_data(source: string): Promise<ProductsData> {
+interface IngredientsData {
+  "food": Ingredient[],
+  "drink": Ingredient[]
+}
+
+interface Ingredient {
+  title: string,
+  source: string,
+  price: number
+}
+
+async function get_data<T>(source: string): Promise<T> {
   const response = await (fetch(source));
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
@@ -32,31 +43,52 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [menuData, setMenuData] = useState<Product[]>();
+  const [menuData, setMenuData] = useState<ProductsData>();
+  const [ingredientsData, setIngredientsData] = useState<IngredientsData>();
 
   useEffect(() => {
     const fetchMenuData = async () => {
-      const data = await get_data("/products.json");
-      setMenuData(Object.values(data).flat());
+      const products = await get_data<ProductsData>("/products.json");
+      setMenuData(products);
+
+      const ingredients = await get_data<IngredientsData>("/ingredients.json");
+      setIngredientsData(ingredients);
+
     };
     fetchMenuData();
   }, []);
 
-  console.log(menuData);
   const slug = location.pathname.split('/')[2];
   let dataset: Product = { slug: "", title: "", source: "", price: 0 };
+  let productT: keyof ProductsData = "pizzas";
+  let productK: keyof IngredientsData;
+
+  function isProductKey(key: string, obj: ProductsData): key is keyof ProductsData {
+    return (key in obj);
+  }
 
   if (menuData) {
-    for (let product of menuData) {
-      if (product.slug === slug) {
-        dataset = product;
-        break;
+    let flag = false;
+    for (let [productType, datas] of Object.entries(menuData)) {
+      if (isProductKey(productType, menuData)) {
+        for (let product of datas) {
+          if ((product.slug === slug)) {
+            dataset = product;
+            productT = productType;
+            flag = true;
+            break;
+          }
+        }
       }
+      if (flag) break;
     }
   }
 
-  return (
+  productK = ["pizzas", "romes"].includes(productT) ? "food" : "drink";
 
+  console.log(productT, productK);
+
+  return (
     <>
       <RemoveScroll>
         <div className="modal-product-page">
@@ -65,8 +97,8 @@ export default function ProductPage() {
             <div className="modal-card-product-panel">
               <div className="modal-card-product-content">
                 <h2>{dataset.title}</h2>
-                <div className="modal-card-product-panel-type">25 см, традиционное тесто 25, 380 г</div>
-                <div className="modal-card-product-panel-description">Увеличенная порция моцареллы, ветчина , пикантная пепперони , кубики брынзы , томаты , шампиньоны , итальянские травы , фирменный томатный соус</div>
+                <div className="modal-card-product-panel-type">Здесь будут граммовки и количество</div>
+                <div className="modal-card-product-panel-description">Здесь будет описание продукта</div>
                 <div className="button-option-panel">
                   <button>25 см</button>
                   <button>30 см</button>
@@ -79,36 +111,17 @@ export default function ProductPage() {
                 <div className="add-ingredients-panel">
                   <h3>Добавить по вкусу</h3>
                   <div className="add-ingredients-grid">
-                    <div className="add-ingredients-card">
-                      <img src="/images/ingredients/pizza/mozarella.png" />
-                      <span className="add-ingredients-card-title">Моцарелла</span>
-                      <span className="add-ingredients-card-price">149 Р</span>
-                    </div>
-                    <div className="add-ingredients-card">
-                      <img src="/images/ingredients/pizza/mozarella.png" />
-                      <span className="add-ingredients-card-title">Моцарелла</span>
-                      <span className="add-ingredients-card-price">149 Р</span>
-                    </div>
-                    <div className="add-ingredients-card">
-                      <img src="/images/ingredients/pizza/mozarella.png" />
-                      <span className="add-ingredients-card-title">Моцарелла</span>
-                      <span className="add-ingredients-card-price">149 Р</span>
-                    </div>
-                    <div className="add-ingredients-card">
-                      <img src="/images/ingredients/pizza/mozarella.png" />
-                      <span className="add-ingredients-card-title">Моцарелла</span>
-                      <span className="add-ingredients-card-price">149 Р</span>
-                    </div>
-                    <div className="add-ingredients-card">
-                      <img src="/images/ingredients/pizza/mozarella.png" />
-                      <span className="add-ingredients-card-title">Моцарелла</span>
-                      <span className="add-ingredients-card-price">149 Р</span>
-                    </div>
-                    <div className="add-ingredients-card">
-                      <img src="/images/ingredients/pizza/mozarella.png" />
-                      <span className="add-ingredients-card-title">Моцарелла</span>
-                      <span className="add-ingredients-card-price">149 Р</span>
-                    </div>
+
+                    {
+                      ingredientsData?.[productK]?.map((ingredient, index) => (
+                        <div key={index} className="add-ingredients-card">
+                          <img src={ingredient.source} />
+                          <span className="add-ingredients-card-title">{ingredient.title}</span>
+                          <span className="add-ingredients-card-price">{ingredient.price} ₽</span>
+                        </div>
+                      ))
+                    }
+
                   </div>
                 </div>
               </div>

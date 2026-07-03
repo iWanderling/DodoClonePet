@@ -5,7 +5,7 @@ export default function Card({ source, title, price }: { source: string, title: 
 
   const navigate = useNavigate();
   let product_address_title = source.split("/")[3].split(".")[0];
-  console.log(source);
+
   return (
     <>
       <Link to={`/product/${product_address_title}`}>

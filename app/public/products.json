@@ -3,15 +3,260 @@
     {
       "slug": "arriva",
       "title": "Аррива!",
-      "price": 519,
+      "price": 429,
       "source": "/images/pizzas/arriva.webp"
+    },
+    {
+      "slug": "diablo",
+      "title": "Диабло",
+      "price": 519,
+      "source": "/images/pizzas/diablo.webp"
+    },
+    {
+      "slug": "pesto",
+      "title": "Песто",
+      "price": 379,
+      "source": "/images/pizzas/pesto.webp"
+    },
+    {
+      "slug": "margarita",
+      "title": "Маргарита",
+      "price": 319,
+      "source": "/images/pizzas/margarita.webp"
     }
   ],
-  "combos": [],
-  "romes": [],
-  "appetizers": [],
-  "coffee-and-tea": [],
-  "drinks": [],
-  "breakfasts": [],
-  "desserts": []
+  "combos": [
+    {
+      "slug": "combo-with-dodo-toy",
+      "title": "Комбо с птичкой",
+      "price": 999,
+      "source": "/images/combos/combo-with-dodo-toy.webp"
+    },
+    {
+      "slug": "five-n-one-with-pocket-pizza",
+      "title": "Пять в одном с покет-пиццей",
+      "price": 685,
+      "source": "/images/combos/five-n-one-with-pocket-pizza.webp"
+    },
+    {
+      "slug": "dodobox",
+      "title": "Додо-бокс",
+      "price": 619,
+      "source": "/images/combos/dodobox.webp"
+    },
+    {
+      "slug": "salad-n-snack",
+      "title": "Салат и закуска",
+      "price": 459,
+      "source": "/images/combos/salad-n-snack.webp"
+    }
+  ],
+  "romes": [
+    {
+      "slug": "rome-arriva",
+      "title": "Римская Аррива!",
+      "price": 559,
+      "source": "/images/romes/rome-arriva.webp"
+    },
+    {
+      "slug": "rome-con-carne",
+      "title": "Римская Кон-карне",
+      "price": 619,
+      "source": "/images/romes/rome-con-carne.webp"
+    },
+    {
+      "slug": "rome-pesto",
+      "title": "Римская Песто",
+      "price": 529,
+      "source": "/images/romes/rome-pesto.webp"
+    },
+    {
+      "slug": "rome-carbonara",
+      "title": "Римская Карбонара",
+      "price": 589,
+      "source": "/images/romes/rome-carbonara.webp"
+    }
+  ],
+  "appetizers": [
+    {
+      "slug": "cheese-sticks-w-pesto",
+      "title": "Сырные палочки с песто",
+      "price": 265,
+      "source": "/images/appetizers/cheese-sticks-w-pesto.webp"
+    },
+    {
+      "slug": "pasta-meat",
+      "title": "Паста Мясная",
+      "price": 399,
+      "source": "/images/appetizers/pasta-meat.webp"
+    },
+    {
+      "slug": "lunchbox-w-chicken-wings",
+      "title": "Ланчбокс с куриными крыльями",
+      "price": 365,
+      "source": "/images/appetizers/lunchbox-w-chicken-wings.webp"
+    },
+    {
+      "slug": "salad-vegetables-mix",
+      "title": "Салат Овощной микс",
+      "price": 280,
+      "source": "/images/appetizers/salad-vegetables-mix.webp"
+    }
+  ],
+  "coffee-and-tea": [
+    {
+      "slug": "ice-cappuccino",
+      "title": "Айс капучино",
+      "price": 229,
+      "source": "/images/drinks/ice-cappuccino.webp"
+    },
+    {
+      "slug": "caramel-cappuccino",
+      "title": "Карамельный капучино",
+      "price": 149,
+      "source": "/images/drinks/caramel-cappuccino.webp"
+    },
+    {
+      "slug": "nuts-latte",
+      "title": "Ореховый латте",
+      "price": 159,
+      "source": "/images/drinks/nuts-latte.webp"
+    },
+    {
+      "slug": "coffee-pack",
+      "title": "Кофе в зёрнах — фирменная смесь",
+      "price": 965,
+      "source": "/images/drinks/coffee-pack.webp"
+    }
+  ],
+  "drinks": [
+    {
+      "slug": "strawberry-milkshake",
+      "title": "Клубничный молочный коктейль",
+      "price": 230,
+      "source": "/images/drinks/strawberry-milkshake.webp"
+    },
+    {
+      "slug": "hot-sorbet-mango-chilli",
+      "title": "Горячий сорбет манго-чили",
+      "price": 189,
+      "source": "/images/drinks/hot-sorbet-mango-chilli.webp"
+    },
+    {
+      "slug": "dobrii-apple-cherry-ryabina",
+      "title": "Нектар Добрый Яблоко-вишня-черноплодная рябина",
+      "price": 235,
+      "source": "/images/drinks/dobrii-apple-cherry-ryabina.webp"
+    },
+    {
+      "slug": "rich-black-tea-lemon",
+      "title": "Rich Tea Черный с лимоном",
+      "price": 169,
+      "source": "/images/drinks/rich-black-tea-lemon.webp"
+    }
+  ],
+  "breakfasts": [
+    {
+      "slug": "omlette-ham-mushrooms",
+      "title": "Омлет с ветчиной и грибами",
+      "price": 219,
+      "source": "/images/breakfasts/omlette-ham-mushrooms.webp"
+    },
+    {
+      "slug": "syurniki-malina-jam",
+      "title": "Сырники с малиновым вареньем",
+      "price": 169,
+      "source": "/images/breakfasts/syurniki-malina-jam.webp"
+    },
+    {
+      "slug": "americano",
+      "title": "Американо",
+      "price": 99,
+      "source": "/images/breakfasts/americano.webp"
+    },
+    {
+      "slug": "breakfast-for-two",
+      "title": "Завтрак на двоих",
+      "price": 465,
+      "source": "/images/breakfasts/breakfast-for-two.webp"
+    }
+  ],
+  "desserts": [
+    {
+      "slug": "brusleticki",
+      "title": "Бруслетики",
+      "price": 169,
+      "source": "/images/desserts/brusleticki.webp"
+    },
+    {
+      "slug": "caramel-peanut-cheesecake",
+      "title": "Чизкейк с арахисом и карамелью",
+      "price": 219,
+      "source": "/images/desserts/caramel-peanut-cheesecake.webp"
+    },
+    {
+      "slug": "macaron-assorti",
+      "title": "Набор пирожных Макарон ассорти",
+      "price": 189,
+      "source": "/images/desserts/macaron-assorti.webp"
+    },
+    {
+      "slug": "sorbet-strawberry-granate",
+      "title": "Сорбет клубника-гранат",
+      "price": 159,
+      "source": "/images/desserts/sorbet-strawberry-granate.webp"
+    }
+  ],
+  "sauces": [
+    {
+      "slug": "thousands-islands",
+      "title": "Тысяча островов",
+      "price": 49,
+      "source": "/images/sauces/thousands-islands.webp"
+    },
+    {
+      "slug": "two-sauces",
+      "title": "Два соуса",
+      "price": 89,
+      "source": "/images/sauces/two-sauces.webp"
+    },
+    {
+      "slug": "garlic-sauce",
+      "title": "Чесночный",
+      "price": 49,
+      "source": "/images/sauces/garlic-sauce.webp"
+    },
+    {
+      "slug": "raspberry-jam",
+      "title": "Малиновое варенье",
+      "price": 69,
+      "source": "/images/sauces/raspberry-jam.webp"
+    }
+  ],
+  "others": [
+    {
+      "slug": "dodo-book",
+      "title": "Додо: от подвала до миллиарда",
+      "price": 569,
+      "source": "/images/others/dodo-book.webp"
+    },
+    {
+      "slug": "dodo-toy",
+      "title": "Плюшевая птичка Додо",
+      "price": 899,
+      "source": "/images/others/dodo-toy.webp"
+    },
+    {
+      "slug": "coloring-book",
+      "title": "Додо Раскраска",
+      "price": 10,
+      "source": "/images/others/coloring-book.webp"
+    },
+    {
+      "slug": "dodo-hat",
+      "title": "Додо Клюв",
+      "price": 10,
+      "source": "/images/others/dodo-hat.webp"
+    }
+  ]
 }

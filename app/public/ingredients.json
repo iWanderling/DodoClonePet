@@ -1,5 +1,5 @@
 {
-  "pizzas": [
+  "food": [
     {
       "title": "Моцарелла",
       "price": 149,
@@ -14,6 +14,13 @@
       "title": "Халапеньо",
       "price": 79,
       "source": "/images/ingredients/pizza/chalapenjo.png"
-    },
+    }
+  ],
+  "drink": [
+    {
+      "title": "Кокосовый сироп",
+      "price": 39,
+      "source": "/images/ingredients/drink/coconut-syrup.png"
+    }
   ]
 }

@@ -11,7 +11,9 @@ interface ProductsData {
   "coffee-and-tea": Product[],
   "drinks": Product[],
   "breakfasts": Product[],
-  "desserts": Product[]
+  "desserts": Product[],
+  "sauces": Product[],
+  "others": Product[]
 }
 
 interface Product {
@@ -29,6 +31,8 @@ const MENU_SECTIONS: { id: keyof ProductsData, heading: string }[] = [
   { id: "drinks", heading: "Напитки" },
   { id: "breakfasts", heading: "Завтраки" },
   { id: "desserts", heading: "Десерты" },
+  { id: "sauces", heading: "Соусы" },
+  {id: "others", heading: "Другие товары"}
 ]
 
 async function get_data(source: string): Promise<ProductsData> {
