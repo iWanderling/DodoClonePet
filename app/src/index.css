@@ -21,6 +21,5 @@
 body, button {
   background-color: var(--background-color);
   width: 100%;
-  overflow-x: hidden;
   font: 600 18px / 24px "Dodo", Courier New;
 }

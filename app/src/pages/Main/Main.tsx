@@ -2,6 +2,8 @@ import "./Main.css"
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
 import { useState, useEffect } from "react";
+import { Link as ScrollLink } from "react-scroll"
+
 
 interface ProductsData {
   "pizzas": Product[],
@@ -32,7 +34,7 @@ const MENU_SECTIONS: { id: keyof ProductsData, heading: string }[] = [
   { id: "breakfasts", heading: "Завтраки" },
   { id: "desserts", heading: "Десерты" },
   { id: "sauces", heading: "Соусы" },
-  {id: "others", heading: "Другие товары"}
+  { id: "others", heading: "Другие товары" }
 ]
 
 async function get_data(source: string): Promise<ProductsData> {
@@ -43,7 +45,7 @@ async function get_data(source: string): Promise<ProductsData> {
 
 function MenuSection({ id, heading, data }: { id: string, heading: string, data: Product[] }) {
   return (
-    <div className="menu-content-section">
+    <section className="menu-content-section">
       <h1 className="menu-content-heading" id={id}>{heading}</h1>
       <div className="menu-content">
         {data.map((product, index) => (
@@ -54,7 +56,7 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
             price={product.price} />
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 
@@ -74,21 +76,20 @@ export default function Main() {
   return (
     <>
       <main className="menu">
-
-        <div className="menu-navbar">
+        <nav className="menu-navbar">
           <ul>
-            <li><NavLink to="#pizzas">Пиццы</NavLink></li>
-            <li><NavLink to="#combos">Комбо</NavLink></li>
-            <li><NavLink to="#rome">Римские пиццы</NavLink></li>
-            <li><NavLink to="#snacks">Закуски</NavLink></li>
-            <li><NavLink to="#coffee-and-tea">Кофе и чай</NavLink></li>
-            <li><NavLink to="#drinks">Напитки</NavLink></li>
-            <li><NavLink to="#breakfasts">Завтраки</NavLink></li>
-            <li><NavLink to="#desserts">Десерты</NavLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} activeClass="active" to="pizzas">Пиццы</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="combos">Комбо</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="romes">Римские пиццы</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="appetizers">Закуски</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="coffee-and-tea">Кофе и чай</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="drinks">Напитки</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="breakfasts">Завтраки</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="desserts">Десерты</ScrollLink></li>
             <li><button className="menu-navbar-more-button">Ещё</button></li>
           </ul>
           <button className="menu-navbar-button" onClick={() => navigate("/")}>Корзина</button>
-        </div>
+        </nav>
 
         <div className="menu-container">
 

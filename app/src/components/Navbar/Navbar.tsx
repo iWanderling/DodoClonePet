@@ -8,7 +8,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar">
+      <nav className="navbar">
         <img src={logotype} width="270px" height="40px" alt="Dodo Pizza Logo" />
         <ul>
           <li><NavLink to="/">Главная</NavLink></li>
@@ -18,7 +18,7 @@ export default function Navbar() {
 
         </ul>
         <button className="navbar-button" onClick={() => navigate("/login")}>Войти</button>
-      </div>
+      </nav>
     </>
   )
 }
