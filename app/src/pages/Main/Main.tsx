@@ -75,6 +75,25 @@ export default function Main() {
 
   return (
     <>
+      <section className="story-block">
+
+        <button className="story-block-button prev">{"<"}</button>
+
+        <div className="story-block-content">
+          <img src="/images/stories/giveaward-111.webp" />
+          <img src="/images/stories/tom-yam-story.webp" />
+          <img src="/images/stories/dobri-cola.webp" />
+          <img src="/images/stories/giveaward-111.webp" />
+          <img src="/images/stories/tom-yam-story.webp" />
+          <img src="/images/stories/dobri-cola.webp" />
+          <img src="/images/stories/giveaward-111.webp" />
+          <img src="/images/stories/tom-yam-story.webp" />
+          <img src="/images/stories/dobri-cola.webp" />
+        </div>
+
+        <button className="story-block-button next">{">"}</button>
+
+      </section>
       <main className="menu">
         <nav className="menu-navbar">
           <ul>
