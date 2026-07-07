@@ -1,7 +1,7 @@
 import "./Main.css"
 import { NavLink, Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link as ScrollLink } from "react-scroll"
 
 
@@ -64,6 +64,8 @@ export default function Main() {
 
   const navigate = useNavigate();
   const [menuData, setMenuData] = useState<ProductsData>();
+  const [showLeftBtn, setShowLeftBtn] = useState(false);
+  const [showRightBtn, setShowRightBtn] = useState(true);
 
   useEffect(() => {
     const fetchMenuData = async () => {
@@ -73,25 +75,56 @@ export default function Main() {
     fetchMenuData();
   }, []);
 
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const checkScrollPosition = () => {
+    if (contentRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = contentRef.current;
+
+      setShowLeftBtn(scrollLeft > 2);
+      console.log(scrollLeft, scrollWidth, clientWidth);
+      setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
+    }
+  }
+
+  const handleScrollLeft = () => {
+    if (contentRef.current) {
+      // clientWidth — это ширина видимого "окна" скролла
+      // Добавляем + 7, чтобы учесть один gap между элементами при перелистывании
+      const scrollStep = contentRef.current.clientWidth + 7;
+      contentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+      console.log(scrollStep);
+    }
+
+  };
+
+  const handleScrollRight = () => {
+    if (contentRef.current) {
+      const scrollStep = contentRef.current.clientWidth + 7;
+      contentRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
+      console.log(scrollStep + "R");
+    }
+  };
+
+
   return (
     <>
       <section className="story-block">
 
-        <button className="story-block-button prev">{"<"}</button>
+        {showLeftBtn && <button className="story-block-button prev" onClick={handleScrollLeft}>{"<"}</button>}
 
-        <div className="story-block-content">
-          <img src="/images/stories/giveaward-111.webp" />
-          <img src="/images/stories/tom-yam-story.webp" />
-          <img src="/images/stories/dobri-cola.webp" />
-          <img src="/images/stories/giveaward-111.webp" />
-          <img src="/images/stories/tom-yam-story.webp" />
-          <img src="/images/stories/dobri-cola.webp" />
-          <img src="/images/stories/giveaward-111.webp" />
-          <img src="/images/stories/tom-yam-story.webp" />
-          <img src="/images/stories/dobri-cola.webp" />
+        <div className="story-block-content" ref={contentRef} onScroll={checkScrollPosition}>
+          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
+          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
+          <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
+          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
+          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
+          <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
+          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
+          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
         </div>
 
-        <button className="story-block-button next">{">"}</button>
+        {showRightBtn && <button className="story-block-button next" onClick={handleScrollRight}>{">"}</button>}
 
       </section>
       <main className="menu">
