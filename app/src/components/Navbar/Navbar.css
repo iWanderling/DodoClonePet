@@ -1,6 +1,5 @@
 .navbar {
   background-color: var(--background-color);
-  position: sticky;
   top: 0;
   left: 0;
   display: flex;
@@ -12,7 +11,6 @@
   flex: 1;
   border-bottom: 1px solid rgb(212, 212, 212);
   height: 60px;
-  z-index: 100;
 
   ul {
     display: flex;

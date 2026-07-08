@@ -1,6 +1,5 @@
 .menu {
   background-color: white;
-  border-radius: 60px;
   padding: 40px 160px;
 }
 
@@ -18,15 +17,15 @@
 }
 
 .menu-navbar {
+  border-radius: 60px 60px 0 0;
+  padding: 40px 160px;
   background-color: white;
   position: sticky;
-  top: 60px;
-  padding: 10px 0px;
+  top: 120px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 25px;
   z-index: 90;
 
   ul {
@@ -142,7 +141,6 @@
 
 .story-block {
 
-  margin-top: 100px;
   margin-bottom: 20px;
 
   padding: 0 160px;
@@ -201,4 +199,59 @@
   object-fit: cover;
   scroll-snap-align: start;
 
+}
+
+.header-panel {
+  top: 0;
+  left: 0;
+  position: sticky;
+  padding: 30px 160px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  background-color: var(--background-color);
+}
+
+.left {
+  display: flex;
+  flex-direction: row;
+  gap: 45px;
+}
+
+.header-panel .left .header-panel-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.header-panel-img-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-panel .title {
+  font-size: 29px;
+}
+
+.header-panel .description {
+  font-size: 13px;
+  font-weight: 600;
+  font-style: bold;
+  color: rgb(52, 52, 52);
+}
+
+.header-panel-img {
+  height: 52px;
+  width: 52px;
+}
+
+.header-panel-btn {
+  width: 92px;
+  height: 45px;
+  border: 0;
+  border-radius: 23px;
+  background-color: white;
 }
