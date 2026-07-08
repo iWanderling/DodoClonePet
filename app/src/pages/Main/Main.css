@@ -1,6 +1,6 @@
 .menu {
   background-color: white;
-  padding: 40px 160px;
+  padding: 0 160px;
 }
 
 .menu-container {
@@ -13,20 +13,26 @@
 .sidebar {
   position: sticky;
   width: 282px;
-  top: 140px;
+  top: 230px;
+  z-index: 90;
 }
 
 .menu-navbar {
+  background-color: var(--background-color);
+  position: sticky;
+  top: 112px;
+  z-index: 90;
+}
+
+.menu-navbar-block {
   border-radius: 60px 60px 0 0;
   padding: 40px 160px;
   background-color: white;
-  position: sticky;
-  top: 120px;
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  z-index: 90;
 
   ul {
     display: flex;
