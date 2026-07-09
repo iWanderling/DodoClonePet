@@ -120,7 +120,7 @@ export default function Main() {
             </div>
           </div>
           <div className="header-panel-city-info">
-            <div>Доставка пиццы Казань</div>
+            <div>Доставка пиццы <a className="city">Казань</a></div>
             <div>35 мин • 4.89 ⭐ </div>
           </div>
         </div>
@@ -150,15 +150,15 @@ export default function Main() {
 
       <nav className="menu-navbar">
         <div className="menu-navbar-block">
-          <ul>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} activeClass="active" to="pizzas">Пиццы</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="combos">Комбо</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="romes">Римские пиццы</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="appetizers">Закуски</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="coffee-and-tea">Кофе и чай</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="drinks">Напитки</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="breakfasts">Завтраки</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-140} duration={200} to="desserts">Десерты</ScrollLink></li>
+          <ul className="menu-navbar-block-titles">
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} activeClass="active" to="pizzas">Пиццы</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="combos">Комбо</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="romes">Римские пиццы</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="appetizers">Закуски</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="coffee-and-tea">Кофе и чай</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="drinks">Напитки</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="breakfasts">Завтраки</ScrollLink></li>
+            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="desserts">Десерты</ScrollLink></li>
             <li><button className="menu-navbar-more-button">Ещё</button></li>
           </ul>
           <button className="menu-navbar-button" onClick={() => navigate("/")}>Корзина</button>

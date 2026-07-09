@@ -9,15 +9,17 @@ export default function Navbar() {
   return (
     <>
       <nav className="navbar">
-        <img src={logotype} width="270px" height="40px" alt="Dodo Pizza Logo" />
         <ul>
-          <li><NavLink to="/">Главная</NavLink></li>
-          <li><NavLink to="/about">О нас</NavLink></li>
-          <li><NavLink to="/contacts">Контакты</NavLink></li>
-          <li><NavLink to="/">Акции</NavLink></li>
-
+          <li><NavLink className="live" to="/">Прямой эфир</NavLink></li>
+          <li><NavLink to="/about">Работа в Додо</NavLink></li>
+          <li><NavLink to="/contacts">О нас</NavLink></li>
+          <li><NavLink to="/">Контакты</NavLink></li>
+          <li><NavLink to="/">Корпоративные заказы</NavLink></li>
+          <li><NavLink to="/about">Сертификаты для бизнеса</NavLink></li>
+          <li><NavLink to="/contacts">Акции</NavLink></li>
+          <li><NavLink to="/">Додокоины</NavLink></li>
         </ul>
-        <button className="navbar-button" onClick={() => navigate("/login")}>Войти</button>
+        Язык
       </nav>
     </>
   )

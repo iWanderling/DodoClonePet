@@ -13,7 +13,7 @@
 .sidebar {
   position: sticky;
   width: 282px;
-  top: 230px;
+  top: 205px;
   z-index: 90;
 }
 
@@ -24,9 +24,17 @@
   z-index: 90;
 }
 
+.header-panel-city-info {
+  cursor: pointer;
+  font-size: 17px;
+  a {
+    color: var(--dodo-color);
+  }
+}
+
 .menu-navbar-block {
   border-radius: 60px 60px 0 0;
-  padding: 40px 160px;
+  padding: 25px 160px;
   background-color: white;
 
   display: flex;
@@ -39,7 +47,7 @@
     flex-direction: row;
     list-style: none;
     align-items: center;
-    gap: 16px;
+    gap: 42px;
     font-size: 16px;
   }
 
@@ -55,8 +63,17 @@
   }
 
   a.active {
-    color: var(--dodo-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: white;
+    border-radius: 30px;
+    padding: 10px 20px;
   }
+}
+
+.menu-navbar-block-titles {
 }
 
 .menu-navbar-button {
