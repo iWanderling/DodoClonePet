@@ -3,6 +3,57 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { RemoveScroll } from "react-remove-scroll"
 
+interface BaseProduct {
+  id: string,
+  title: string,
+  description: string | string[],
+  price?: number
+}
+
+interface PizzaCard extends BaseProduct {
+  removableIngredients?: string[],
+  grams: {
+    traditional: {
+      "20"?: number,
+      "25"?: number,
+      "30"?: number,
+      "35"?: number,
+    },
+    thin: {
+      "20"?: number,
+      "25"?: number,
+      "30"?: number,
+      "35"?: number,
+    }
+  },
+  variations: {
+    "20"?: number,
+    "25"?: number,
+    "30"?: number,
+    "35"?: number
+  },
+  extraIngredients?: string[],
+  excludedForThinDough?: string[]
+}
+
+interface ComboCard {}
+
+interface RomeCard extends BaseProduct {
+  grams: number,
+  removableIngredients?: string[],
+  extraIngredients?: string[]
+}
+
+interface AppetizerCard extends BaseProduct {
+  grams: number | Record<string, number>,
+  variations?: Record<string, number>
+}
+
+interface ProductsCard extends BaseProduct {
+  grams: number | Record <string, number>,
+  variations?: Record<string, number>
+}
+
 interface ProductsData {
   "pizzas": Product[],
   "combos": Product[],
