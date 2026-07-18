@@ -5,17 +5,64 @@ import { useState, useEffect, useRef } from "react";
 import { Link as ScrollLink } from "react-scroll"
 
 
-interface ProductsData {
-  "pizzas": Product[],
-  "combos": Product[],
-  "romes": Product[],
-  "appetizers": Product[],
-  "coffee-and-tea": Product[],
-  "drinks": Product[],
-  "breakfasts": Product[],
-  "desserts": Product[],
-  "sauces": Product[],
-  "others": Product[]
+interface BaseProduct {
+  id: string,
+  title: string,
+  description: string | string[],
+  price?: number
+}
+
+// Record <string, number> => [20, 25, 30, 35]:number(optional)
+interface PizzaCard extends BaseProduct {
+  removableIngredients?: string[],
+  grams: {
+    traditional: Record<string, number>,
+    thin: Record<string, number>,
+  },
+  variations: Record<string, number>,
+  extraIngredients?: string[],
+  excludedForThinDough?: string[]
+}
+
+interface RomeCard extends BaseProduct {
+  grams: number,
+  removableIngredients?: string[],
+  extraIngredients?: string[]
+}
+
+interface ProductCard extends BaseProduct {
+  grams: number | Record<string, number>,
+  variations?: Record<string, number>
+}
+
+interface ComboCard { }
+
+async function loadJson<T>(source: string): Promise<T> {
+  const response = await (fetch(source));
+  if (!response.ok) throw Error("Ошибка загрузки данных :(");
+  return await response.json();
+}
+
+function getProductInfo(menu: Menu, ID: string): any {
+  for (const [key, products] of Object.entries(menu))
+    for (const product of products) {
+      if (product.id === ID) return [key, product]
+    }
+  return null;
+}
+
+interface Menu {
+  ingredients: any,
+  pizzas: PizzaCard,
+  combos: any,
+  romes: RomeCard,
+  appetizers: ProductCard,
+  "coffee-and-tea": ProductCard,
+  drinks: ProductCard,
+  desserts: ProductCard,
+  breakfasts: ProductCard,
+  sauces: BaseProduct,
+  others: BaseProduct
 }
 
 interface Product {
@@ -24,7 +71,7 @@ interface Product {
   price: number
 }
 
-const MENU_SECTIONS: { id: keyof ProductsData, heading: string }[] = [
+const MENU_SECTIONS: { id: keyof Menu, heading: string }[] = [
   { id: "pizzas", heading: "Пиццы" },
   { id: "combos", heading: "Комбо" },
   { id: "romes", heading: "Римские пиццы" },
@@ -37,7 +84,12 @@ const MENU_SECTIONS: { id: keyof ProductsData, heading: string }[] = [
   { id: "others", heading: "Другие товары" }
 ]
 
-async function get_data(source: string): Promise<ProductsData> {
+const IMG_PATHS = {
+  "pizzas": "/images/pizzas/",
+  "combos": "/images"
+}
+
+async function get_data(source: string): Promise<Menu> {
   const response = await (fetch(source));
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
@@ -51,7 +103,7 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
         {data.map((product, index) => (
           <Card
             key={index}
-            source={product.source}
+            source={`/images/pizzas/${product.id}.webp`}
             title={product.title}
             price={product.price} />
         ))}
@@ -63,7 +115,7 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
 export default function Main() {
 
   const navigate = useNavigate();
-  const [menuData, setMenuData] = useState<ProductsData>();
+  const [menuData, setMenuData] = useState<Menu>  ();
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
 

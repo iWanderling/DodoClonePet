@@ -1,0 +1,30 @@
+{
+  "food": [
+    {
+      "id": 1,
+      "title": "Моцарелла",
+      "price": 149,
+      "source": "/images/ingredients/pizza/mozarella.png"
+    },
+    {
+      "id": 2,
+      "title": "Сыры чеддер и пармезан",
+      "price": 169,
+      "source": "/images/ingredients/pizza/chedder-parmesan.png"
+    },
+    {
+      "id": 3,
+      "title": "Халапеньо",
+      "price": 79,
+      "source": "/images/ingredients/pizza/chalapenjo.png"
+    }
+  ],
+  "drink": [
+    {
+      "id": 4,
+      "title": "Кокосовый сироп",
+      "price": 39,
+      "source": "/images/ingredients/drink/coconut-syrup.png"
+    }
+  ]
+}

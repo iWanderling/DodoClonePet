@@ -10,33 +10,17 @@ interface BaseProduct {
   price?: number
 }
 
+// Record <string, number> => [20, 25, 30, 35]:number(optional)
 interface PizzaCard extends BaseProduct {
   removableIngredients?: string[],
   grams: {
-    traditional: {
-      "20"?: number,
-      "25"?: number,
-      "30"?: number,
-      "35"?: number,
-    },
-    thin: {
-      "20"?: number,
-      "25"?: number,
-      "30"?: number,
-      "35"?: number,
-    }
+    traditional: Record<string, number>,
+    thin: Record<string, number>,
   },
-  variations: {
-    "20"?: number,
-    "25"?: number,
-    "30"?: number,
-    "35"?: number
-  },
+  variations: Record<string, number>,
   extraIngredients?: string[],
   excludedForThinDough?: string[]
 }
-
-interface ComboCard {}
 
 interface RomeCard extends BaseProduct {
   grams: number,
@@ -44,49 +28,50 @@ interface RomeCard extends BaseProduct {
   extraIngredients?: string[]
 }
 
-interface AppetizerCard extends BaseProduct {
+interface ProductCard extends BaseProduct {
   grams: number | Record<string, number>,
   variations?: Record<string, number>
 }
 
-interface ProductsCard extends BaseProduct {
-  grams: number | Record <string, number>,
-  variations?: Record<string, number>
-}
+interface ComboCard { }
 
-interface ProductsData {
-  "pizzas": Product[],
-  "combos": Product[],
-  "romes": Product[],
-  "appetizers": Product[],
-  "coffee-and-tea": Product[],
-  "drinks": Product[],
-  "breakfasts": Product[],
-  "desserts": Product[]
-}
-
-interface Product {
-  slug: string,
-  title: string,
-  source: string,
-  price: number
-}
-
-interface IngredientsData {
-  "food": Ingredient[],
-  "drink": Ingredient[]
-}
-
-interface Ingredient {
-  title: string,
-  source: string,
-  price: number
-}
-
-async function get_data<T>(source: string): Promise<T> {
+async function loadJson<T>(source: string): Promise<T> {
   const response = await (fetch(source));
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
+}
+
+function getProductInfo(menu: Menu, ID: string): any {
+  for (const [key, products] of Object.entries(menu))
+    for (const product of products) {
+      if (product.id === ID) return [key, product]
+    }
+  return null;
+}
+
+function convertDescriptionToText(description: string | string[]): string {
+  if (Array.isArray(description)) {
+    return description.join(", ")
+  }
+  return description;
+}
+
+interface Menu {
+  ingredients: any,
+  pizzas: PizzaCard,
+  combos: any,
+  romes: RomeCard,
+  appetizers: ProductCard,
+  "coffee-and-tea": ProductCard,
+  drinks: ProductCard,
+  desserts: ProductCard,
+  breakfasts: ProductCard,
+  sauces: BaseProduct,
+  others: BaseProduct
+}
+
+interface Ingredients {
+
 }
 
 export default function ProductPage() {
@@ -94,89 +79,85 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [menuData, setMenuData] = useState<ProductsData>();
-  const [ingredientsData, setIngredientsData] = useState<IngredientsData>();
+  const [menu, setMenu] = useState<Menu>();
+  const [ingredients, setIngredients] = useState<Ingredients>();
+  const [selectPanel, setSelectPanel] = useState<string>();
+  const [selectedFlag, setSelectedFlag] = useState<boolean>(false);
+  const [description, setDescription] = useState<string>("");
+  const [price, setPrice] = useState<number>(0);
 
   useEffect(() => {
-    const fetchMenuData = async () => {
-      const products = await get_data<ProductsData>("/products.json");
-      setMenuData(products);
-
-      const ingredients = await get_data<IngredientsData>("/ingredients.json");
-      setIngredientsData(ingredients);
-
+    const fetchMenu = async () => {
+      setMenu(await loadJson<Menu>("/products.json"));
+      // setIngredients(await loadJson<Ingredients>("/ingredients.json"););
     };
-    fetchMenuData();
+    fetchMenu();
   }, []);
 
-  const slug = location.pathname.split('/')[2];
-  let dataset: Product = { slug: "", title: "", source: "", price: 0 };
-  let productT: keyof ProductsData = "pizzas";
-  let productK: keyof IngredientsData;
+  const productID = location.pathname.split('/')[2];
+  let productInfo: [keyof Menu, any] | null = null;
+  let productType: keyof Menu | null = null;
+  let product: any | null = null;
 
-  function isProductKey(key: string, obj: ProductsData): key is keyof ProductsData {
-    return (key in obj);
-  }
-
-  if (menuData) {
-    let flag = false;
-    for (let [productType, datas] of Object.entries(menuData)) {
-      if (isProductKey(productType, menuData)) {
-        for (let product of datas) {
-          if ((product.slug === slug)) {
-            dataset = product;
-            productT = productType;
-            flag = true;
-            break;
-          }
-        }
-      }
-      if (flag) break;
+  if (menu) {
+    productInfo = getProductInfo(menu, productID);
+    if (productInfo) {
+      productType = productInfo[0];
+      product = productInfo[1];
     }
   }
 
-  productK = ["pizzas", "romes"].includes(productT) ? "food" : "drink";
+  if (product) {
+    if (!selectedFlag && product.variations) {
+      let productVariations = Object.keys(product.variations);
+      let variationsAmount = productVariations.length;
+      if (variationsAmount > 1) {
+        let chosenOption = productVariations[variationsAmount - 2];
+        setDescription(chosenOption);
+        setSelectedFlag(true);
+        setSelectPanel(chosenOption);
+        setPrice(product.variations[productVariations[variationsAmount - 2]])
+      }
+    }
+  }
 
-  console.log(productT, productK);
-
-  return (
+  return (product &&
     <>
       <RemoveScroll>
         <div className="modal-product-page">
           <div className="modal-card">
-            <img className="modal-card-product-img" src={dataset.source} alt="" />
+            <img className="modal-card-product-img" src={`/images/${productType}/${product.id}.webp`} alt="" />
             <div className="modal-card-product-panel">
               <div className="modal-card-product-content">
-                <h2>{dataset.title}</h2>
-                <div className="modal-card-product-panel-type">Здесь будут граммовки и количество</div>
-                <div className="modal-card-product-panel-description">Здесь будет описание продукта</div>
-                <div className="button-option-panel">
-                  <button>25 см</button>
-                  <button>30 см</button>
-                  <button>35 см</button>
+                <h2>{product.title}</h2>
+                <div className="modal-card-product-panel-type">{description}</div>
+                <div className="modal-card-product-panel-description">{convertDescriptionToText(product.description)}</div>
+                {product.variations && <div className="button-option-panel">
+                  {Object.keys(product.variations).map((key) => (
+                    <button key={key}>{key} см</button>
+                  ))}
                 </div>
-                <div className="button-option-panel">
+                }
+                {productType === "pizzas" && <div className="button-option-panel">
                   <button>Традиционное</button>
                   <button>Тонкое</button>
-                </div>
-                <div className="add-ingredients-panel">
-                  <h3>Добавить по вкусу</h3>
-                  <div className="add-ingredients-grid">
-
-                    {
-                      ingredientsData?.[productK]?.map((ingredient, index) => (
-                        <div key={index} className="add-ingredients-card">
-                          <img src={ingredient.source} />
-                          <span className="add-ingredients-card-title">{ingredient.title}</span>
-                          <span className="add-ingredients-card-price">{ingredient.price} ₽</span>
-                        </div>
-                      ))
-                    }
-
-                  </div>
-                </div>
+                </div>}
+                {/* <div className="add-ingredients-panel">
+                    <h3>Добавить по вкусу</h3>
+                    <div className="add-ingredients-grid">
+                      {
+                        ingredientsData?.[productK]?.map((ingredient, index) => (
+                          <div key={index} className="add-ingredients-card">
+                            <img src={ingredient.source} />
+                            <span className="add-ingredients-card-title">{ingredient.title}</span>
+                            <span className="add-ingredients-card-price">{ingredient.price} ₽</span>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </div> */}
               </div>
-              <button className="button-cart">В корзину за 615 Р</button>
+              <button className="button-cart">В корзину за {price} Р</button>
             </div>
           </div>
           <button className="close-modal" onClick={() => navigate("/")}>✖</button>
