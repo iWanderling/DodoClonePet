@@ -37,12 +37,6 @@ interface ProductCard extends BaseProduct {
 
 interface ComboCard { }
 
-async function loadJson<T>(source: string): Promise<T> {
-  const response = await (fetch(source));
-  if (!response.ok) throw Error("Ошибка загрузки данных :(");
-  return await response.json();
-}
-
 function getProductInfo(menu: Menu, ID: string): any {
   for (const [key, products] of Object.entries(menu))
     for (const product of products) {
@@ -89,13 +83,15 @@ const IMG_PATHS = {
   "combos": "/images"
 }
 
-async function get_data(source: string): Promise<Menu> {
+async function loadJson<T>(source: string): Promise<T> {
   const response = await (fetch(source));
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
 }
 
-function MenuSection({ id, heading, data }: { id: string, heading: string, data: Product[] }) {
+
+function MenuSection({ id, heading, data }: { id: string, heading: string, data: any[] }) {
+
   return (
     <section className="menu-content-section">
       <h1 className="menu-content-heading" id={id}>{heading}</h1>
@@ -103,9 +99,9 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
         {data.map((product, index) => (
           <Card
             key={index}
-            source={`/images/pizzas/${product.id}.webp`}
+            source={`/images/${(id === "coffee-and-tea" ? "drinks" : id)}/${product.id}.webp`}
             title={product.title}
-            price={product.price} />
+            price={!product.price ? product.variations[Object.keys(product.variations)[0]] : product.price} />
         ))}
       </div>
     </section>
@@ -115,16 +111,15 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
 export default function Main() {
 
   const navigate = useNavigate();
-  const [menuData, setMenuData] = useState<Menu>  ();
+  const [menu, setMenu] = useState<Menu>();
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
 
   useEffect(() => {
-    const fetchMenuData = async () => {
-      const data = await get_data("/products.json");
-      setMenuData(data);
+    const fetchMenu = async () => {
+      setMenu(await loadJson<Menu>("/products.json"));
     };
-    fetchMenuData();
+    fetchMenu();
   }, []);
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -161,7 +156,6 @@ export default function Main() {
 
   return (
     <>
-
       <nav className="header-panel">
         <div className="left">
           <div className="header-panel-brand-block">
@@ -222,9 +216,8 @@ export default function Main() {
         <div className="menu-container">
 
           <div>
-            {menuData && MENU_SECTIONS.map((section) => {
-              const products = menuData[section.id] || [];
-
+            {menu && MENU_SECTIONS.map((section) => {
+              const products = menu[section.id];
               return (
                 <MenuSection key={section.id} heading={section.heading} id={section.id} data={products} />
               )

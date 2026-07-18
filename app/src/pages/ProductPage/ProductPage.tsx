@@ -1,6 +1,6 @@
 import "./ProductPage.css"
 import { useNavigate, useLocation } from "react-router-dom"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { RemoveScroll } from "react-remove-scroll"
 
 interface BaseProduct {
@@ -81,9 +81,13 @@ export default function ProductPage() {
 
   const [menu, setMenu] = useState<Menu>();
   const [ingredients, setIngredients] = useState<Ingredients>();
+
   const [selectPanel, setSelectPanel] = useState<string>();
   const [selectedFlag, setSelectedFlag] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>("");
+  const [selectedDough, setSelectedDough] = useState<string | null>(null);
+  const um = useRef("шт");
+
+  const [description, setDescription] = useState<string[]>([]);
   const [price, setPrice] = useState<number>(0);
 
   useEffect(() => {
@@ -108,16 +112,62 @@ export default function ProductPage() {
   }
 
   if (product) {
-    if (!selectedFlag && product.variations) {
-      let productVariations = Object.keys(product.variations);
-      let variationsAmount = productVariations.length;
-      if (variationsAmount > 1) {
-        let chosenOption = productVariations[variationsAmount - 2];
-        setDescription(chosenOption);
-        setSelectedFlag(true);
-        setSelectPanel(chosenOption);
-        setPrice(product.variations[productVariations[variationsAmount - 2]])
+    let descr = [];
+    let pr = 0;
+    let doughType: string | null = null;
+    let chosenOption = "1";
+
+    if (!selectedFlag) {
+      if (product.variations) {
+        let productVariations = Object.keys(product.variations);
+        let variationsAmount = productVariations.length;
+        chosenOption = productVariations[0];
+        pr = product.variations[chosenOption]
+
+        if (variationsAmount > 1) {
+          chosenOption = productVariations[variationsAmount - 2];
+          pr = product.variations[productVariations[variationsAmount - 2]];
+        }
       }
+      else {
+        pr = product.price;
+      }
+
+      if (productType === "pizzas") {
+        um.current = "см";
+        descr.push(chosenOption + " см");
+        if (selectedDough) descr.push(selectedDough);
+        else {
+          doughType = "традиционное тесто";
+          descr.push("традиционное тесто");
+        }
+      }
+      else if (productType === "romes") {
+        um.current = "см";
+        doughType = "римское тесто";
+        descr.push(chosenOption + " шт");
+        descr.push(doughType);
+      }
+      else if (productType === "drinks" || productType === "coffee-and-tea") {
+        um.current = "л";
+        descr.push(chosenOption + " л");
+      }
+      else descr.push(chosenOption + " шт");
+
+      if (product.grams) {
+        if (typeof product.grams === "number") descr.push(product.grams + " г");
+        else if (productType === "pizzas") {
+          if (doughType === "традиционное тесто") descr.push(product.grams["traditional"][chosenOption] + " г");
+          else if (doughType === "тонкое тесто") descr.push(product.grams["thin"][chosenOption] + " г")
+        }
+        else descr.push(product.grams[chosenOption] + " г");
+      }
+
+      setSelectedFlag(true);
+      setSelectPanel(chosenOption);
+      setSelectedDough(doughType);
+      setDescription(descr);
+      setPrice(pr);
     }
   }
 
@@ -130,11 +180,11 @@ export default function ProductPage() {
             <div className="modal-card-product-panel">
               <div className="modal-card-product-content">
                 <h2>{product.title}</h2>
-                <div className="modal-card-product-panel-type">{description}</div>
+                <div className="modal-card-product-panel-type">{description.join(", ")}</div>
                 <div className="modal-card-product-panel-description">{convertDescriptionToText(product.description)}</div>
                 {product.variations && <div className="button-option-panel">
                   {Object.keys(product.variations).map((key) => (
-                    <button key={key}>{key} см</button>
+                    <button key={key}>{key} {um.current}</button>
                   ))}
                 </div>
                 }
