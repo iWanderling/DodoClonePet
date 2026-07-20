@@ -1,24 +1,26 @@
 {
-  "ingredients": {
-    "food": [
-      {
-        "id": "mozarella",
-        "title": "Моцарелла",
-        "pricesPerDiameter": {
-          "20": 79,
-          "25": 99,
-          "30": 119,
-          "35": 149,
-          "rome": 99
-        }
-      }
-    ],
-    "drink": [
-      {
-        "id": "coconut-syrup",
-        "title": "Кокосовый сироп",
-        "price": 39
-      }
-    ]
-  }
+  "food": [
+    {
+      "id": "mozarella",
+      "title": "Моцарелла",
+      "price": 119
+    },
+    {
+      "id": "chalapenjo",
+      "title": "Халапеньо",
+      "price": 119
+    },
+    {
+      "id": "chedder-parmesan",
+      "title": "Чеддер и пармезан",
+      "price": 119
+    }
+  ],
+  "drinks": [
+    {
+      "id": "coconut-syrup",
+      "title": "Кокосовый сироп",
+      "price": 39
+    }
+  ]
 }

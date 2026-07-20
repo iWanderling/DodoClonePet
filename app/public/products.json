@@ -40,7 +40,7 @@
         "30": 600,
         "35": 730
       },
-      "extraIngredients": [],
+      "extraIngredients": ["mozarella", "chalapenjo", "chedder-parmesan"],
       "excludedForThinDough": []
     }
   ],
@@ -104,7 +104,7 @@
     {
       "id": "ice-cappuccino",
       "title": "Айс капучино",
-      "description": "",
+      "description": "Освежающий холодный кофе с порцией эспрессо и пломбиром",
       "grams": {
         "0.3": 129,
         "0.6": 219
@@ -112,7 +112,8 @@
       "variations": {
         "0.3": 139,
         "0.6": 219
-      }
+      },
+      "extraIngredients": ["coconut-syrup"]
     }
   ],
   "drinks": [

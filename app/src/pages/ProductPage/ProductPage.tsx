@@ -70,9 +70,17 @@ interface Menu {
   others: BaseProduct
 }
 
-interface Ingredients {
-
+interface BaseIngredients {
+  id: string,
+  title: string,
+  price: number,
 }
+
+interface Ingredients {
+  food: BaseIngredients[],
+  drinks: BaseIngredients[]
+}
+
 
 export default function ProductPage() {
 
@@ -91,14 +99,16 @@ export default function ProductPage() {
   // Единица измерения для панели с выбором
   const um = useRef("шт");
 
-  // Описание (граммовки, количество и т.п.) и цена 
+  // Описание (граммовки, количество и т.п.), цена, доп. ингредиенты
   const [description, setDescription] = useState<string[]>([]);
   const [price, setPrice] = useState<number>(0);
+  const [extraIngredients, setExtraIngredients] = useState<BaseIngredients[]>([]);
+  const [ingredientsType, setIngredientsType] = useState<keyof Ingredients | null>();
 
   useEffect(() => {
     const fetchMenu = async () => {
       setMenu(await loadJson<Menu>("/products.json"));
-      // setIngredients(await loadJson<Ingredients>("/ingredients.json"););
+      setIngredients(await loadJson<Ingredients>("/ingredients.json"));
     };
     fetchMenu();
   }, []);
@@ -179,6 +189,31 @@ export default function ProductPage() {
     }
   }
 
+  useEffect(() => {
+    let ingredientsType1: keyof Ingredients | null = null;
+    if (product && product.extraIngredients) {
+      let extrIngr = [];
+      console.log(productType);
+      if (productType && ["pizzas", "romes"].includes(productType)) ingredientsType1 = "food";
+      else if (productType && ["coffee-and-tea", "drinks"].includes(productType)) ingredientsType1 = "drinks";
+
+      console.log(productType, ingredientsType1);
+      if (ingredients && ingredientsType1) {
+
+        for (let ei of product.extraIngredients) {
+          for (let i of ingredients[ingredientsType1]) {
+            if (ei === i.id) extrIngr.push(i);
+          }
+        }
+      }
+
+      setExtraIngredients(extrIngr);
+      setIngredientsType(ingredientsType1);
+    }
+  }, [ingredients]);
+
+  if (productType === "coffee-and-tea") productType = "drinks";
+
   return (product &&
     <>
       <RemoveScroll>
@@ -191,7 +226,7 @@ export default function ProductPage() {
                 <div className="modal-card-product-panel-type">{description.join(", ")}</div>
                 <div className="modal-card-product-panel-description">{convertDescriptionToText(product.description)}</div>
                 {product.variations && <div className="button-option-panel">
-                  {Object.keys(product.variations).map((key, index) => (
+                  {Object.keys(product.variations).map((key) => (
                     (key === selectPanel ?
                       <button className="active" key={key}>{key} {um.current}</button> :
                       <button key={key} onClick={() => setSelectPanel(key)} >{key} {um.current}</button>
@@ -206,20 +241,21 @@ export default function ProductPage() {
                     onClick={() => setSelectedDough("тонкое тесто")}>Тонкое</button>
                 </div>
                 }
-                {/* <div className="add-ingredients-panel">
+                {extraIngredients.length > 0 &&
+                  <div className="add-ingredients-panel">
                     <h3>Добавить по вкусу</h3>
                     <div className="add-ingredients-grid">
                       {
-                        ingredientsData?.[productK]?.map((ingredient, index) => (
+                        extraIngredients.map((ingredient, index) => (
                           <div key={index} className="add-ingredients-card">
-                            <img src={ingredient.source} />
+                            <img src={`/images/ingredients/${ingredientsType}/${ingredient.id}.png`} />
                             <span className="add-ingredients-card-title">{ingredient.title}</span>
                             <span className="add-ingredients-card-price">{ingredient.price} ₽</span>
                           </div>
                         ))
                       }
                     </div>
-                  </div> */}
+                  </div>}
               </div>
               <button className="button-cart">В корзину за {price} Р</button>
             </div>
