@@ -79,14 +79,19 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Данные о меню и доп. ингредиентах для блюд и напитков
   const [menu, setMenu] = useState<Menu>();
   const [ingredients, setIngredients] = useState<Ingredients>();
 
+  // Панели с кнопками для выбора диаметра/количества/типа и теста для пиццы
   const [selectPanel, setSelectPanel] = useState<string>();
   const [selectedFlag, setSelectedFlag] = useState<boolean>(false);
   const [selectedDough, setSelectedDough] = useState<string | null>(null);
+
+  // Единица измерения для панели с выбором
   const um = useRef("шт");
 
+  // Описание (граммовки, количество и т.п.) и цена 
   const [description, setDescription] = useState<string[]>([]);
   const [price, setPrice] = useState<number>(0);
 
@@ -98,11 +103,13 @@ export default function ProductPage() {
     fetchMenu();
   }, []);
 
+  // Данные о выбранном товаре
   const productID = location.pathname.split('/')[2];
   let productInfo: [keyof Menu, any] | null = null;
   let productType: keyof Menu | null = null;
   let product: any | null = null;
 
+  // Загрузка данных о товаре
   if (menu) {
     productInfo = getProductInfo(menu, productID);
     if (productInfo) {
@@ -111,6 +118,7 @@ export default function ProductPage() {
     }
   }
 
+  // Получаем все данные для отображения модалки
   if (product) {
     let descr = [];
     let pr = 0;
@@ -183,15 +191,21 @@ export default function ProductPage() {
                 <div className="modal-card-product-panel-type">{description.join(", ")}</div>
                 <div className="modal-card-product-panel-description">{convertDescriptionToText(product.description)}</div>
                 {product.variations && <div className="button-option-panel">
-                  {Object.keys(product.variations).map((key) => (
-                    <button key={key}>{key} {um.current}</button>
+                  {Object.keys(product.variations).map((key, index) => (
+                    (key === selectPanel ?
+                      <button className="active" key={key}>{key} {um.current}</button> :
+                      <button key={key} onClick={() => setSelectPanel(key)} >{key} {um.current}</button>
+                    )
                   ))}
                 </div>
                 }
                 {productType === "pizzas" && <div className="button-option-panel">
-                  <button>Традиционное</button>
-                  <button>Тонкое</button>
-                </div>}
+                  <button className={selectedDough === "традиционное тесто" ? "active" : ""}
+                    onClick={() => setSelectedDough("традиционное тесто")}>Традиционное</button>
+                  <button className={selectedDough === "тонкое тесто" ? "active" : ""}
+                    onClick={() => setSelectedDough("тонкое тесто")}>Тонкое</button>
+                </div>
+                }
                 {/* <div className="add-ingredients-panel">
                     <h3>Добавить по вкусу</h3>
                     <div className="add-ingredients-grid">
@@ -212,7 +226,7 @@ export default function ProductPage() {
           </div>
           <button className="close-modal" onClick={() => navigate("/")}>✖</button>
         </div>
-      </RemoveScroll>
+      </RemoveScroll >
     </>
   )
 }
