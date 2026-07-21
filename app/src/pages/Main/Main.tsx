@@ -102,7 +102,7 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
             source={`/images/${(id === "coffee-and-tea" ? "drinks" : id)}/${product.id}.webp`}
             title={product.title}
             price={!product.price ? product.variations[Object.keys(product.variations)[0]] : product.price}
-            hasVariations={!product.price ? true : false} />
+            hasVariations={product.variations && Object.keys(product.variations).length > 1 ? true : false} />
         ))}
       </div>
     </section>

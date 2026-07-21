@@ -104,6 +104,7 @@ export default function ProductPage() {
   const [price, setPrice] = useState<number>(0);
   const [extraIngredients, setExtraIngredients] = useState<BaseIngredients[]>([]);
   const [ingredientsType, setIngredientsType] = useState<keyof Ingredients | null>();
+  const addedIngredients = useRef<any[]>([]);
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -163,7 +164,7 @@ export default function ProductPage() {
       else if (productType === "romes") {
         um.current = "см";
         doughType = "римское тесто";
-        descr.push(chosenOption + " шт");
+        descr.push(chosenOption + " см");
         descr.push(doughType);
       }
       else if (productType === "drinks" || productType === "coffee-and-tea") {
@@ -214,6 +215,19 @@ export default function ProductPage() {
 
   if (productType === "coffee-and-tea") productType = "drinks";
 
+  function changePriceWithIngredients(ingredient: BaseIngredients): void {
+    let ingredientPrice = ingredient.price;
+
+    if (!addedIngredients.current.includes(ingredient.id)) {
+      addedIngredients.current.push(ingredient.id);
+    } else {
+      addedIngredients.current = addedIngredients.current.filter(i => i !== ingredient.id);
+      ingredientPrice = -ingredientPrice;
+    }
+
+    setPrice((prev) => prev + ingredientPrice)
+  }
+
   return (product &&
     <>
       <RemoveScroll>
@@ -227,7 +241,7 @@ export default function ProductPage() {
                 <div className="modal-card-product-panel-description">{convertDescriptionToText(product.description)}</div>
                 {product.variations && <div className="button-option-panel">
                   {Object.keys(product.variations).map((key) => (
-                    (key === selectPanel ?
+                    (key === selectPanel && Object.keys(product.variations).length > 1 ?
                       <button className="active" key={key}>{key} {um.current}</button> :
                       <button key={key} onClick={() => setSelectPanel(key)} >{key} {um.current}</button>
                     )
@@ -241,17 +255,21 @@ export default function ProductPage() {
                     onClick={() => setSelectedDough("тонкое тесто")}>Тонкое</button>
                 </div>
                 }
+                {productType === "romes" && <div className="button-option-panel">
+                  <button>Римское тесто</button>
+                  </div>
+                  }
                 {extraIngredients.length > 0 &&
                   <div className="add-ingredients-panel">
                     <h3>Добавить по вкусу</h3>
                     <div className="add-ingredients-grid">
                       {
                         extraIngredients.map((ingredient, index) => (
-                          <div key={index} className="add-ingredients-card">
+                          <button key={index} className={`add-ingredients-card ${addedIngredients.current.includes(ingredient.id) ? "active" : "Ingre"}`} onClick={() => {changePriceWithIngredients(ingredient)}}>
                             <img src={`/images/ingredients/${ingredientsType}/${ingredient.id}.png`} />
                             <span className="add-ingredients-card-title">{ingredient.title}</span>
                             <span className="add-ingredients-card-price">{ingredient.price} ₽</span>
-                          </div>
+                          </button>
                         ))
                       }
                     </div>

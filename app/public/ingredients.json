@@ -21,6 +21,16 @@
       "id": "coconut-syrup",
       "title": "Кокосовый сироп",
       "price": 39
+    },
+    {
+      "id": "nut-syrup",
+      "title": "Ореховый сироп",
+      "price": 39
+    },
+    {
+      "id": "caramel-syrup",
+      "title": "Карамельный сироп",
+      "price": 39
     }
   ]
 }
