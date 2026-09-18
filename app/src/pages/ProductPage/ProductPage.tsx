@@ -3,6 +3,38 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
 import { RemoveScroll } from "react-remove-scroll"
 
+
+interface Product {
+  id: string,
+  title: string,
+  type: string,
+  inMenu: string[],
+  description: string | string[],
+  isOptionalDescription: boolean,
+  removableOptionalDescription: string[],
+  options: ProductOptions[],
+  measurement_unit: string,
+  flag: string | null,
+}
+
+
+type ProductOptions = {
+  kind: string,
+  price: number,
+  size: number,
+  nutritionFacts?: {
+    calories: number,
+    proteins: number,
+    fats: number,
+    carbohydrates: number,
+    weight: number
+  },
+  imageSource: string,
+  availableToppings?: string[],
+  excludedToppings?: string[]
+}
+
+
 interface BaseProduct {
   id: string,
   title: string,
