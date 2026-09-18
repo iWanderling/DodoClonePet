@@ -1,5 +1,5 @@
 import "./Main.css"
-import { NavLink, Outlet, useNavigate } from "react-router-dom"
+import { Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
 import { useState, useEffect, useRef } from "react";
 import { Link as ScrollLink } from "react-scroll"
@@ -35,16 +35,6 @@ interface ProductCard extends BaseProduct {
   variations?: Record<string, number>
 }
 
-interface ComboCard { }
-
-function getProductInfo(menu: Menu, ID: string): any {
-  for (const [key, products] of Object.entries(menu))
-    for (const product of products) {
-      if (product.id === ID) return [key, product]
-    }
-  return null;
-}
-
 interface Menu {
   ingredients: any,
   pizzas: PizzaCard,
@@ -59,11 +49,6 @@ interface Menu {
   others: BaseProduct
 }
 
-interface Product {
-  title: string,
-  source: string,
-  price: number
-}
 
 const MENU_SECTIONS: { id: keyof Menu, heading: string }[] = [
   { id: "pizzas", heading: "Пиццы" },
@@ -78,10 +63,6 @@ const MENU_SECTIONS: { id: keyof Menu, heading: string }[] = [
   { id: "others", heading: "Другие товары" }
 ]
 
-const IMG_PATHS = {
-  "pizzas": "/images/pizzas/",
-  "combos": "/images"
-}
 
 async function loadJson<T>(source: string): Promise<T> {
   const response = await (fetch(source));
@@ -92,6 +73,10 @@ async function loadJson<T>(source: string): Promise<T> {
 
 function MenuSection({ id, heading, data }: { id: string, heading: string, data: any[] }) {
 
+  let extraInfoTitleImg = "";
+  
+  if (id === "pizzas") extraInfoTitleImg = "-25-traditional";
+
   return (
     <section className="menu-content-section">
       <h1 className="menu-content-heading" id={id}>{heading}</h1>
@@ -99,7 +84,7 @@ function MenuSection({ id, heading, data }: { id: string, heading: string, data:
         {data.map((product, index) => (
           <Card
             key={index}
-            source={`/images/${(id === "coffee-and-tea" ? "drinks" : id)}/${product.id}.webp`}
+            source={`/images/${(id === "coffee-and-tea" ? "drinks" : id)}/${product.id}/${product.id}${extraInfoTitleImg}.webp`}
             title={product.title}
             price={!product.price ? product.variations[Object.keys(product.variations)[0]] : product.price}
             hasVariations={product.variations && Object.keys(product.variations).length > 1 ? true : false} />

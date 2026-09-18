@@ -1,10 +1,7 @@
 import "./Navbar.css"
-import logotype from "../../assets/logotype1.png"
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 export default function Navbar() {
-
-  const navigate = useNavigate();
 
   return (
     <>

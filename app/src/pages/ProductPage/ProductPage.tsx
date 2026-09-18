@@ -105,6 +105,7 @@ export default function ProductPage() {
   const [extraIngredients, setExtraIngredients] = useState<BaseIngredients[]>([]);
   const [ingredientsType, setIngredientsType] = useState<keyof Ingredients | null>();
   const addedIngredients = useRef<any[]>([]);
+  let disabledFlagPanel = useRef(false);
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -129,35 +130,101 @@ export default function ProductPage() {
     }
   }
 
-  // Получаем все данные для отображения модалки
-  if (product) {
-    let descr = [];
-    let pr = 0;
-    let doughType: string | null = null;
-    let chosenOption = "1";
+  // Получаем все данные для отображения модалки (первая загрузка)
+  useEffect(() => {
+    if (product) {
+      let descr = [];
+      let pr = 0;
+      let doughType: string | null = null;
+      let chosenOption = "1";
 
-    if (!selectedFlag) {
-      if (product.variations) {
-        let productVariations = Object.keys(product.variations);
-        let variationsAmount = productVariations.length;
-        chosenOption = productVariations[0];
-        pr = product.variations[chosenOption]
+      if (!selectedFlag) {
+        if (product.variations) {
+          let productVariations = Object.keys(product.variations);
+          let variationsAmount = productVariations.length;
+          chosenOption = productVariations[0];
+          pr = product.variations[chosenOption]
 
-        if (variationsAmount > 1) {
-          chosenOption = productVariations[variationsAmount - 2];
-          pr = product.variations[productVariations[variationsAmount - 2]];
+          if (variationsAmount > 1) {
+            chosenOption = productVariations[variationsAmount - 2];
+            pr = product.variations[productVariations[variationsAmount - 2]];
+          }
+        }
+        else {
+          pr = product.price;
+        }
+
+        if (productType === "pizzas") {
+          um.current = "см";
+          descr.push(chosenOption + " см");
+          if (selectedDough) descr.push(selectedDough);
+          else {
+            doughType = "традиционное тесто";
+            descr.push("традиционное тесто");
+          }
+        }
+        else if (productType === "romes") {
+          um.current = "см";
+          doughType = "римское тесто";
+          descr.push(chosenOption + " см");
+          descr.push(doughType);
+        }
+        else if (productType === "drinks" || productType === "coffee-and-tea") {
+          um.current = "л";
+          descr.push(chosenOption + " л");
+        }
+        else descr.push(chosenOption + " шт");
+
+        if (product.grams) {
+          if (typeof product.grams === "number") descr.push(product.grams + " г");
+          else if (productType === "pizzas") {
+            if (doughType === "традиционное тесто") descr.push(product.grams["traditional"][chosenOption] + " г");
+            else if (doughType === "тонкое тесто") descr.push(product.grams["thin"][chosenOption] + " г")
+          }
+          else descr.push(product.grams[chosenOption] + " г");
+        }
+
+        setSelectedFlag(true);
+        setSelectPanel(chosenOption);
+        setSelectedDough(doughType);
+        setDescription(descr);
+        setPrice(pr);
+      }
+    }
+  }, [product])
+
+  useEffect(() => {
+
+    if (product) {
+      let descr = [];
+      let addedIngredientsPrice = 0;
+      let chosenOption = selectPanel;
+      let doughType = selectedDough;
+
+      if (extraIngredients) {
+        for (let i of extraIngredients) {
+          if (addedIngredients.current.includes(i.id)) addedIngredientsPrice += i.price;
         }
       }
+
+      if (product && product.variations && selectPanel) {
+        setPrice(product.variations[selectPanel] + addedIngredientsPrice);
+      }
       else {
-        pr = product.price;
+        setPrice(product.price + addedIngredientsPrice);
       }
 
       if (productType === "pizzas") {
         um.current = "см";
         descr.push(chosenOption + " см");
-        if (selectedDough) descr.push(selectedDough);
+        if (selectedDough && chosenOption && chosenOption in product.grams.thin) {
+          disabledFlagPanel.current = false;
+          descr.push(selectedDough);
+        }
         else {
           doughType = "традиционное тесто";
+          setSelectedDough(doughType);
+          disabledFlagPanel.current = true;
           descr.push("традиционное тесто");
         }
       }
@@ -173,23 +240,23 @@ export default function ProductPage() {
       }
       else descr.push(chosenOption + " шт");
 
-      if (product.grams) {
+      if (product.grams && chosenOption) {
         if (typeof product.grams === "number") descr.push(product.grams + " г");
         else if (productType === "pizzas") {
-          if (doughType === "традиционное тесто") descr.push(product.grams["traditional"][chosenOption] + " г");
+          if ((doughType === "традиционное тесто") || (doughType === "тонкое тесто" && chosenOption === "20")) {
+            descr.push(product.grams["traditional"][chosenOption] + " г");
+          }
           else if (doughType === "тонкое тесто") descr.push(product.grams["thin"][chosenOption] + " г")
         }
         else descr.push(product.grams[chosenOption] + " г");
       }
 
-      setSelectedFlag(true);
-      setSelectPanel(chosenOption);
-      setSelectedDough(doughType);
       setDescription(descr);
-      setPrice(pr);
-    }
-  }
 
+    }
+  }, [selectPanel, selectedDough])
+
+  // Добавление опций для ингредиентов
   useEffect(() => {
     let ingredientsType1: keyof Ingredients | null = null;
     if (product && product.extraIngredients) {
@@ -233,7 +300,16 @@ export default function ProductPage() {
       <RemoveScroll>
         <div className="modal-product-page">
           <div className="modal-card">
-            <img className="modal-card-product-img" src={`/images/${productType}/${product.id}.webp`} alt="" />
+            {productType === "pizzas" &&
+              <img className={`modal-card-product-img scale-${selectPanel}`} src={`/images/${productType}/${product.id}/${product.id}-${selectPanel}-${selectedDough === "традиционное тесто" ? "traditional" : "thin"}.webp`} alt="" />
+            }
+
+            {productType === "appetizers" &&
+              <img className={`modal-card-product-img scale-${selectPanel}`} src={`/images/${productType}/${product.id}/${product.id}${selectPanel !== "1" ? `-${selectPanel}` : ""}.webp`} alt="" />
+            }
+            {productType !== "pizzas" && productType !== "appetizers" &&
+              <img className={`modal-card-product-img scale-${selectPanel}`} src={`/images/${productType}/${product.id}/${product.id}.webp`} alt="" />
+            }
             <div className="modal-card-product-panel">
               <div className="modal-card-product-content">
                 <h2>{product.title}</h2>
@@ -251,21 +327,21 @@ export default function ProductPage() {
                 {productType === "pizzas" && <div className="button-option-panel">
                   <button className={selectedDough === "традиционное тесто" ? "active" : ""}
                     onClick={() => setSelectedDough("традиционное тесто")}>Традиционное</button>
-                  <button className={selectedDough === "тонкое тесто" ? "active" : ""}
+                  <button className={selectedDough === "тонкое тесто" ? "active" : disabledFlagPanel.current === true ? "disabled" : "24hf23hju"}
                     onClick={() => setSelectedDough("тонкое тесто")}>Тонкое</button>
                 </div>
                 }
                 {productType === "romes" && <div className="button-option-panel">
                   <button>Римское тесто</button>
-                  </div>
-                  }
+                </div>
+                }
                 {extraIngredients.length > 0 &&
                   <div className="add-ingredients-panel">
                     <h3>Добавить по вкусу</h3>
                     <div className="add-ingredients-grid">
                       {
                         extraIngredients.map((ingredient, index) => (
-                          <button key={index} className={`add-ingredients-card ${addedIngredients.current.includes(ingredient.id) ? "active" : "Ingre"}`} onClick={() => {changePriceWithIngredients(ingredient)}}>
+                          <button key={index} className={`add-ingredients-card ${addedIngredients.current.includes(ingredient.id) ? "active" : "Ingre"}`} onClick={() => { changePriceWithIngredients(ingredient) }}>
                             <img src={`/images/ingredients/${ingredientsType}/${ingredient.id}.png`} />
                             <span className="add-ingredients-card-title">{ingredient.title}</span>
                             <span className="add-ingredients-card-price">{ingredient.price} ₽</span>

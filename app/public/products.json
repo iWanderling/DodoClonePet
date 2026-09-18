@@ -43,7 +43,13 @@
       "extraIngredients": [
         "mozarella",
         "chalapenjo",
-        "chedder-parmesan"
+        "chedder-parmesan",
+        "red-onion",
+        "mushrooms",
+        "sweet-pepper",
+        "bacon",
+        "herbs",
+        "fresh-tomatoes"
       ],
       "excludedForThinDough": []
     },
@@ -90,7 +96,13 @@
       "extraIngredients": [
         "mozarella",
         "chalapenjo",
-        "chedder-parmesan"
+        "chedder-parmesan",
+        "red-onion",
+        "mushrooms",
+        "sweet-pepper",
+        "bacon",
+        "herbs",
+        "fresh-tomatoes"
       ],
       "excludedForThinDough": []
     },
@@ -134,45 +146,66 @@
       "extraIngredients": [
         "mozarella",
         "chalapenjo",
-        "chedder-parmesan"
+        "chedder-parmesan",
+        "red-onion",
+        "mushrooms",
+        "sweet-pepper",
+        "bacon",
+        "herbs",
+        "fresh-tomatoes"
       ],
       "excludedForThinDough": []
     },
     {
-      "id": "margarita",
-      "title": "Маргарита",
+      "id": "azu",
+      "title": "Азу по-татарски",
       "description": [
-        "Увеличенная порция моцареллы",
+        "Фирменный томатный соус",
+        "моцарелла",
+        "соус бургер",
+        "красный лук",
+        "говядина пряная",
         "томаты",
+        "чеснок",
         "итальянские травы",
-        "фирменный томатный соус"
+        "картофель по-деревенски",
+        "маринованные огурчики"
       ],
       "removableIngredients": [
-        "итальянские травы"
+        "итальянские травы",
+        "красный лук",
+        "говядина пряная",
+        "томаты",
+        "чеснок",
+        "картофель по-деревенски",
+        "маринованные огурчики"
       ],
       "grams": {
         "traditional": {
-          "20": 200,
           "25": 250,
           "30": 300,
           "35": 350
         },
         "thin": {
-          "25": 200,
           "30": 250,
           "35": 300
         }
       },
       "variations": {
-        "20": 319,
         "25": 429,
         "30": 539,
         "35": 649
       },
       "extraIngredients": [
+        "red-onion",
         "mozarella",
         "chalapenjo",
-        "chedder-parmesan"
+        "chedder-parmesan",
+        "mushrooms",
+        "sweet-pepper",
+        "bacon",
+        "herbs",
+        "fresh-tomatoes"
       ],
       "excludedForThinDough": []
     }
@@ -264,7 +297,7 @@
   ],
   "appetizers": [
     {
-      "id": "cheese-sticks-w-pesto",
+      "id": "cheese-sticks-pesto",
       "title": "Сырные палочки с песто",
       "description": "Легко делиться, вкусно есть: моцарелла и соус песто на пышном тесте. Чесночный соус идет в комплекте",
       "grams": {
@@ -301,20 +334,9 @@
       }
     },
     {
-      "id": "lunchbox-w-chicken-wings",
+      "id": "lunchbox-chicken-wings",
       "title": "Ланчбокс с куриными крыльями",
       "description": "Горячий сытный обед из куриных крылышек со специями и ароматом копчения, пряного картофеля из печи и соуса барбекю",
-      "grams": {
-        "1": 100
-      },
-      "variations": {
-        "1": 319
-      }
-    },
-    {
-      "id": "salad-vegetables-mix",
-      "title": "Салат Овощной микс",
-      "description": "Хрустящий салат айсберг, сочные томаты черри, перец, кубики брынзы, соус бальзамик и итальянские травы",
       "grams": {
         "1": 100
       },

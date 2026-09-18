@@ -28,6 +28,7 @@
 .header-panel-city-info {
   cursor: pointer;
   font-size: 17px;
+
   a {
     color: var(--dodo-color);
   }
@@ -72,9 +73,6 @@
     border-radius: 30px;
     padding: 10px 20px;
   }
-}
-
-.menu-navbar-block-titles {
 }
 
 .menu-navbar-button {

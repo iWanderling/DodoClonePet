@@ -29,6 +29,9 @@
   width: 420px;
   height: 420px;
   margin-left: 65px;
+  position: relative;
+  left: 1.5%;
+  transition: 0.3s;
 }
 
 .modal-card-product-panel {
@@ -41,7 +44,7 @@
   flex-direction: column;
 
   padding: 0;
-  overflow: hidden;
+
   max-height: calc(85vh - 30px - 20px);
 }
 
@@ -180,4 +183,24 @@
 .card-product-content-block {
   display: flex;
   flex-direction: column;
+}
+
+.disabled {
+  color: gray;
+}
+
+.scale-20 {
+  transform: scale(0.75);
+}
+
+.scale-25 {
+  transform: scale(0.90);
+}
+
+.scale-30 {
+  transform: scale(1.05);
+}
+
+.scale-35 {
+  transform: scale(1.2);
 }

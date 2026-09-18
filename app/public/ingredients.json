@@ -14,6 +14,36 @@
       "id": "chedder-parmesan",
       "title": "Чеддер и пармезан",
       "price": 119
+    },
+    {
+      "id": "herbs",
+      "title": "Итальянские травы",
+      "price": 119
+    },
+    {
+      "id": "fresh-tomatoes",
+      "title": "Свежие томаты",
+      "price": 119
+    },
+    {
+      "id": "sweet-pepper",
+      "title": "Сладкий перец",
+      "price": 119
+    },
+    {
+      "id": "mushrooms",
+      "title": "Грибы",
+      "price": 119
+    },
+    {
+      "id": "bacon",
+      "title": "Бекон",
+      "price": 119
+    },
+    {
+      "id": "red-onion",
+      "title": "Сладкий лук",
+      "price": 119
     }
   ],
   "drinks": [
