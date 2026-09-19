@@ -19,23 +19,25 @@
       "томаты",
       "чеснок"
     ],
-    "options": {
-      "kind": "traditional",
-      "price": 419,
-      "size": 25,
-      "imageSource": "images/pizzas/pesto/pesto-20-traditional.webp",
-      "availableToppings": [
-        "mozarella",
-        "chalapenjo",
-        "chedder-parmesan",
-        "red-onion",
-        "mushrooms",
-        "sweet-pepper",
-        "bacon",
-        "herbs",
-        "fresh-tomatoes"
-      ]
-    },
+    "options": [
+      {
+        "kind": "traditional",
+        "price": 419,
+        "size": 20,
+        "imageSource": "images/pizzas/pesto/pesto-20-traditional.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ]
+      }
+    ],
     "measurement_unit": "cm",
     "flag": "null"
   }

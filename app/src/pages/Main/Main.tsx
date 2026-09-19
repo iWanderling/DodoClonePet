@@ -4,65 +4,62 @@ import Card from "../../components/Card/Card"
 import { useState, useEffect, useRef } from "react";
 import { Link as ScrollLink } from "react-scroll"
 
+// Тип для меню (повторяет Product)
+type Menu = Product[];
 
-interface BaseProduct {
+// Универсальное описание для каждого товара
+interface Product {
+  id: string, // ID
+  title: string, // Название
+  type: string, // Тип товара (пицца, закуска, напиток)
+  inMenu: string[], // В каких разделах меню находится
+  description: string | string[], // Описание товара
+  isOptionalDescription: boolean, // Можно ли удалять ингредиенты из описания
+  removableOptionalDescription?: string[], // Какие ингредиенты можно удалять из описания
+  options: ProductOptions[], // Опции для товара (по размеру, количеству, типу и так далее)
+  measurement_unit: string, // Мера исчисления (в граммах, милилитрах, поштучно)
+  flag: string | null, // Флаг для плашки в меню (суперхит, скидка и так далее)
+}
+
+// Описание опций для каждого товара
+type ProductOptions = {
+  kind: string, // Тип (виды теста, закусок или одиночный тип)
+  price: number, // Цена
+  size: number, // Количество или размер
+  nutritionFacts?: { // Нутриенты ВКБЖУ
+    calories: number,
+    proteins: number,
+    fats: number,
+    carbohydrates: number,
+    weight: number
+  },
+  imageSource: string, // Ссылка на изображение
+  availableToppings?: string[], // Доступные для добавления начинки
+  excludedToppings?: string[] // Исключённые начинки для данной опции
+}
+
+// Тип данных для вывода товаров из определённого раздела меню
+interface MenuSectionOutputData {
   id: string,
   title: string,
-  description: string | string[],
-  price?: number
+  imageSource: string,
+  price: number,
+  hasOptions: boolean
 }
 
-// Record <string, number> => [20, 25, 30, 35]:number(optional)
-interface PizzaCard extends BaseProduct {
-  removableIngredients?: string[],
-  grams: {
-    traditional: Record<string, number>,
-    thin: Record<string, number>,
-  },
-  variations: Record<string, number>,
-  extraIngredients?: string[],
-  excludedForThinDough?: string[]
-}
-
-interface RomeCard extends BaseProduct {
-  grams: number,
-  removableIngredients?: string[],
-  extraIngredients?: string[]
-}
-
-interface ProductCard extends BaseProduct {
-  grams: number | Record<string, number>,
-  variations?: Record<string, number>
-}
-
-interface Menu {
-  ingredients: any,
-  pizzas: PizzaCard,
-  combos: any,
-  romes: RomeCard,
-  appetizers: ProductCard,
-  "coffee-and-tea": ProductCard,
-  drinks: ProductCard,
-  desserts: ProductCard,
-  breakfasts: ProductCard,
-  sauces: BaseProduct,
-  others: BaseProduct
-}
-
-
-const MENU_SECTIONS: { id: keyof Menu, heading: string }[] = [
-  { id: "pizzas", heading: "Пиццы" },
-  { id: "combos", heading: "Комбо" },
-  { id: "romes", heading: "Римские пиццы" },
-  { id: "appetizers", heading: "Закуски" },
-  { id: "coffee-and-tea", heading: "Кофе и чай" },
-  { id: "drinks", heading: "Напитки" },
-  { id: "breakfasts", heading: "Завтраки" },
-  { id: "desserts", heading: "Десерты" },
-  { id: "sauces", heading: "Соусы" },
-  { id: "others", heading: "Другие товары" }
+// Данные о разделах основного меню
+const MENU_SECTIONS = [
+  { id: "pizza", heading: "Пиццы" },
+  { id: "combo", heading: "Комбо" },
+  { id: "rome", heading: "Римские пиццы" },
+  { id: "appetizer", heading: "Закуски" },
+  { id: "coffee-tea", heading: "Кофе и чай" },
+  { id: "drink", heading: "Напитки" },
+  { id: "breakfast", heading: "Завтраки" },
+  { id: "dessert", heading: "Десерты" },
+  { id: "sauce", heading: "Соусы" },
+  { id: "other", heading: "Другие товары" }
 ]
-
 
 async function loadJson<T>(source: string): Promise<T> {
   const response = await (fetch(source));
@@ -70,24 +67,52 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 }
 
+function MenuSection({ heading, type, menu }: { heading: string, type: string, menu: Menu }) {
+  const sectionProducts: Product[] = menu.filter(p => p.type === type);
+  const outputData: MenuSectionOutputData[] = [];
 
-function MenuSection({ id, heading, data }: { id: string, heading: string, data: any[] }) {
+  for (let sectionProduct of sectionProducts) {
+    let productID = sectionProduct.id;
+    let productTitle = sectionProduct.title;
+    let productImageSource: string;
+    let productPrice: number;
+    let hasOptions = false;
 
-  let extraInfoTitleImg = "";
-  
-  if (id === "pizzas") extraInfoTitleImg = "-25-traditional";
+    let indexToFindImgPrice = 0;
+
+    if (sectionProduct.options.length > 1) {
+      indexToFindImgPrice = 1;
+      hasOptions = true;
+    }
+
+    console.log(sectionProduct.options);
+    productImageSource = sectionProduct.options[indexToFindImgPrice].imageSource;
+    productPrice = sectionProduct.options[indexToFindImgPrice].price;
+
+    let productData: MenuSectionOutputData = {
+      id: productID,
+      title: productTitle,
+      imageSource: productImageSource,
+      price: productPrice,
+      hasOptions: hasOptions
+    }
+
+    outputData.push(productData);
+  }
 
   return (
     <section className="menu-content-section">
-      <h1 className="menu-content-heading" id={id}>{heading}</h1>
+      <h1 className="menu-content-heading" id={type}>{heading}</h1>
       <div className="menu-content">
-        {data.map((product, index) => (
+        {outputData.map((product) => (
           <Card
-            key={index}
-            source={`/images/${(id === "coffee-and-tea" ? "drinks" : id)}/${product.id}/${product.id}${extraInfoTitleImg}.webp`}
+            key={product.id}
+            id={product.id}
+            imageSource={product.imageSource}
             title={product.title}
-            price={!product.price ? product.variations[Object.keys(product.variations)[0]] : product.price}
-            hasVariations={product.variations && Object.keys(product.variations).length > 1 ? true : false} />
+            price={product.price}
+            hasOptions={product.hasOptions}
+          />
         ))}
       </div>
     </section>
@@ -102,14 +127,16 @@ export default function Main() {
   const [showRightBtn, setShowRightBtn] = useState(true);
 
   useEffect(() => {
-    const fetchMenu = async () => {
+    const loader = async () => {
       setMenu(await loadJson<Menu>("/products.json"));
     };
-    fetchMenu();
+    loader();
   }, []);
 
+  // Переключатели (скролл-панель) для историй
   const contentRef = useRef<HTMLDivElement>(null);
 
+  // Вычисление позиции для скролл-кнопок
   const checkScrollPosition = () => {
     if (contentRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = contentRef.current;
@@ -118,8 +145,9 @@ export default function Main() {
       console.log(scrollLeft, scrollWidth, clientWidth);
       setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
     }
-  }
+  };
 
+  // Обработка скролла для историй влево
   const handleScrollLeft = () => {
     if (contentRef.current) {
       // clientWidth — это ширина видимого "окна" скролла
@@ -128,9 +156,9 @@ export default function Main() {
       contentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
       console.log(scrollStep);
     }
-
   };
 
+  // Обработка скролла для историй вправо
   const handleScrollRight = () => {
     if (contentRef.current) {
       const scrollStep = contentRef.current.clientWidth + 7;
@@ -139,9 +167,9 @@ export default function Main() {
     }
   };
 
-
   return (
     <>
+      {/* Панель с названием и выбранным городом */}
       <nav className="header-panel">
         <div className="left">
           <div className="header-panel-brand-block">
@@ -161,10 +189,9 @@ export default function Main() {
         </div>
       </nav>
 
+      {/* Раздел с историями */}
       <section className="story-block">
-
         {showLeftBtn && <button className="story-block-button prev" onClick={handleScrollLeft}>{"<"}</button>}
-
         <div className="story-block-content" ref={contentRef} onScroll={checkScrollPosition}>
           <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
@@ -175,11 +202,10 @@ export default function Main() {
           <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
         </div>
-
         {showRightBtn && <button className="story-block-button next" onClick={handleScrollRight}>{">"}</button>}
-
       </section>
 
+      {/* Раздел с навигационной панелью меню */}
       <nav className="menu-navbar">
         <div className="menu-navbar-block">
           <ul className="menu-navbar-block-titles">
@@ -197,19 +223,14 @@ export default function Main() {
         </div>
       </nav>
 
+      {/* Раздел с меню */}
       <main className="menu">
-
         <div className="menu-container">
-
           <div>
             {menu && MENU_SECTIONS.map((section) => {
-              const products = menu[section.id];
-              return (
-                <MenuSection key={section.id} heading={section.heading} id={section.id} data={products} />
-              )
+              return (<MenuSection key={section.id} heading={section.heading} type={section.id} menu={menu} />)
             })}
           </div>
-
           <aside className="sidebar">
             <div className="aside-img-container">
               <img src="/images/brand/aside1.webp" />
@@ -222,6 +243,7 @@ export default function Main() {
         </div>
       </main>
 
+      {/* Сторонние компоненты (ProductPage, Footer) */}
       <Outlet />
     </>
   )
