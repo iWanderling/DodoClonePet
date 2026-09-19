@@ -1,0 +1,14 @@
+[
+  {
+    "id": "tomatoes",
+    "title": "Свежие томаты",
+    "type": "food",
+    "imageSource": "images/ingredients/food/fresh-tomatoes.png",
+    "prices": {
+      "tiny": 39,
+      "small": 49,
+      "medium": 59,
+      "large": 79
+    }
+  }
+]

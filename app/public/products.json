@@ -36,6 +36,23 @@
           "herbs",
           "fresh-tomatoes"
         ]
+      },
+      {
+        "kind": "traditional",
+        "price": 549,
+        "size": 25,
+        "imageSource": "images/pizzas/pesto/pesto-25-traditional.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ]
       }
     ],
     "measurement_unit": "cm",

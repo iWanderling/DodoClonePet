@@ -9,7 +9,7 @@ export default function Card({ id, imageSource, title, price, hasOptions }:
 
   return (
     <>
-      <Link to={`products/${id}`}>
+      <Link to={`product/${id}`}>
         <div className="menu-card">
           <img src={imageSource} alt={title} />
           <span>{title}</span>

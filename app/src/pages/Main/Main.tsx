@@ -61,16 +61,19 @@ const MENU_SECTIONS = [
   { id: "other", heading: "Другие товары" }
 ]
 
+// Загрузка JSON
 async function loadJson<T>(source: string): Promise<T> {
   const response = await (fetch(source));
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
 }
 
+// Создание разделов для меню
 function MenuSection({ heading, type, menu }: { heading: string, type: string, menu: Menu }) {
   const sectionProducts: Product[] = menu.filter(p => p.type === type);
   const outputData: MenuSectionOutputData[] = [];
 
+  // Подготовка данных о товарах к выводу
   for (let sectionProduct of sectionProducts) {
     let productID = sectionProduct.id;
     let productTitle = sectionProduct.title;
@@ -85,10 +88,10 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
       hasOptions = true;
     }
 
-    console.log(sectionProduct.options);
     productImageSource = sectionProduct.options[indexToFindImgPrice].imageSource;
-    productPrice = sectionProduct.options[indexToFindImgPrice].price;
+    productPrice = sectionProduct.options[0].price;
 
+    // Подготовленные данные о товаре
     let productData: MenuSectionOutputData = {
       id: productID,
       title: productTitle,
@@ -119,8 +122,10 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
   )
 }
 
+// Компонент главного окна сайта
 export default function Main() {
 
+  // Создание состояний и загрузка данных меню
   const navigate = useNavigate();
   const [menu, setMenu] = useState<Menu>();
   const [showLeftBtn, setShowLeftBtn] = useState(false);

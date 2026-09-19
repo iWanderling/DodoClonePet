@@ -40,6 +40,7 @@ type ProductOptions = {
   excludedToppings?: string[] // Исключённые начинки для данной опции
 }
 
+// Описание топпингов
 type ProductToppings = {
   id: string,
   title: string,
@@ -51,14 +52,14 @@ type ProductToppings = {
     medium: number,
     large: number
   }
-}
+};
 
 // Загрузка JSON-данных
 async function loadJson<T>(source: string): Promise<T> {
   const response = await fetch(source);
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
-}
+};
 
 // Преобразование описания в строку (если необходимо)
 function descriptionConverter(description: string | string[]): string {
@@ -66,7 +67,7 @@ function descriptionConverter(description: string | string[]): string {
     return description.join(", ")
   }
   return description
-}
+};
 
 export default function ProductPage() {
 
@@ -76,24 +77,34 @@ export default function ProductPage() {
 
   // Хранение списка опций товара и доступных топпингов для него
   const [product, setProduct] = useState<Product>();
+  const productOptions = useRef<ProductOptions[]>([]);
   const [productToppings, setProductToppings] = useState<ProductToppings>();
 
   // Состояния типа товара и его размера/количества
   const [kind, setKind] = useState<string>();
   const [size, setSize] = useState<string>();
 
-  // Загрузка данных о товаре и !топпингах
+  // Загрузка данных о товаре и !топпингах(добавить)
   useEffect(() => {
     const loader = async () => {
       const menu = await loadJson<Menu>("/products.json");
+      const toppings = await loadJson<Toppings>("/toppings.json");
+
       setProduct(menu.find(p => p.id === productID));
     };
     loader();
   }, []);
 
-  return (
-  <>
-    13
-  </>
+  console.log(product);
+
+  return (product &&
+    <RemoveScroll>
+      <div className="modal-product-page">
+        <div className="modal-card">
+        </div>
+
+        <button className="close-modal" onClick={() => navigate("/")}>✖</button>
+      </div>
+    </RemoveScroll>
   )
 }
