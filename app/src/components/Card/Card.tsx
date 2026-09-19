@@ -1,18 +1,19 @@
 import './Card.css'
 import { Link, useNavigate } from 'react-router-dom'
 
-export default function Card({ source, title, price, hasVariations }: { source: string, title: string, price: number, hasVariations: boolean }) {
+
+export default function Card({ id, imageSource, title, price, hasOptions }:
+  { id: string, imageSource: string, title: string, price: number, hasOptions: boolean }) {
 
   const navigate = useNavigate();
-  let product_address_title = source.split("/")[3].split(".")[0];
 
   return (
     <>
-      <Link to={`/product/${product_address_title}`}>
+      <Link to={`products/${id}`}>
         <div className="menu-card">
-          <img src={source} alt={title} />
+          <img src={imageSource} alt={title} />
           <span>{title}</span>
-          <button onClick={() => navigate(`/product/${product_address_title}`)}>{hasVariations ? "от" : ""} {price} ₽</button>
+          <button onClick={() => navigate(`/product/${id}`)}>{hasOptions ? "от" : ""} {price} ₽</button>
         </div>
       </Link>
     </>

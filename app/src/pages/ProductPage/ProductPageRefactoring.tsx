@@ -1,11 +1,13 @@
 import "./ProductPage.css"
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
+import { useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
 
+
 // Тип для меню (повторяет Product)
-type Menu = Product;
-type Ingredients = null;
+type Menu = Product[];
+type Toppings = ProductToppings[];
 
 // Универсальное описание для каждого товара
 interface Product {
@@ -38,6 +40,19 @@ type ProductOptions = {
   excludedToppings?: string[] // Исключённые начинки для данной опции
 }
 
+type ProductToppings = {
+  id: string,
+  title: string,
+  type: string,
+  imageSource: string,
+  prices: {
+    tiny: number,
+    small: number,
+    medium: number,
+    large: number
+  }
+}
+
 // Загрузка JSON-данных
 async function loadJson<T>(source: string): Promise<T> {
   const response = await fetch(source);
@@ -55,8 +70,30 @@ function descriptionConverter(description: string | string[]): string {
 
 export default function ProductPage() {
 
+  // Для навигации и ID товара
   const navigate = useNavigate();
+  const productID = useParams()["product"];
 
-  return <>
+  // Хранение списка опций товара и доступных топпингов для него
+  const [product, setProduct] = useState<Product>();
+  const [productToppings, setProductToppings] = useState<ProductToppings>();
+
+  // Состояния типа товара и его размера/количества
+  const [kind, setKind] = useState<string>();
+  const [size, setSize] = useState<string>();
+
+  // Загрузка данных о товаре и !топпингах
+  useEffect(() => {
+    const loader = async () => {
+      const menu = await loadJson<Menu>("/products.json");
+      setProduct(menu.find(p => p.id === productID));
+    };
+    loader();
+  }, []);
+
+  return (
+  <>
+    13
   </>
+  )
 }
