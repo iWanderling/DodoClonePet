@@ -24,7 +24,7 @@
         "kind": "traditional",
         "price": 419,
         "size": 20,
-        "imageSource": "images/pizzas/pesto/pesto-20-traditional.webp",
+        "imageSource": "/images/pesto-20-traditional.webp",
         "availableToppings": [
           "mozarella",
           "chalapenjo",
@@ -41,7 +41,7 @@
         "kind": "traditional",
         "price": 549,
         "size": 25,
-        "imageSource": "images/pizzas/pesto/pesto-25-traditional.webp",
+        "imageSource": "/images/0198bf4437a872c0b4538bc1485015b1.webp",
         "availableToppings": [
           "mozarella",
           "chalapenjo",

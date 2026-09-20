@@ -77,30 +77,69 @@ export default function ProductPage() {
 
   // Хранение списка опций товара и доступных топпингов для него
   const [product, setProduct] = useState<Product>();
-  const productOptions = useRef<ProductOptions[]>([]);
+  const [currentOption, setCurrentOption] = useState<ProductOptions>();
   const [productToppings, setProductToppings] = useState<ProductToppings>();
 
   // Состояния типа товара и его размера/количества
-  const [kind, setKind] = useState<string>();
-  const [size, setSize] = useState<string>();
+  const [allKinds, setAllKinds] = useState<Set<string>>();
+  const [allSizes, setAllSizes] = useState<Set<number>>();
 
-  // Загрузка данных о товаре и !топпингах(добавить)
+  const [kind, setKind] = useState<string>();
+  const [size, setSize] = useState<number>();
+
+  // Загрузка данных о товаре и топпингах (добавить)
   useEffect(() => {
     const loader = async () => {
-      const menu = await loadJson<Menu>("/products.json");
-      const toppings = await loadJson<Toppings>("/toppings.json");
+      const menu = await loadJson<Menu>("/data/products.json");
+      const toppings = await loadJson<Toppings>("/data/toppings.json");
 
       setProduct(menu.find(p => p.id === productID));
     };
     loader();
   }, []);
 
-  console.log(product);
+  // Загрузка текущей опции товара
+  useEffect(() => {
+    if (product) {
+      let sizes: Set<number> = new Set(product.options.map(option => option.size));
+      let sortedSizes: number[] = [...sizes].sort((a, b) => a - b); // finished here
 
-  return (product &&
+      setCurrentOption(product.options[product.options.length - 1]);
+    }
+    if (currentOption) {
+      setKind(currentOption.kind);
+      setSize(currentOption.size);
+    }
+  }, [product])
+
+  return (product && currentOption &&
     <RemoveScroll>
       <div className="modal-product-page">
         <div className="modal-card">
+          <img className="modal-card-product-img" src={currentOption.imageSource} alt={product.title} />
+          <div className="modal-card-product-panel">
+            <div className="modal-card-product-content">
+              <h2>{product.title}</h2>
+              <div className="modal-card-product-panel-type">{descriptionConverter(product.description)}</div>
+              {size &&
+                <div className="button-option-panel">
+                  {product.options.map((option) => (
+                    <button className={option.size === size ? "active" : ""}
+                      key={size}>{option.size}{product.measurement_unit}</button>
+                  ))}
+                </div>
+              }
+              {kind &&
+                <div className="button-option-panel">
+                  {product.options.map((option) => (
+                    <button className={option.kind === kind ? "active" : ""}
+                      key={kind}>{option.kind}</button>
+                  ))}
+                </div>
+              }
+            </div>
+            <button className="button-cart">В корзину за {currentOption.price} Р</button>
+          </div>
         </div>
 
         <button className="close-modal" onClick={() => navigate("/")}>✖</button>

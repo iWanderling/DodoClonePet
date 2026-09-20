@@ -133,7 +133,7 @@ export default function Main() {
 
   useEffect(() => {
     const loader = async () => {
-      setMenu(await loadJson<Menu>("/products.json"));
+      setMenu(await loadJson<Menu>("/data/products.json"));
     };
     loader();
   }, []);
@@ -178,7 +178,7 @@ export default function Main() {
       <nav className="header-panel">
         <div className="left">
           <div className="header-panel-brand-block">
-            <img className="header-panel-img" src="/images/brand/dodologos.webp" />
+            <img className="header-panel-img" src="/images/dodologo.webp" />
             <div className="header-panel-img-text">
               <div className="title">додо пицца</div>
               <div className="description">1492 пиццерии в 26 странах</div>
@@ -238,7 +238,7 @@ export default function Main() {
           </div>
           <aside className="sidebar">
             <div className="aside-img-container">
-              <img src="/images/brand/aside1.webp" />
+              <img src="images/c8d4e73f9a1b6c5e0f2a4b8d7e9f1c3a.webp" />
               <div className="aside-img-text-block">
                 <div className="title">В приложении выгоднее</div>
                 <div className="description">Скачайте и получайте бонусы</div>
