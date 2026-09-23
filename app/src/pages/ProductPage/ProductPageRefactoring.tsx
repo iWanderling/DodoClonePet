@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react"
 import { useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
 
-
 // Тип для меню (повторяет Product)
 type Menu = Product[];
 type Toppings = ProductToppings[];
@@ -19,6 +18,8 @@ interface Product {
   isOptionalDescription: boolean, // Можно ли удалять ингредиенты из описания
   removableOptionalDescription?: string[], // Какие ингредиенты можно удалять из описания
   options: ProductOptions[], // Опции для товара (по размеру, количеству, типу и так далее)
+  defaultKind: string,  // Тип товара по умолчанию
+  defaultSize: number, // Размер / количество по умолчанию
   measurement_unit: string, // Мера исчисления (в граммах, милилитрах, поштучно)
   flag: string | null, // Флаг для плашки в меню (суперхит, скидка и так далее)
 }
@@ -69,6 +70,17 @@ function descriptionConverter(description: string | string[]): string {
   return description
 };
 
+// Найти опцию товара по выбранному размеру/количеству и типу
+function optionFinder(product: Product, size: number, kind: string): ProductOptions | undefined {
+  return product.options.find(option => (option.size === size && option.kind === kind))
+}
+
+// Сделать строку с заглавной буквы
+function toCapitalize(string: string) {
+  if (!string) return "";
+  return string[0].toUpperCase() + string.slice(1);
+}
+
 export default function ProductPage() {
 
   // Для навигации и ID товара
@@ -79,10 +91,12 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product>();
   const [currentOption, setCurrentOption] = useState<ProductOptions>();
   const [productToppings, setProductToppings] = useState<ProductToppings>();
+  const [translator, setTranslator] = useState<any>();
 
   // Состояния типа товара и его размера/количества
-  const [allKinds, setAllKinds] = useState<Set<string>>();
-  const [allSizes, setAllSizes] = useState<Set<number>>();
+  const [allKinds, setAllKinds] = useState<string[]>();
+  const [disabledKinds, setDisabledKinds] = useState<string[]>([]);
+  const [allSizes, setAllSizes] = useState<number[]>();
 
   const [kind, setKind] = useState<string>();
   const [size, setSize] = useState<number>();
@@ -92,26 +106,62 @@ export default function ProductPage() {
     const loader = async () => {
       const menu = await loadJson<Menu>("/data/products.json");
       const toppings = await loadJson<Toppings>("/data/toppings.json");
+      const translator = await loadJson<any>("/data/translator.json");
 
       setProduct(menu.find(p => p.id === productID));
+      setTranslator(translator);
     };
     loader();
   }, []);
 
-  // Загрузка текущей опции товара
+  // Загрузка всех опций выбора размера и типа товара, установка варианта по умолчанию
   useEffect(() => {
     if (product) {
       let sizes: Set<number> = new Set(product.options.map(option => option.size));
-      let sortedSizes: number[] = [...sizes].sort((a, b) => a - b); // finished here
+      let sortedSizes: number[] = [...sizes].sort((a, b) => a - b);
+      setAllSizes(sortedSizes);
 
-      setCurrentOption(product.options[product.options.length - 1]);
+      let kinds: Set<string> = new Set(product.options.map(option => option.kind));
+      let sortedKinds: string[] = [...kinds].sort();
+      setAllKinds(sortedKinds);
+
+      setSize(product.defaultSize);
+      setKind(product.defaultKind);
+
+      if (size && kind) setCurrentOption(optionFinder(product, size, kind));
     }
+  }, [product]);
+
+  // Изменение размера и типа товара
+  useEffect(() => {
     if (currentOption) {
       setKind(currentOption.kind);
       setSize(currentOption.size);
     }
-  }, [product])
+  }, [currentOption]);
 
+  // Установка новой выбранной опции
+  useEffect(() => {
+
+    if (product && size && kind) {
+      let notAvailableKinds: string[] = [];
+      let foundOption = optionFinder(product, size, kind);
+
+      if (foundOption) setCurrentOption(foundOption);
+
+      if (allKinds) {
+        for (let k of allKinds) {
+          let randomOption = optionFinder(product, size, k);
+          if (!randomOption) notAvailableKinds.push(k);
+          else if (!foundOption) setCurrentOption(randomOption);
+        }
+      }
+
+      setDisabledKinds(notAvailableKinds);
+    }
+  }, [size, kind]);
+
+  // HTML
   return (product && currentOption &&
     <RemoveScroll>
       <div className="modal-product-page">
@@ -121,19 +171,21 @@ export default function ProductPage() {
             <div className="modal-card-product-content">
               <h2>{product.title}</h2>
               <div className="modal-card-product-panel-type">{descriptionConverter(product.description)}</div>
-              {size &&
+              {size && allSizes &&
                 <div className="button-option-panel">
-                  {product.options.map((option) => (
-                    <button className={option.size === size ? "active" : ""}
-                      key={size}>{option.size}{product.measurement_unit}</button>
+                  {allSizes.map((s) => (
+                    <button className={s === size ? "active" : ""}
+                      key={s} onClick={() => setSize(s)} >{s} {translator[product.measurement_unit]}</button>
                   ))}
                 </div>
               }
-              {kind &&
+              {kind && allKinds &&
                 <div className="button-option-panel">
-                  {product.options.map((option) => (
-                    <button className={option.kind === kind ? "active" : ""}
-                      key={kind}>{option.kind}</button>
+                  {allKinds.map((k) => (
+                    <button className={(disabledKinds.find(dk => k === dk)) ? "disabled" : (k === kind) ? "active" : ""}
+                      key={k} onClick={(disabledKinds.find(dk => k === dk)) ? () => { } : () => setKind(k)}>
+                      {toCapitalize(translator[k])}
+                    </button>
                   ))}
                 </div>
               }

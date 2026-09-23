@@ -147,7 +147,6 @@ export default function Main() {
       const { scrollLeft, scrollWidth, clientWidth } = contentRef.current;
 
       setShowLeftBtn(scrollLeft > 2);
-      console.log(scrollLeft, scrollWidth, clientWidth);
       setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
     }
   };

@@ -39,7 +39,7 @@
       },
       {
         "kind": "traditional",
-        "price": 549,
+        "price": 559,
         "size": 25,
         "imageSource": "/images/0198bf4437a872c0b4538bc1485015b1.webp",
         "availableToppings": [
@@ -53,8 +53,27 @@
           "herbs",
           "fresh-tomatoes"
         ]
+      },
+      {
+        "kind": "thin",
+        "price": 559,
+        "size": 25,
+        "imageSource": "/images/019a8aa9de1b718eba653c9f5fb1d65f.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ]
       }
     ],
+    "defaultKind": "traditional",
+    "defaultSize": 25,
     "measurement_unit": "cm",
     "flag": "null"
   }
