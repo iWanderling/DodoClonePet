@@ -31,10 +31,10 @@ type ProductOptions = {
   size: number, // Количество или размер
   nutritionFacts?: { // Нутриенты ВКБЖУ
     calories: number,
-    proteins: number,
-    fats: number,
-    carbohydrates: number,
-    weight: number
+    proteins?: number,
+    fats?: number,
+    carbohydrates?: number,
+    weight?: number
   },
   imageSource: string, // Ссылка на изображение
   availableToppings?: string[], // Доступные для добавления начинки
@@ -170,16 +170,22 @@ export default function ProductPage() {
           <div className="modal-card-product-panel">
             <div className="modal-card-product-content">
               <h2>{product.title}</h2>
-              <div className="modal-card-product-panel-type">{descriptionConverter(product.description)}</div>
+              <div className="modal-card-product-panel-type">
+                {currentOption.size} {translator[product.measurement_unit]}
+                {currentOption.kind != "single" ? ", " + translator[currentOption.kind] : ""}
+                {currentOption.nutritionFacts?.weight ? ", " + currentOption.nutritionFacts.weight + " " + translator["g"] : ""}
+
+                </div>
+              <div className="modal-card-product-panel-description">{descriptionConverter(product.description)}</div>
               {size && allSizes &&
                 <div className="button-option-panel">
                   {allSizes.map((s) => (
-                    <button className={s === size ? "active" : ""}
+                    <button className={(s === size && allSizes.length > 1) ? "active" : ""}
                       key={s} onClick={() => setSize(s)} >{s} {translator[product.measurement_unit]}</button>
                   ))}
                 </div>
               }
-              {kind && allKinds &&
+              {kind && allKinds && allKinds[0] != "single" && 
                 <div className="button-option-panel">
                   {allKinds.map((k) => (
                     <button className={(disabledKinds.find(dk => k === dk)) ? "disabled" : (k === kind) ? "active" : ""}

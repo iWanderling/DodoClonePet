@@ -88,8 +88,8 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
       hasOptions = true;
     }
 
-    productImageSource = sectionProduct.options[indexToFindImgPrice].imageSource;
-    productPrice = sectionProduct.options[0].price;
+    productImageSource = sectionProduct.options[0].imageSource;
+    productPrice = sectionProduct.options[0].price; // отредактировать (минимальная цена);
 
     // Подготовленные данные о товаре
     let productData: MenuSectionOutputData = {

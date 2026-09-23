@@ -35,7 +35,14 @@
           "bacon",
           "herbs",
           "fresh-tomatoes"
-        ]
+        ],
+        "nutritionFacts": {
+          "calories": 267.7,
+          "proteins": 12.2,
+          "fats": 11.2,
+          "carbohydrates": 29.6,
+          "weight": 250
+        }
       },
       {
         "kind": "traditional",
@@ -70,11 +77,99 @@
           "herbs",
           "fresh-tomatoes"
         ]
+      },
+      {
+        "kind": "traditional",
+        "price": 879,
+        "size": 30,
+        "imageSource": "/images/019a8aaa69cc7601b28736b1ebe7fc25.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ]
+      },
+      {
+        "kind": "thin",
+        "price": 879,
+        "size": 30,
+        "imageSource": "/images/019a8aaa6f637925bede03b63207f1c5.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ]
       }
     ],
     "defaultKind": "traditional",
-    "defaultSize": 25,
+    "defaultSize": 30,
     "measurement_unit": "cm",
     "flag": "null"
+  },
+  {
+    "id": "sanset-vishnya-golubika",
+    "title": "Сансет вишня-голубика",
+    "description": "Иссиня-багряный закат со вкусом вишни и голубики в вашем стакане",
+    "type": "drink",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "single",
+        "size": 0.3,
+        "price": 219,
+        "imageSource": "/images/019d0055c1f170c8b6d5fac0c5f9fa2c.webp",
+        "nutritionFacts": {
+          "calories": 52.7,
+          "carbohydrates": 13.2,
+          "weight": 370
+        }
+      },
+      {
+        "kind": "single",
+        "size": 0.6,
+        "price": 389,
+        "imageSource": "/images/019d0055d0e973b3866208da79554e54.webp",
+        "nutritionFacts": {
+          "calories": 52.7,
+          "carbohydrates": 13.2,
+          "weight": 370
+        }
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 0.3,
+    "measurement_unit": "l",
+    "flag": null
+  },
+  {
+    "id": "dodo-ot-podvala-do-milliarda",
+    "title": "Додо: от подвала до миллиарда",
+    "description": "Новая книга Додо: вдохновляющая история успеха и людей, которые сделали это возможным",
+    "type": "other",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "single",
+        "size": 1,
+        "price": 569,
+        "imageSource": "/images/0197d1524c157360ac33b46b35ad97db.webp"
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 1,
+    "measurement_unit": "pcs",
+    "flag": null
   }
 ]
