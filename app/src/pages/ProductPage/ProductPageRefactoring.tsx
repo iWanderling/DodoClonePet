@@ -39,6 +39,7 @@ type ProductOptions = {
   imageSource: string, // Ссылка на изображение
   availableToppings?: string[], // Доступные для добавления начинки
   excludedToppings?: string[] // Исключённые начинки для данной опции
+  toppingSize?: keyof ProductToppings["prices"]; // Размер начинки (для изменения цены)
 }
 
 // Описание топпингов
@@ -90,7 +91,9 @@ export default function ProductPage() {
   // Хранение списка опций товара и доступных топпингов для него
   const [product, setProduct] = useState<Product>();
   const [currentOption, setCurrentOption] = useState<ProductOptions>();
-  const [productToppings, setProductToppings] = useState<ProductToppings>();
+  const [productToppings, setProductToppings] = useState<Toppings>();
+  const [allToppings, setAllToppings] = useState<Toppings>();
+  const [selectedToppings, setSelectedToppings] = useState<Toppings>([]);
   const [translator, setTranslator] = useState<any>();
 
   // Состояния типа товара и его размера/количества
@@ -109,12 +112,14 @@ export default function ProductPage() {
       const translator = await loadJson<any>("/data/translator.json");
 
       setProduct(menu.find(p => p.id === productID));
+      setAllToppings(toppings);
       setTranslator(translator);
     };
     loader();
   }, []);
 
-  // Загрузка всех опций выбора размера и типа товара, установка варианта по умолчанию
+  // Загрузка всех опций выбора размера и типа товара, 
+  // его начинок, установка варианта по умолчанию
   useEffect(() => {
     if (product) {
       let sizes: Set<number> = new Set(product.options.map(option => option.size));
@@ -129,8 +134,17 @@ export default function ProductPage() {
       setKind(product.defaultKind);
 
       if (size && kind) setCurrentOption(optionFinder(product, size, kind));
+      if (allToppings && currentOption && currentOption.availableToppings) {
+        let toppings: ProductToppings[] = [];
+
+        for (let topping_id of currentOption.availableToppings) {
+          let topping = allToppings.find((t) => t.id === topping_id);
+          if (topping) toppings.push(topping);
+        }
+        setProductToppings(toppings);
+      }
     }
-  }, [product]);
+  }, [product, allToppings]);
 
   // Изменение размера и типа товара
   useEffect(() => {
@@ -138,11 +152,20 @@ export default function ProductPage() {
       setKind(currentOption.kind);
       setSize(currentOption.size);
     }
+    if (allToppings && currentOption && currentOption.availableToppings) {
+      let toppings: ProductToppings[] = [];
+
+      for (let topping_id of currentOption.availableToppings) {
+        let topping = allToppings.find((t) => t.id === topping_id);
+        if (topping) toppings.push(topping);
+      }
+      setProductToppings(toppings);
+    }
+    else setProductToppings([]);
   }, [currentOption]);
 
   // Установка новой выбранной опции
   useEffect(() => {
-
     if (product && size && kind) {
       let notAvailableKinds: string[] = [];
       let foundOption = optionFinder(product, size, kind);
@@ -175,8 +198,8 @@ export default function ProductPage() {
                 {currentOption.kind != "single" ? ", " + translator[currentOption.kind] : ""}
                 {currentOption.nutritionFacts?.weight ? ", " + currentOption.nutritionFacts.weight + " " + translator["g"] : ""}
 
-                </div>
-              <div className="modal-card-product-panel-description">{descriptionConverter(product.description)}</div>
+              </div>
+              <div className="modal-card-product-panel-description">{toCapitalize(descriptionConverter(product.description))}</div>
               {size && allSizes &&
                 <div className="button-option-panel">
                   {allSizes.map((s) => (
@@ -185,23 +208,48 @@ export default function ProductPage() {
                   ))}
                 </div>
               }
-              {kind && allKinds && allKinds[0] != "single" && 
+              {kind && allKinds && allKinds[0] != "single" &&
                 <div className="button-option-panel">
                   {allKinds.map((k) => (
-                    <button className={(disabledKinds.find(dk => k === dk)) ? "disabled" : (k === kind) ? "active" : ""}
+                    <button className={(disabledKinds.find(dk => k === dk)) ? "disabled" : (k === kind && allKinds.length > 1) ? "active" : ""}
                       key={k} onClick={(disabledKinds.find(dk => k === dk)) ? () => { } : () => setKind(k)}>
                       {toCapitalize(translator[k])}
                     </button>
                   ))}
                 </div>
               }
+              {productToppings && productToppings.length > 0 &&
+                <div className="add-ingredients-panel">
+                  <h3>Добавить по вкусу</h3>
+                  <div className="add-ingredients-grid">
+                    {
+                      productToppings.map((topping, index) => (
+                        <button key={index}
+                          className={`add-ingredients-card ${selectedToppings && selectedToppings.find((t) => t === topping) ? "active" : ""}`}
+                          onClick={() => {
+                            setSelectedToppings((prev) => prev.includes(topping) ?
+                              prev.filter((t) => t !== topping) :
+                              [...prev, topping])
+                          }}>
+                          <img src={topping.imageSource} />
+                          <span className="add-ingredients-card-title">{topping.title}</span>
+                          <span className="add-ingredients-card-price">
+                            {(currentOption.toppingSize) ? topping.prices[currentOption.toppingSize] : topping.prices["tiny"]} ₽</span>
+                        </button>)
+                      )
+                    }
+                  </div>
+                </div>
+              }
             </div>
-            <button className="button-cart">В корзину за {currentOption.price} Р</button>
+            <button className="button-cart">В корзину за {(!currentOption.toppingSize) ? currentOption.price :
+            currentOption.price + selectedToppings.reduce
+              ((sum, topping) => sum + (currentOption.toppingSize ? topping.prices[currentOption.toppingSize] : 0), 0)} Р</button>
           </div>
         </div>
 
         <button className="close-modal" onClick={() => navigate("/")}>✖</button>
       </div>
-    </RemoveScroll>
+    </RemoveScroll >
   )
 }

@@ -51,7 +51,7 @@ interface MenuSectionOutputData {
 const MENU_SECTIONS = [
   { id: "pizza", heading: "Пиццы" },
   { id: "combo", heading: "Комбо" },
-  { id: "rome", heading: "Римские пиццы" },
+  { id: "roman", heading: "Римские пиццы" },
   { id: "appetizer", heading: "Закуски" },
   { id: "coffee-tea", heading: "Кофе и чай" },
   { id: "drink", heading: "Напитки" },

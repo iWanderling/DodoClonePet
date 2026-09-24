@@ -1,14 +1,74 @@
 [
   {
-    "id": "tomatoes",
+    "id": "fresh-tomatoes",
     "title": "Свежие томаты",
     "type": "food",
-    "imageSource": "images/ingredients/food/fresh-tomatoes.png",
+    "imageSource": "/images/0199152a8428737d9f6b19c1b2329749.png",
     "prices": {
       "tiny": 39,
       "small": 49,
       "medium": 59,
       "large": 79
+    }
+  },
+  {
+    "id": "mozarella",
+    "title": "Моцарелла",
+    "type": "food",
+    "imageSource": "/images/0199ae74f2fd783b8fb21bb0af7d09e6.png",
+    "prices": {
+      "tiny": 69,
+      "small": 99,
+      "medium": 125,
+      "large": 149
+    }
+  },
+  {
+    "id": "mushrooms",
+    "title": "Шампиньоны",
+    "type": "food",
+    "imageSource": "/images/0199152bfda5723f8bbecc43a35f83f1.png",
+    "prices": {
+      "tiny": 49,
+      "small": 69,
+      "medium": 79,
+      "large": 99
+    }
+  },
+  {
+    "id": "red-onion",
+    "title": "Красный лук",
+    "type": "food",
+    "imageSource": "/images/0199ae747c85710abcf2950497834b01.png",
+    "prices": {
+      "tiny": 49,
+      "small": 69,
+      "medium": 79,
+      "large": 99
+    }
+  },
+  {
+    "id": "sweet-pepper",
+    "title": "Сладкий перец",
+    "type": "food",
+    "imageSource": "/images/0199152da27677a7a24a41b4eddfcedd.png",
+    "prices": {
+      "tiny": 49,
+      "small": 69,
+      "medium": 79,
+      "large": 99
+    }
+  },
+   {
+    "id": "pineapple",
+    "title": "Сочные ананасы",
+    "type": "food",
+    "imageSource": "/images/0199152b81587495b19ba8008c567f5d.png",
+    "prices": {
+      "tiny": 49,
+      "small": 69,
+      "medium": 79,
+      "large": 99
     }
   }
 ]
