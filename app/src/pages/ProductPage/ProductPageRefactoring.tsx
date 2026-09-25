@@ -40,6 +40,7 @@ type ProductOptions = {
   availableToppings?: string[], // Доступные для добавления начинки
   excludedToppings?: string[] // Исключённые начинки для данной опции
   toppingSize?: keyof ProductToppings["prices"]; // Размер начинки (для изменения цены)
+  extraDescriptionInfo?: string, // Дополнительная информация для описания
 }
 
 // Описание топпингов
@@ -195,7 +196,7 @@ export default function ProductPage() {
               <h2>{product.title}</h2>
               <div className="modal-card-product-panel-type">
                 {currentOption.size} {translator[product.measurement_unit]}
-                {currentOption.kind != "single" ? ", " + translator[currentOption.kind] : ""}
+                {currentOption.kind != "single" ? ", " + translator[currentOption.kind] + (currentOption.extraDescriptionInfo ? " " + translator[currentOption.extraDescriptionInfo] : "") : ""}
                 {currentOption.nutritionFacts?.weight ? ", " + currentOption.nutritionFacts.weight + " " + translator["g"] : ""}
 
               </div>

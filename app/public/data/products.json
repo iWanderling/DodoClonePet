@@ -26,7 +26,6 @@
         "size": 20,
         "imageSource": "/images/pesto-20-traditional.webp",
         "availableToppings": [
-
           "chalapenjo",
           "chedder-parmesan",
           "red-onion",
@@ -44,6 +43,7 @@
           "carbohydrates": 29.6,
           "weight": 250
         },
+        "extraDescriptionInfo": "dough",
         "toppingSize": "tiny"
       },
       {
@@ -70,7 +70,8 @@
           "carbohydrates": 30.1,
           "weight": 400
         },
-        "toppingSize": "small"
+        "toppingSize": "small",
+        "extraDescriptionInfo": "dough"
       },
       {
         "kind": "thin",
@@ -96,6 +97,7 @@
           "carbohydrates": 25.8,
           "weight": 300
         },
+        "extraDescriptionInfo": "dough",
         "toppingSize": "small"
       },
       {
@@ -122,6 +124,7 @@
           "carbohydrates": 29.1,
           "weight": 610
         },
+        "extraDescriptionInfo": "dough",
         "toppingSize": "medium"
       },
       {
@@ -141,6 +144,7 @@
           "herbs",
           "fresh-tomatoes"
         ],
+        "extraDescriptionInfo": "dough",
         "nutritionFacts": {
           "calories": 270.9,
           "proteins": 12.2,
@@ -162,6 +166,7 @@
           "carbohydrates": 29.4,
           "weight": 810
         },
+        "extraDescriptionInfo": "dough",
         "availableToppings": [
           "mozarella",
           "chalapenjo",
@@ -188,6 +193,7 @@
           "carbohydrates": 24.7,
           "weight": 740
         },
+        "extraDescriptionInfo": "dough",
         "availableToppings": [
           "mozarella",
           "chalapenjo",
@@ -243,6 +249,7 @@
           "carbohydrates": 32.8,
           "weight": 420
         },
+        "extraDescriptionInfo": "dough",
         "imageSource": "/images/0198c34dfcc67080b7f471fccffd4afe.webp"
       }
     ],
