@@ -41,6 +41,7 @@ type ProductOptions = {
   excludedToppings?: string[] // Исключённые начинки для данной опции
   toppingSize?: keyof ProductToppings["prices"]; // Размер начинки (для изменения цены)
   extraDescriptionInfo?: string, // Дополнительная информация для описания
+  imageScale?: number // Дополнительная информация для изменения размера изображения
 }
 
 // Описание топпингов
@@ -190,7 +191,7 @@ export default function ProductPage() {
     <RemoveScroll>
       <div className="modal-product-page">
         <div className="modal-card">
-          <img className="modal-card-product-img" src={currentOption.imageSource} alt={product.title} />
+          <img className={`modal-card-product-img ${currentOption.imageScale ? "scale-" + currentOption.imageScale.toString() : ""}`} src={currentOption.imageSource} alt={product.title} />
           <div className="modal-card-product-panel">
             <div className="modal-card-product-content">
               <h2>{product.title}</h2>

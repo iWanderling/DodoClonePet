@@ -44,6 +44,7 @@
           "weight": 250
         },
         "extraDescriptionInfo": "dough",
+        "imageScale": 20,
         "toppingSize": "tiny"
       },
       {
@@ -71,6 +72,7 @@
           "weight": 400
         },
         "toppingSize": "small",
+        "imageScale": 25,
         "extraDescriptionInfo": "dough"
       },
       {
@@ -98,6 +100,7 @@
           "weight": 300
         },
         "extraDescriptionInfo": "dough",
+        "imageScale": 25,
         "toppingSize": "small"
       },
       {
@@ -125,6 +128,7 @@
           "weight": 610
         },
         "extraDescriptionInfo": "dough",
+        "imageScale": 30,
         "toppingSize": "medium"
       },
       {
@@ -152,6 +156,7 @@
           "carbohydrates": 25.4,
           "weight": 490
         },
+        "imageScale": 30,
         "toppingSize": "medium"
       },
       {
@@ -179,6 +184,7 @@
           "herbs",
           "fresh-tomatoes"
         ],
+        "imageScale": 35,
         "toppingSize": "large"
       },
       {
@@ -206,6 +212,7 @@
           "herbs",
           "fresh-tomatoes"
         ],
+        "imageScale": 35,
         "toppingSize": "large"
       }
     ],
