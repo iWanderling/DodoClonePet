@@ -244,7 +244,7 @@ export default function ProductPage() {
             </div>
             <button className="button-cart">В корзину за {(!currentOption.toppingSize) ? currentOption.price :
             currentOption.price + selectedToppings.reduce
-              ((sum, topping) => sum + (currentOption.toppingSize ? topping.prices[currentOption.toppingSize] : 0), 0)} Р</button>
+              ((sum, topping) => sum + ((currentOption.toppingSize && currentOption.availableToppings?.includes(topping.id)) ? topping.prices[currentOption.toppingSize] : 0), 0)} Р</button>
           </div>
         </div>
 
