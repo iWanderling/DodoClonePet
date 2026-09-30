@@ -1,394 +1,269 @@
 import "./ProductPage.css"
-import { useNavigate, useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { useState, useEffect, useRef } from "react"
+import { useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
 
+// Тип для меню (повторяет Product)
+type Menu = Product[];
+type Toppings = ProductToppings[];
 
+// Универсальное описание для каждого товара
 interface Product {
+  id: string, // ID
+  title: string, // Название
+  type: string, // Тип товара (пицца, закуска, напиток)
+  inMenu: string[], // В каких разделах меню находится
+  description: string | string[], // Описание товара
+  isOptionalDescription: boolean, // Можно ли удалять ингредиенты из описания
+  removableOptionalDescription?: string[], // Какие ингредиенты можно удалять из описания
+  options: ProductOptions[], // Опции для товара (по размеру, количеству, типу и так далее)
+  defaultKind: string,  // Тип товара по умолчанию
+  defaultSize: number, // Размер / количество по умолчанию
+  measurement_unit: string, // Мера исчисления (в граммах, милилитрах, поштучно)
+  flag: string | null, // Флаг для плашки в меню (суперхит, скидка и так далее)
+}
+
+// Описание опций для каждого товара
+type ProductOptions = {
+  kind: string, // Тип (виды теста, закусок или одиночный тип)
+  price: number, // Цена
+  size: number, // Количество или размер
+  nutritionFacts?: { // Нутриенты ВКБЖУ
+    calories: number,
+    proteins?: number,
+    fats?: number,
+    carbohydrates?: number,
+    weight?: number
+  },
+  imageSource: string, // Ссылка на изображение
+  availableToppings?: string[], // Доступные для добавления начинки
+  excludedToppings?: string[] // Исключённые начинки для данной опции
+  toppingSize?: keyof ProductToppings["prices"]; // Размер начинки (для изменения цены)
+  extraDescriptionInfo?: string, // Дополнительная информация для описания
+  imageScale?: number // Дополнительная информация для изменения размера изображения
+}
+
+// Описание топпингов
+type ProductToppings = {
   id: string,
   title: string,
   type: string,
-  inMenu: string[],
-  description: string | string[],
-  isOptionalDescription: boolean,
-  removableOptionalDescription: string[],
-  options: ProductOptions[],
-  measurement_unit: string,
-  flag: string | null,
-}
-
-
-type ProductOptions = {
-  kind: string,
-  price: number,
-  size: number,
-  nutritionFacts?: {
-    calories: number,
-    proteins: number,
-    fats: number,
-    carbohydrates: number,
-    weight: number
-  },
   imageSource: string,
-  availableToppings?: string[],
-  excludedToppings?: string[]
-}
+  prices: {
+    tiny: number,
+    small: number,
+    medium: number,
+    large: number
+  }
+};
 
-
-interface BaseProduct {
-  id: string,
-  title: string,
-  description: string | string[],
-  price?: number
-}
-
-// Record <string, number> => [20, 25, 30, 35]:number(optional)
-interface PizzaCard extends BaseProduct {
-  removableIngredients?: string[],
-  grams: {
-    traditional: Record<string, number>,
-    thin: Record<string, number>,
-  },
-  variations: Record<string, number>,
-  extraIngredients?: string[],
-  excludedForThinDough?: string[]
-}
-
-interface RomeCard extends BaseProduct {
-  grams: number,
-  removableIngredients?: string[],
-  extraIngredients?: string[]
-}
-
-interface ProductCard extends BaseProduct {
-  grams: number | Record<string, number>,
-  variations?: Record<string, number>
-}
-
-interface ComboCard { }
-
+// Загрузка JSON-данных
 async function loadJson<T>(source: string): Promise<T> {
-  const response = await (fetch(source));
+  const response = await fetch(source);
   if (!response.ok) throw Error("Ошибка загрузки данных :(");
   return await response.json();
-}
+};
 
-function getProductInfo(menu: Menu, ID: string): any {
-  for (const [key, products] of Object.entries(menu))
-    for (const product of products) {
-      if (product.id === ID) return [key, product]
-    }
-  return null;
-}
-
-function convertDescriptionToText(description: string | string[]): string {
+// Преобразование описания в строку (если необходимо)
+function descriptionConverter(description: string | string[]): string {
   if (Array.isArray(description)) {
     return description.join(", ")
   }
-  return description;
+  return description
+};
+
+// Найти опцию товара по выбранному размеру/количеству и типу
+function optionFinder(product: Product, size: number, kind: string): ProductOptions | undefined {
+  return product.options.find(option => (option.size === size && option.kind === kind))
 }
 
-interface Menu {
-  ingredients: any,
-  pizzas: PizzaCard,
-  combos: any,
-  romes: RomeCard,
-  appetizers: ProductCard,
-  "coffee-and-tea": ProductCard,
-  drinks: ProductCard,
-  desserts: ProductCard,
-  breakfasts: ProductCard,
-  sauces: BaseProduct,
-  others: BaseProduct
+// Сделать строку с заглавной буквы
+function toCapitalize(string: string) {
+  if (!string) return "";
+  return string[0].toUpperCase() + string.slice(1);
 }
-
-interface BaseIngredients {
-  id: string,
-  title: string,
-  price: number,
-}
-
-interface Ingredients {
-  food: BaseIngredients[],
-  drinks: BaseIngredients[]
-}
-
 
 export default function ProductPage() {
 
+  // Для навигации и ID товара
   const navigate = useNavigate();
-  const location = useLocation();
+  const productID = useParams()["product"];
 
-  // Данные о меню и доп. ингредиентах для блюд и напитков
-  const [menu, setMenu] = useState<Menu>();
-  const [ingredients, setIngredients] = useState<Ingredients>();
+  // Хранение списка опций товара и доступных топпингов для него
+  const [product, setProduct] = useState<Product>();
+  const [currentOption, setCurrentOption] = useState<ProductOptions>();
+  const [productToppings, setProductToppings] = useState<Toppings>();
+  const [allToppings, setAllToppings] = useState<Toppings>();
+  const [selectedToppings, setSelectedToppings] = useState<Toppings>([]);
+  const [translator, setTranslator] = useState<any>();
 
-  // Панели с кнопками для выбора диаметра/количества/типа и теста для пиццы
-  const [selectPanel, setSelectPanel] = useState<string>();
-  const [selectedFlag, setSelectedFlag] = useState<boolean>(false);
-  const [selectedDough, setSelectedDough] = useState<string | null>(null);
+  // Состояния типа товара и его размера/количества
+  const [allKinds, setAllKinds] = useState<string[]>();
+  const [disabledKinds, setDisabledKinds] = useState<string[]>([]);
+  const [allSizes, setAllSizes] = useState<number[]>();
 
-  // Единица измерения для панели с выбором
-  const um = useRef("шт");
+  const [kind, setKind] = useState<string>();
+  const [size, setSize] = useState<number>();
 
-  // Описание (граммовки, количество и т.п.), цена, доп. ингредиенты
-  const [description, setDescription] = useState<string[]>([]);
-  const [price, setPrice] = useState<number>(0);
-  const [extraIngredients, setExtraIngredients] = useState<BaseIngredients[]>([]);
-  const [ingredientsType, setIngredientsType] = useState<keyof Ingredients | null>();
-  const addedIngredients = useRef<any[]>([]);
-  let disabledFlagPanel = useRef(false);
+  const [removedOptions, setRemovedOptions] = useState<string[]>([]);
 
+  // Загрузка данных о товаре и топпингах (добавить)
   useEffect(() => {
-    const fetchMenu = async () => {
-      setMenu(await loadJson<Menu>("/products.json"));
-      setIngredients(await loadJson<Ingredients>("/ingredients.json"));
+    const loader = async () => {
+      const menu = await loadJson<Menu>("/data/products.json");
+      const toppings = await loadJson<Toppings>("/data/toppings.json");
+      const translator = await loadJson<any>("/data/translator.json");
+
+      setProduct(menu.find(p => p.id === productID));
+      setAllToppings(toppings);
+      setTranslator(translator);
     };
-    fetchMenu();
+    loader();
   }, []);
 
-  // Данные о выбранном товаре
-  const productID = location.pathname.split('/')[2];
-  let productInfo: [keyof Menu, any] | null = null;
-  let productType: keyof Menu | null = null;
-  let product: any | null = null;
-
-  // Загрузка данных о товаре
-  if (menu) {
-    productInfo = getProductInfo(menu, productID);
-    if (productInfo) {
-      productType = productInfo[0];
-      product = productInfo[1];
-    }
-  }
-
-  // Получаем все данные для отображения модалки (первая загрузка)
+  // Загрузка всех опций выбора размера и типа товара, 
+  // его начинок, установка варианта по умолчанию
   useEffect(() => {
     if (product) {
-      let descr = [];
-      let pr = 0;
-      let doughType: string | null = null;
-      let chosenOption = "1";
+      let sizes: Set<number> = new Set(product.options.map(option => option.size));
+      let sortedSizes: number[] = [...sizes].sort((a, b) => a - b);
+      setAllSizes(sortedSizes);
 
-      if (!selectedFlag) {
-        if (product.variations) {
-          let productVariations = Object.keys(product.variations);
-          let variationsAmount = productVariations.length;
-          chosenOption = productVariations[0];
-          pr = product.variations[chosenOption]
+      let kinds: Set<string> = new Set(product.options.map(option => option.kind));
+      let sortedKinds: string[] = [...kinds].sort();
+      setAllKinds(sortedKinds);
 
-          if (variationsAmount > 1) {
-            chosenOption = productVariations[variationsAmount - 2];
-            pr = product.variations[productVariations[variationsAmount - 2]];
-          }
-        }
-        else {
-          pr = product.price;
-        }
+      setSize(product.defaultSize);
+      setKind(product.defaultKind);
 
-        if (productType === "pizzas") {
-          um.current = "см";
-          descr.push(chosenOption + " см");
-          if (selectedDough) descr.push(selectedDough);
-          else {
-            doughType = "традиционное тесто";
-            descr.push("традиционное тесто");
-          }
-        }
-        else if (productType === "romes") {
-          um.current = "см";
-          doughType = "римское тесто";
-          descr.push(chosenOption + " см");
-          descr.push(doughType);
-        }
-        else if (productType === "drinks" || productType === "coffee-and-tea") {
-          um.current = "л";
-          descr.push(chosenOption + " л");
-        }
-        else descr.push(chosenOption + " шт");
+      if (size && kind) setCurrentOption(optionFinder(product, size, kind));
+      if (allToppings && currentOption && currentOption.availableToppings) {
+        let toppings: ProductToppings[] = [];
 
-        if (product.grams) {
-          if (typeof product.grams === "number") descr.push(product.grams + " г");
-          else if (productType === "pizzas") {
-            if (doughType === "традиционное тесто") descr.push(product.grams["traditional"][chosenOption] + " г");
-            else if (doughType === "тонкое тесто") descr.push(product.grams["thin"][chosenOption] + " г")
-          }
-          else descr.push(product.grams[chosenOption] + " г");
+        for (let topping_id of currentOption.availableToppings) {
+          let topping = allToppings.find((t) => t.id === topping_id);
+          if (topping) toppings.push(topping);
         }
-
-        setSelectedFlag(true);
-        setSelectPanel(chosenOption);
-        setSelectedDough(doughType);
-        setDescription(descr);
-        setPrice(pr);
+        setProductToppings(toppings);
       }
     }
-  }, [product])
+  }, [product, allToppings]);
 
+  // Изменение размера и типа товара
   useEffect(() => {
-
-    if (product) {
-      let descr = [];
-      let addedIngredientsPrice = 0;
-      let chosenOption = selectPanel;
-      let doughType = selectedDough;
-
-      if (extraIngredients) {
-        for (let i of extraIngredients) {
-          if (addedIngredients.current.includes(i.id)) addedIngredientsPrice += i.price;
-        }
-      }
-
-      if (product && product.variations && selectPanel) {
-        setPrice(product.variations[selectPanel] + addedIngredientsPrice);
-      }
-      else {
-        setPrice(product.price + addedIngredientsPrice);
-      }
-
-      if (productType === "pizzas") {
-        um.current = "см";
-        descr.push(chosenOption + " см");
-        if (selectedDough && chosenOption && chosenOption in product.grams.thin) {
-          disabledFlagPanel.current = false;
-          descr.push(selectedDough);
-        }
-        else {
-          doughType = "традиционное тесто";
-          setSelectedDough(doughType);
-          disabledFlagPanel.current = true;
-          descr.push("традиционное тесто");
-        }
-      }
-      else if (productType === "romes") {
-        um.current = "см";
-        doughType = "римское тесто";
-        descr.push(chosenOption + " см");
-        descr.push(doughType);
-      }
-      else if (productType === "drinks" || productType === "coffee-and-tea") {
-        um.current = "л";
-        descr.push(chosenOption + " л");
-      }
-      else descr.push(chosenOption + " шт");
-
-      if (product.grams && chosenOption) {
-        if (typeof product.grams === "number") descr.push(product.grams + " г");
-        else if (productType === "pizzas") {
-          if ((doughType === "традиционное тесто") || (doughType === "тонкое тесто" && chosenOption === "20")) {
-            descr.push(product.grams["traditional"][chosenOption] + " г");
-          }
-          else if (doughType === "тонкое тесто") descr.push(product.grams["thin"][chosenOption] + " г")
-        }
-        else descr.push(product.grams[chosenOption] + " г");
-      }
-
-      setDescription(descr);
-
+    if (currentOption) {
+      setKind(currentOption.kind);
+      setSize(currentOption.size);
     }
-  }, [selectPanel, selectedDough])
+    if (allToppings && currentOption && currentOption.availableToppings) {
+      let toppings: ProductToppings[] = [];
 
-  // Добавление опций для ингредиентов
+      for (let topping_id of currentOption.availableToppings) {
+        let topping = allToppings.find((t) => t.id === topping_id);
+        if (topping) toppings.push(topping);
+      }
+      setProductToppings(toppings);
+    }
+    else setProductToppings([]);
+  }, [currentOption]);
+
+  // Установка новой выбранной опции
   useEffect(() => {
-    let ingredientsType1: keyof Ingredients | null = null;
-    if (product && product.extraIngredients) {
-      let extrIngr = [];
-      console.log(productType);
-      if (productType && ["pizzas", "romes"].includes(productType)) ingredientsType1 = "food";
-      else if (productType && ["coffee-and-tea", "drinks"].includes(productType)) ingredientsType1 = "drinks";
+    if (product && size && kind) {
+      let notAvailableKinds: string[] = [];
+      let foundOption = optionFinder(product, size, kind);
 
-      console.log(productType, ingredientsType1);
-      if (ingredients && ingredientsType1) {
+      if (foundOption) setCurrentOption(foundOption);
 
-        for (let ei of product.extraIngredients) {
-          for (let i of ingredients[ingredientsType1]) {
-            if (ei === i.id) extrIngr.push(i);
-          }
+      if (allKinds) {
+        for (let k of allKinds) {
+          let randomOption = optionFinder(product, size, k);
+          if (!randomOption) notAvailableKinds.push(k);
+          else if (!foundOption) setCurrentOption(randomOption);
         }
       }
 
-      setExtraIngredients(extrIngr);
-      setIngredientsType(ingredientsType1);
+      setDisabledKinds(notAvailableKinds);
     }
-  }, [ingredients]);
+  }, [size, kind]);
 
-  if (productType === "coffee-and-tea") productType = "drinks";
+  // HTML
+  return (product && currentOption &&
+    <RemoveScroll>
+      <div className="modal-product-page">
+        <div className="modal-card">
+          <img className={`modal-card-product-img ${currentOption.imageScale ? "scale-" + currentOption.imageScale.toString() : ""}`} src={currentOption.imageSource} alt={product.title} />
+          <div className="modal-card-product-panel">
+            <div className="modal-card-product-content">
+              <h2>{product.title}</h2>
+              <div className="modal-card-product-panel-type">
+                {currentOption.size} {translator[product.measurement_unit]}
+                {currentOption.kind != "single" ? ", " + translator[currentOption.kind] + (currentOption.extraDescriptionInfo ? " " + translator[currentOption.extraDescriptionInfo] : "") : ""}
+                {currentOption.nutritionFacts?.weight ? ", " + currentOption.nutritionFacts.weight + " " + translator["g"] : ""}
 
-  function changePriceWithIngredients(ingredient: BaseIngredients): void {
-    let ingredientPrice = ingredient.price;
-
-    if (!addedIngredients.current.includes(ingredient.id)) {
-      addedIngredients.current.push(ingredient.id);
-    } else {
-      addedIngredients.current = addedIngredients.current.filter(i => i !== ingredient.id);
-      ingredientPrice = -ingredientPrice;
-    }
-
-    setPrice((prev) => prev + ingredientPrice)
-  }
-
-  return (product &&
-    <>
-      <RemoveScroll>
-        <div className="modal-product-page">
-          <div className="modal-card">
-            {productType === "pizzas" &&
-              <img className={`modal-card-product-img scale-${selectPanel}`} src={`/images/${productType}/${product.id}/${product.id}-${selectPanel}-${selectedDough === "традиционное тесто" ? "traditional" : "thin"}.webp`} alt="" />
-            }
-
-            {productType === "appetizers" &&
-              <img className={`modal-card-product-img scale-${selectPanel}`} src={`/images/${productType}/${product.id}/${product.id}${selectPanel !== "1" ? `-${selectPanel}` : ""}.webp`} alt="" />
-            }
-            {productType !== "pizzas" && productType !== "appetizers" &&
-              <img className={`modal-card-product-img scale-${selectPanel}`} src={`/images/${productType}/${product.id}/${product.id}.webp`} alt="" />
-            }
-            <div className="modal-card-product-panel">
-              <div className="modal-card-product-content">
-                <h2>{product.title}</h2>
-                <div className="modal-card-product-panel-type">{description.join(", ")}</div>
-                <div className="modal-card-product-panel-description">{convertDescriptionToText(product.description)}</div>
-                {product.variations && <div className="button-option-panel">
-                  {Object.keys(product.variations).map((key) => (
-                    (key === selectPanel && Object.keys(product.variations).length > 1 ?
-                      <button className="active" key={key}>{key} {um.current}</button> :
-                      <button key={key} onClick={() => setSelectPanel(key)} >{key} {um.current}</button>
-                    )
+              </div>
+              <div className="modal-card-product-panel-description">
+                {product.isOptionalDescription && Array.isArray(product.description) &&
+                  product.description.map((i) => (
+                    (product.removableOptionalDescription && product.removableOptionalDescription.find(r => r === i) ?
+                      <a className={(removedOptions.includes(i) ? "removed" : "not-removed")}>{i} <button
+                        onClick={() => setRemovedOptions((prev) => prev.includes(i) ? prev.filter(ri => ri !== i) : [...prev, i])}
+                        style={{ "width": "inherit", "height": "inherit" }}>
+                          o</button>, </a> : `${i}, `)))
+                }
+                {!Array.isArray(product.description) && toCapitalize(descriptionConverter(product.description))}
+              </div>
+              {size && allSizes &&
+                <div className="button-option-panel">
+                  {allSizes.map((s) => (
+                    <button className={(s === size && allSizes.length > 1) ? "active" : ""}
+                      key={s} onClick={() => setSize(s)} >{s} {translator[product.measurement_unit]}</button>
                   ))}
                 </div>
-                }
-                {productType === "pizzas" && <div className="button-option-panel">
-                  <button className={selectedDough === "традиционное тесто" ? "active" : ""}
-                    onClick={() => setSelectedDough("традиционное тесто")}>Традиционное</button>
-                  <button className={selectedDough === "тонкое тесто" ? "active" : disabledFlagPanel.current === true ? "disabled" : "24hf23hju"}
-                    onClick={() => setSelectedDough("тонкое тесто")}>Тонкое</button>
+              }
+              {kind && allKinds && allKinds[0] != "single" &&
+                <div className="button-option-panel">
+                  {allKinds.map((k) => (
+                    <button className={(disabledKinds.find(dk => k === dk)) ? "disabled" : (k === kind && allKinds.length > 1) ? "active" : ""}
+                      key={k} onClick={(disabledKinds.find(dk => k === dk)) ? () => { } : () => setKind(k)}>
+                      {toCapitalize(translator[k])}
+                    </button>
+                  ))}
                 </div>
-                }
-                {productType === "romes" && <div className="button-option-panel">
-                  <button>Римское тесто</button>
+              }
+              {productToppings && productToppings.length > 0 &&
+                <div className="add-ingredients-panel">
+                  <h3>Добавить по вкусу</h3>
+                  <div className="add-ingredients-grid">
+                    {
+                      productToppings.map((topping, index) => (
+                        <button key={index}
+                          className={`add-ingredients-card ${selectedToppings && selectedToppings.find((t) => t === topping) ? "active" : ""}`}
+                          onClick={() => {
+                            setSelectedToppings((prev) => prev.includes(topping) ?
+                              prev.filter((t) => t !== topping) :
+                              [...prev, topping])
+                          }}>
+                          <img src={topping.imageSource} />
+                          <span className="add-ingredients-card-title">{topping.title}</span>
+                          <span className="add-ingredients-card-price">
+                            {(currentOption.toppingSize) ? topping.prices[currentOption.toppingSize] : topping.prices["tiny"]} ₽</span>
+                        </button>)
+                      )
+                    }
+                  </div>
                 </div>
-                }
-                {extraIngredients.length > 0 &&
-                  <div className="add-ingredients-panel">
-                    <h3>Добавить по вкусу</h3>
-                    <div className="add-ingredients-grid">
-                      {
-                        extraIngredients.map((ingredient, index) => (
-                          <button key={index} className={`add-ingredients-card ${addedIngredients.current.includes(ingredient.id) ? "active" : "Ingre"}`} onClick={() => { changePriceWithIngredients(ingredient) }}>
-                            <img src={`/images/ingredients/${ingredientsType}/${ingredient.id}.png`} />
-                            <span className="add-ingredients-card-title">{ingredient.title}</span>
-                            <span className="add-ingredients-card-price">{ingredient.price} ₽</span>
-                          </button>
-                        ))
-                      }
-                    </div>
-                  </div>}
-              </div>
-              <button className="button-cart">В корзину за {price} Р</button>
+              }
             </div>
+            <button className="button-cart">В корзину за {(!currentOption.toppingSize) ? currentOption.price :
+              currentOption.price + selectedToppings.reduce
+                ((sum, topping) => sum + ((currentOption.toppingSize && currentOption.availableToppings?.includes(topping.id)) ? topping.prices[currentOption.toppingSize] : 0), 0)} ₽</button>
           </div>
-          <button className="close-modal" onClick={() => navigate("/")}>✖</button>
         </div>
-      </RemoveScroll >
-    </>
+
+        <button className="close-modal" onClick={() => navigate("/")}>✖</button>
+      </div>
+    </RemoveScroll >
   )
 }
