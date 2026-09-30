@@ -107,6 +107,7 @@ export default function ProductPage() {
   const [size, setSize] = useState<number>();
 
   const [removedOptions, setRemovedOptions] = useState<string[]>([]);
+  const [nutritionOpened, setNutritionOpened] = useState<boolean>(false);
 
   // Загрузка данных о товаре и топпингах (добавить)
   useEffect(() => {
@@ -196,7 +197,15 @@ export default function ProductPage() {
           <img className={`modal-card-product-img ${currentOption.imageScale ? "scale-" + currentOption.imageScale.toString() : ""}`} src={currentOption.imageSource} alt={product.title} />
           <div className="modal-card-product-panel">
             <div className="modal-card-product-content">
-              <h2>{product.title}</h2>
+              <h2>{product.title}
+                <button style={{ "width": "inherit", "height": "inherit" }} className="nutrition-facts-button" onClick={() => setNutritionOpened(prev => !prev)}>O</button></h2>
+              {nutritionOpened ? <div className="nutrition-facts-block">
+                Пищевая ценность на 100 г <br/>
+                {currentOption.nutritionFacts &&
+                  Object.entries(currentOption.nutritionFacts).map((key, index) => (
+                    <span key={index}>{toCapitalize(translator[key[0]])}: {key[1]} {key[0] === "calories" ? translator["ccal"] : translator["g"]} <br/></span>))
+                }
+              </div> : ""}
               <div className="modal-card-product-panel-type">
                 {currentOption.size} {translator[product.measurement_unit]}
                 {currentOption.kind != "single" ? ", " + translator[currentOption.kind] + (currentOption.extraDescriptionInfo ? " " + translator[currentOption.extraDescriptionInfo] : "") : ""}
@@ -210,7 +219,7 @@ export default function ProductPage() {
                       <a className={(removedOptions.includes(i) ? "removed" : "not-removed")}>{i} <button
                         onClick={() => setRemovedOptions((prev) => prev.includes(i) ? prev.filter(ri => ri !== i) : [...prev, i])}
                         style={{ "width": "inherit", "height": "inherit" }}>
-                          o</button>, </a> : `${i}, `)))
+                        o</button>, </a> : `${i}, `)))
                 }
                 {!Array.isArray(product.description) && toCapitalize(descriptionConverter(product.description))}
               </div>

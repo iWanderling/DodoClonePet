@@ -209,5 +209,7 @@
   color: rgb(96, 95, 95);
 }
 
-.not-removed {
+.nutrition-facts-block {
+  background-color: rgba(226, 226, 226, 0.8)
+
 }
