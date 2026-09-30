@@ -1,0 +1,387 @@
+[
+  {
+    "id": "pesto",
+    "title": "Песто",
+    "type": "pizza",
+    "description": [
+      "цыпленок",
+      "соус песто",
+      "кубики брынзы",
+      "томаты",
+      "моцарелла",
+      "фирменный соус альфредо"
+    ],
+    "isOptionalDescription": true,
+    "removableOptionalDescription": [
+      "цыпленок",
+      "кубики брынзы",
+      "томаты"
+    ],
+    "options": [
+      {
+        "kind": "traditional",
+        "price": 419,
+        "size": 20,
+        "imageSource": "/images/pesto-20-traditional.webp",
+        "availableToppings": [
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "pineapple",
+          "fresh-tomatoes"
+        ],
+        "nutritionFacts": {
+          "calories": 267.7,
+          "proteins": 12.2,
+          "fats": 11.2,
+          "carbohydrates": 29.6,
+          "weight": 250
+        },
+        "extraDescriptionInfo": "dough",
+        "imageScale": 20,
+        "toppingSize": "tiny"
+      },
+      {
+        "kind": "traditional",
+        "price": 559,
+        "size": 25,
+        "imageSource": "/images/0198bf4437a872c0b4538bc1485015b1.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "pineapple",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ],
+        "nutritionFacts": {
+          "calories": 269.2,
+          "proteins": 11.1,
+          "fats": 10.8,
+          "carbohydrates": 30.1,
+          "weight": 400
+        },
+        "toppingSize": "small",
+        "imageScale": 25,
+        "extraDescriptionInfo": "dough"
+      },
+      {
+        "kind": "thin",
+        "price": 559,
+        "size": 25,
+        "imageSource": "/images/019a8aa9de1b718eba653c9f5fb1d65f.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "pineapple",
+          "herbs",
+          "fresh-tomatoes"
+        ],
+        "nutritionFacts": {
+          "calories": 283.6,
+          "proteins": 13.9,
+          "fats": 13.9,
+          "carbohydrates": 25.8,
+          "weight": 300
+        },
+        "extraDescriptionInfo": "dough",
+        "imageScale": 25,
+        "toppingSize": "small"
+      },
+      {
+        "kind": "traditional",
+        "price": 879,
+        "size": 30,
+        "imageSource": "/images/019a8aaa69cc7601b28736b1ebe7fc25.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "mushrooms",
+          "pineapple",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ],
+        "nutritionFacts": {
+          "calories": 263.6,
+          "proteins": 10.9,
+          "fats": 10.7,
+          "carbohydrates": 29.1,
+          "weight": 610
+        },
+        "extraDescriptionInfo": "dough",
+        "imageScale": 30,
+        "toppingSize": "medium"
+      },
+      {
+        "kind": "thin",
+        "price": 879,
+        "size": 30,
+        "imageSource": "/images/019a8aaa6f637925bede03b63207f1c5.webp",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "pineapple",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ],
+        "extraDescriptionInfo": "dough",
+        "nutritionFacts": {
+          "calories": 270.9,
+          "proteins": 12.2,
+          "fats": 12.5,
+          "carbohydrates": 25.4,
+          "weight": 490
+        },
+        "imageScale": 30,
+        "toppingSize": "medium"
+      },
+      {
+        "kind": "traditional",
+        "size": 35,
+        "price": 989,
+        "imageSource": "/images/0198bf445d4c71ee80a8061bc891ea23.webp",
+        "nutritionFacts": {
+          "calories": 265.3,
+          "proteins": 11.3,
+          "fats": 10.6,
+          "carbohydrates": 29.4,
+          "weight": 810
+        },
+        "extraDescriptionInfo": "dough",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "pineapple",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ],
+        "imageScale": 35,
+        "toppingSize": "large"
+      },
+      {
+        "kind": "thin",
+        "size": 35,
+        "price": 989,
+        "imageSource": "/images/0198bf4462a974ab8614a57b5cf5798f.webp",
+        "nutritionFacts": {
+          "calories": 250.7,
+          "proteins": 11.4,
+          "fats": 11.0,
+          "carbohydrates": 24.7,
+          "weight": 740
+        },
+        "extraDescriptionInfo": "dough",
+        "availableToppings": [
+          "mozarella",
+          "chalapenjo",
+          "chedder-parmesan",
+          "red-onion",
+          "pineapple",
+          "mushrooms",
+          "sweet-pepper",
+          "bacon",
+          "herbs",
+          "fresh-tomatoes"
+        ],
+        "imageScale": 35,
+        "toppingSize": "large"
+      }
+    ],
+    "defaultKind": "traditional",
+    "defaultSize": 30,
+    "measurement_unit": "cm",
+    "flag": "null"
+  },
+  {
+    "id": "arriva-roman",
+    "title": "Римская Аррива!",
+    "type": "roman",
+    "description": [
+      "острые колбаски чоризо",
+      "цыпленок",
+      "томаты",
+      "соус бургер",
+      "сладкий перец",
+      "красный лук",
+      "моцарелла",
+      "соус ранч",
+      "чеснок"
+    ],
+    "isOptionalDescription": true,
+    "removableOptionalDescription": [
+      "острые колбаски чоризо",
+      "цыпленок",
+      "томаты",
+      "сладкий перец",
+      "красный лук"
+    ],
+    "options": [
+      {
+        "kind": "roman",
+        "size": 25,
+        "price": 689,
+        "nutritionFacts": {
+          "calories": 291.5,
+          "proteins": 10.9,
+          "fats": 13.0,
+          "carbohydrates": 32.8,
+          "weight": 420
+        },
+        "extraDescriptionInfo": "dough",
+        "imageSource": "/images/0198c34dfcc67080b7f471fccffd4afe.webp"
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 25,
+    "measurement_unit": "cm",
+    "flag": null
+  },
+  {
+    "id": "poket-picca-chorizo-barbekyu",
+    "type": "appetizer",
+    "title": "Покет-пицца чоризо барбекю",
+    "description": [
+      "тесто",
+      "острые колбаски чоризо",
+      "пикантная пепперони",
+      "моцарелла",
+      "красный лук",
+      "маринованные огурчики",
+      "соус бургер",
+      "соус барбекю"
+    ],
+    "isOptionalDescription": true,
+    "removableOptionalDescription": [
+      "острые колбаски чоризо",
+      "красный лук",
+      "пикантная пепперони",
+      "маринованные огурчики"
+    ],
+    "options": [
+      {
+        "kind": "single",
+        "size": 1,
+        "imageSource": "/images/01a07ceb4d76785b9f6fa0edd37a8983.webp",
+        "price": 289,
+        "nutritionFacts": {
+          "calories": 317.5,
+          "proteins": 11.6,
+          "fats": 13.2,
+          "carbohydrates": 38.0,
+          "weight": 200
+        }
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 1,
+    "flag": null,
+    "measurement_unit": "pcs"
+  },
+  {
+    "id": "sanset-vishnya-golubika",
+    "title": "Сансет вишня-голубика",
+    "description": "Иссиня-багряный закат со вкусом вишни и голубики в вашем стакане",
+    "type": "drink",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "single",
+        "size": 0.3,
+        "price": 219,
+        "imageSource": "/images/019d0055c1f170c8b6d5fac0c5f9fa2c.webp",
+        "nutritionFacts": {
+          "calories": 52.7,
+          "carbohydrates": 13.2,
+          "weight": 370
+        }
+      },
+      {
+        "kind": "single",
+        "size": 0.6,
+        "price": 389,
+        "imageSource": "/images/019d0055d0e973b3866208da79554e54.webp",
+        "nutritionFacts": {
+          "calories": 52.7,
+          "carbohydrates": 13.2,
+          "weight": 570
+        }
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 0.3,
+    "measurement_unit": "l",
+    "flag": null
+  },
+  {
+    "id": "tort-shokoladno-malinovyi",
+    "title": "Торт шоколадно-малиновый",
+    "type": "dessert",
+    "description": "Поговорим про нежность: воздушно-шоколадные коржи, легкий крем и ягодная начинка",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "single",
+        "size": 1,
+        "price": 205,
+        "imageSource": "/images/019fa30d32e377f0a31860524b35b780.webp",
+        "nutritionFacts": {
+          "calories": 340,
+          "proteins": 4.5,
+          "fats": 20,
+          "carbohydrates": 39,
+          "weight": 90
+        }
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 1,
+    "flag": null,
+    "measurement_unit": "pcs"
+  },
+  {
+    "id": "dodo-ot-podvala-do-milliarda",
+    "title": "Додо: от подвала до миллиарда",
+    "description": "Новая книга Додо: вдохновляющая история успеха и людей, которые сделали это возможным",
+    "type": "other",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "single",
+        "size": 1,
+        "price": 569,
+        "imageSource": "/images/0197d1524c157360ac33b46b35ad97db.webp"
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 1,
+    "measurement_unit": "pcs",
+    "flag": null
+  }
+]

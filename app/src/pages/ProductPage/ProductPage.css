@@ -204,3 +204,12 @@
 .scale-35 {
   transform: scale(1.2);
 }
+
+.removed {
+  color: rgb(96, 95, 95);
+}
+
+.nutrition-facts-block {
+  background-color: rgba(226, 226, 226, 0.8)
+
+}
