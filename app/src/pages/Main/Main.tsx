@@ -229,6 +229,13 @@ export default function Main() {
 
       {/* Раздел с меню */}
       <main className="menu">
+        <section className="popular-products-block">
+          <button className="popular-products-card">
+            <img src="/images/019a8aaa69cc7601b28736b1ebe7fc25.webp" />
+            <span className="popular-products-card-title">Песто</span>
+            <span className="popular-products-card-price">245 ₽</span>
+          </button>
+        </section>
         <div className="menu-container">
           <div>
             {menu && MENU_SECTIONS.map((section) => {
