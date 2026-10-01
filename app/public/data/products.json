@@ -217,7 +217,7 @@
     "defaultKind": "traditional",
     "defaultSize": 30,
     "measurement_unit": "cm",
-    "flag": "null"
+    "flag": "hit"
   },
   {
     "id": "arriva-roman",
@@ -382,6 +382,6 @@
     "defaultKind": "single",
     "defaultSize": 1,
     "measurement_unit": "pcs",
-    "flag": null
+    "flag": "superprice"
   }
 ]

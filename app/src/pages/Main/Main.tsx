@@ -44,7 +44,8 @@ interface MenuSectionOutputData {
   title: string,
   imageSource: string,
   price: number,
-  hasOptions: boolean
+  hasOptions: boolean,
+  flag: string | null
 }
 
 // Данные о разделах основного меню
@@ -70,6 +71,7 @@ async function loadJson<T>(source: string): Promise<T> {
 
 // Создание разделов для меню
 function MenuSection({ heading, type, menu }: { heading: string, type: string, menu: Menu }) {
+
   const sectionProducts: Product[] = menu.filter(p => p.type === type);
   const outputData: MenuSectionOutputData[] = [];
 
@@ -80,6 +82,7 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
     let productImageSource: string;
     let productPrice: number;
     let hasOptions = false;
+    let flag = sectionProduct.flag;
 
     let indexToFindImgPrice = 0;
 
@@ -88,7 +91,7 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
       hasOptions = true;
     }
 
-    productImageSource = sectionProduct.options[0].imageSource;
+    productImageSource = sectionProduct.options[indexToFindImgPrice].imageSource;
     productPrice = sectionProduct.options[0].price; // отредактировать (минимальная цена);
 
     // Подготовленные данные о товаре
@@ -97,7 +100,8 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
       title: productTitle,
       imageSource: productImageSource,
       price: productPrice,
-      hasOptions: hasOptions
+      hasOptions: hasOptions,
+      flag: flag
     }
 
     outputData.push(productData);
@@ -115,6 +119,7 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
             title={product.title}
             price={product.price}
             hasOptions={product.hasOptions}
+            flag={product.flag}
           />
         ))}
       </div>
