@@ -56,10 +56,10 @@ const MENU_SECTIONS = [
   { id: "appetizer", heading: "Закуски" },
   { id: "coffee-tea", heading: "Кофе и чай" },
   { id: "drink", heading: "Напитки" },
-  { id: "breakfast", heading: "Завтраки" },
-  { id: "dessert", heading: "Десерты" },
-  { id: "sauce", heading: "Соусы" },
-  { id: "other", heading: "Другие товары" }
+  // { id: "breakfast", heading: "Завтраки" },
+  // { id: "dessert", heading: "Десерты" },
+  // { id: "sauce", heading: "Соусы" },
+  // { id: "other", heading: "Другие товары" }
 ]
 
 // Загрузка JSON
@@ -108,8 +108,8 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
   }
 
   return (
-    <section className="menu-content-section">
-      <h1 className="menu-content-heading" id={type}>{heading}</h1>
+    <section className="menu-content-section" id={type}>
+      <h1 className="menu-content-heading">{heading}</h1>
       <div className="menu-content">
         {outputData.map((product) => (
           <Card
@@ -194,6 +194,7 @@ export default function Main() {
           </div>
         </div>
         <div className="right">
+          <button className="menu-navbar-button" onClick={() => navigate("/")}>Корзина</button>
           <button className="header-panel-btn">Войти</button>
         </div>
       </nav>
@@ -218,17 +219,12 @@ export default function Main() {
       <nav className="menu-navbar">
         <div className="menu-navbar-block">
           <ul className="menu-navbar-block-titles">
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} activeClass="active" to="pizzas">Пиццы</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="combos">Комбо</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="romes">Римские пиццы</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="appetizers">Закуски</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="coffee-and-tea">Кофе и чай</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="drinks">Напитки</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="breakfasts">Завтраки</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="desserts">Десерты</ScrollLink></li>
-            <li><button className="menu-navbar-more-button">Ещё</button></li>
+            {menu && MENU_SECTIONS.map((section) => {
+              return (
+                <li><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-230} duration={200} to={section.id}>{section.heading}</ScrollLink></li>
+              )
+            })}
           </ul>
-          <button className="menu-navbar-button" onClick={() => navigate("/")}>Корзина</button>
         </div>
       </nav>
 
