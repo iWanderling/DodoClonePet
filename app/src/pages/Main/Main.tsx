@@ -56,10 +56,10 @@ const MENU_SECTIONS = [
   { id: "appetizer", heading: "Закуски" },
   { id: "coffee-tea", heading: "Кофе и чай" },
   { id: "drink", heading: "Напитки" },
-  // { id: "breakfast", heading: "Завтраки" },
-  // { id: "dessert", heading: "Десерты" },
-  // { id: "sauce", heading: "Соусы" },
-  // { id: "other", heading: "Другие товары" }
+  { id: "breakfast", heading: "Завтраки" },
+  { id: "dessert", heading: "Десерты" },
+  { id: "sauce", heading: "Соусы" },
+  { id: "other", heading: "Другие товары" }
 ]
 
 // Загрузка JSON
@@ -135,6 +135,20 @@ export default function Main() {
   const [menu, setMenu] = useState<Menu>();
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
+
+  const [navbarDisplayed, setNavbarDisplayed] = useState<{ id: string, heading: string }[]>([]);
+  const [navbarDropdown, setNavbarDropdown] = useState<{ id: string, heading: string }[]>([]);
+  const [moreBtnId, setMoreBtnId] = useState<string>("more");
+  const [moreBtnText, setMoreBtnText] = useState<string>("Ещё");
+  const [isMoreBtnHovered, setIsMoreBtnHovered] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (MENU_SECTIONS.length >= 7) {
+      setNavbarDisplayed(MENU_SECTIONS.slice(0, 6));
+      setNavbarDropdown(MENU_SECTIONS.slice(6));
+    }
+    else setNavbarDisplayed(MENU_SECTIONS);
+  }, []);
 
   useEffect(() => {
     const loader = async () => {
@@ -219,14 +233,36 @@ export default function Main() {
       <nav className="menu-navbar">
         <div className="menu-navbar-block">
           <ul className="menu-navbar-block-titles">
-            {menu && MENU_SECTIONS.map((section) => {
+            {menu && navbarDisplayed.map((section) => {
               return (
-                <li><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-230} duration={200} to={section.id}>{section.heading}</ScrollLink></li>
+                <li><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={200} onSetActive={() => {
+                  setMoreBtnId("more");
+                  setMoreBtnText("Ещё");
+                }} to={section.id}>{section.heading}</ScrollLink></li>
               )
             })}
+            {menu && navbarDropdown &&
+              <li className="menu-navbar-block-more-button"
+                onMouseEnter={() => { setIsMoreBtnHovered(true) }}
+                onMouseLeave={() => { setIsMoreBtnHovered(false) }}>
+                <ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={200} to={moreBtnId}>{moreBtnText}</ScrollLink>
+{/* finished here */}
+                {isMoreBtnHovered && <div className="menu-navbar-block-more">
+                  {navbarDropdown.map((section) => {
+                    return (
+                      <ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={200} onSetActive={() => {
+                        setMoreBtnId(section.id);
+                        setMoreBtnText(section.heading);
+                      }} to={section.id}>{section.heading}</ScrollLink>
+                    )
+                  })}
+                </div>
+                }
+              </li>
+            }
           </ul>
         </div>
-      </nav>
+      </nav >
 
       {/* Раздел с меню */}
       <main className="menu">
@@ -256,7 +292,7 @@ export default function Main() {
       </main>
 
       {/* Сторонние компоненты (ProductPage, Footer) */}
-      <Outlet />
+      < Outlet />
     </>
   )
 }

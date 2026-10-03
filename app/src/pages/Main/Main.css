@@ -62,7 +62,8 @@
     color: var(--dodo-color);
   }
 
-  a:hover, a.active {
+  a:hover,
+  a.active {
     justify-content: center;
     background-color: black;
     color: white;
@@ -317,4 +318,18 @@
 .popular-products-card-price {
   margin: 15px 0px;
   font-size: 18px;
+}
+
+.menu-navbar-block-more-button:hover {
+}
+
+.menu-navbar-block-more {
+  all: unset;
+  position: absolute;
+  background-color: gray;
+  top: 30px;
+
+  a {
+    all: unset;
+  }
 }
