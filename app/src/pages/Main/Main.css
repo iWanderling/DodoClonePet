@@ -320,16 +320,20 @@
   font-size: 18px;
 }
 
-.menu-navbar-block-more-button:hover {
-}
-
 .menu-navbar-block-more {
-  all: unset;
   position: absolute;
   background-color: gray;
   top: 30px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.3s;
 
   a {
     all: unset;
   }
+  
+}
+
+.hidden {
+  display: none;
 }

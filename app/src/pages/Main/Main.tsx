@@ -190,6 +190,8 @@ export default function Main() {
     }
   };
 
+  console.log(moreBtnId)
+
   return (
     <>
       {/* Панель с названием и выбранным городом */}
@@ -229,13 +231,14 @@ export default function Main() {
         {showRightBtn && <button className="story-block-button next" onClick={handleScrollRight}>{">"}</button>}
       </section>
 
+
       {/* Раздел с навигационной панелью меню */}
       <nav className="menu-navbar">
         <div className="menu-navbar-block">
           <ul className="menu-navbar-block-titles">
             {menu && navbarDisplayed.map((section) => {
               return (
-                <li><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={200} onSetActive={() => {
+                <li key={section.id}><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={0} onSetActive={() => {
                   setMoreBtnId("more");
                   setMoreBtnText("Ещё");
                 }} to={section.id}>{section.heading}</ScrollLink></li>
@@ -245,19 +248,21 @@ export default function Main() {
               <li className="menu-navbar-block-more-button"
                 onMouseEnter={() => { setIsMoreBtnHovered(true) }}
                 onMouseLeave={() => { setIsMoreBtnHovered(false) }}>
-                <ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={200} to={moreBtnId}>{moreBtnText}</ScrollLink>
-{/* finished here */}
-                {isMoreBtnHovered && <div className="menu-navbar-block-more">
+
+                <ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={0} to={moreBtnId}>{moreBtnText}</ScrollLink>
+                
+                <div className={`menu-navbar-block-more ${isMoreBtnHovered ? "visible" : "hidden"}`}><ul>
                   {navbarDropdown.map((section) => {
                     return (
-                      <ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={200} onSetActive={() => {
+                      <li key={section.id}><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={0} onSetActive={() => {
                         setMoreBtnId(section.id);
                         setMoreBtnText(section.heading);
-                      }} to={section.id}>{section.heading}</ScrollLink>
+                      }} to={section.id}>{section.heading}</ScrollLink></li>
                     )
                   })}
+                </ul>
                 </div>
-                }
+
               </li>
             }
           </ul>
@@ -265,7 +270,7 @@ export default function Main() {
       </nav >
 
       {/* Раздел с меню */}
-      <main className="menu">
+      <main className="menu" >
         <section className="popular-products-block">
           <button className="popular-products-card">
             <img src="/images/019a8aaa69cc7601b28736b1ebe7fc25.webp" />
