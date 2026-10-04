@@ -2,7 +2,7 @@ import "./Main.css"
 import { Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
 import { useState, useEffect, useRef } from "react";
-import { Link as ScrollLink } from "react-scroll"
+import { InView } from "react-intersection-observer"
 
 // Тип для меню (повторяет Product)
 type Menu = Product[];
@@ -138,9 +138,10 @@ export default function Main() {
 
   const [navbarDisplayed, setNavbarDisplayed] = useState<{ id: string, heading: string }[]>([]);
   const [navbarDropdown, setNavbarDropdown] = useState<{ id: string, heading: string }[]>([]);
-  const [moreBtnId, setMoreBtnId] = useState<string>("more");
-  const [moreBtnText, setMoreBtnText] = useState<string>("Ещё");
-  const [isMoreBtnHovered, setIsMoreBtnHovered] = useState<boolean>(false);
+
+  const [activeSection, setActiveSection] = useState<string>("more");
+  const [dropdownTitle, setDropdownTitle] = useState<string>("Ещё");
+  const [isDropdownHovered, setIsDropdownHovered] = useState<boolean>(false);
 
   useEffect(() => {
     if (MENU_SECTIONS.length >= 7) {
@@ -177,7 +178,6 @@ export default function Main() {
       // Добавляем + 7, чтобы учесть один gap между элементами при перелистывании
       const scrollStep = contentRef.current.clientWidth + 7;
       contentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-      console.log(scrollStep);
     }
   };
 
@@ -186,11 +186,26 @@ export default function Main() {
     if (contentRef.current) {
       const scrollStep = contentRef.current.clientWidth + 7;
       contentRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
-      console.log(scrollStep + "R");
     }
   };
 
-  console.log(moreBtnId)
+  const handleSectionView = (inView: boolean, id: string) => {
+    if (inView) {
+      setActiveSection(id);
+
+      let section = navbarDropdown.find(pair => pair.id === id);
+      if (section) setDropdownTitle(section.heading);
+      else setDropdownTitle("Ещё");
+    }
+  }
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsDropdownHovered(false);
+    }
+  };
 
   return (
     <>
@@ -238,19 +253,16 @@ export default function Main() {
           <ul className="menu-navbar-block-titles">
             {menu && navbarDisplayed.map((section) => {
               return (
-                <li key={section.id}><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={0} onSetActive={() => {
-                  setMoreBtnId("more");
-                  setMoreBtnText("Ещё");
-                }} to={section.id}>{section.heading}</ScrollLink></li>
+                <li key={section.id}><button onClick={() => scrollToSection(section.id)}>{section.heading}</button></li>
               )
             })}
-            {menu && navbarDropdown &&
+            {/* {menu && navbarDropdown &&
               <li className="menu-navbar-block-more-button"
                 onMouseEnter={() => { setIsMoreBtnHovered(true) }}
                 onMouseLeave={() => { setIsMoreBtnHovered(false) }}>
 
                 <ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={0} to={moreBtnId}>{moreBtnText}</ScrollLink>
-                
+
                 <div className={`menu-navbar-block-more ${isMoreBtnHovered ? "visible" : "hidden"}`}><ul>
                   {navbarDropdown.map((section) => {
                     return (
@@ -264,7 +276,7 @@ export default function Main() {
                 </div>
 
               </li>
-            }
+            } */}
           </ul>
         </div>
       </nav >
@@ -281,7 +293,13 @@ export default function Main() {
         <div className="menu-container">
           <div>
             {menu && MENU_SECTIONS.map((section) => {
-              return (<MenuSection key={section.id} heading={section.heading} type={section.id} menu={menu} />)
+              return (
+                <InView key={section.id} as="div" rootMargin="0px 0px -90% 0px" threshold={0}
+                  onChange={(inView) => handleSectionView(inView, section.id)}>
+                  <MenuSection key={section.id} heading={section.heading} type={section.id} menu={menu} />
+                </InView>
+
+              )
             })}
           </div>
           <aside className="sidebar">
