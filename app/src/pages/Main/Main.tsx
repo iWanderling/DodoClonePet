@@ -52,7 +52,7 @@ interface MenuSectionOutputData {
 // Данные о разделах основного меню
 const MENU_SECTIONS = [
   { id: "pizza", heading: "Пиццы" },
-  { id: "combo", heading: "Комбо" },
+  // { id: "combo", heading: "Комбо" },
   { id: "roman", heading: "Римские пиццы" },
   { id: "appetizer", heading: "Закуски" },
   { id: "coffee-tea", heading: "Кофе и чай" },
@@ -209,7 +209,7 @@ export default function Main() {
             <img className="header-panel-img" src="/images/dodologo.webp" />
             <div className="header-panel-img-text">
               <div className="title">додо пицца</div>
-              <div className="description">1492 пиццерии в 26 странах {activeSection}</div>
+              <div className="description">1492 пиццерии в 26 странах</div>
             </div>
           </div>
           <div className="header-panel-city-info">

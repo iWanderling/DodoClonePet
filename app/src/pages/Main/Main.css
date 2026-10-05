@@ -322,16 +322,11 @@
 
 .menu-navbar-block-more {
   position: absolute;
-  background-color: gray;
-  top: 30px;
+  margin-top: 10px;
+  text-align: center;
   display: flex;
-  flex-direction: column;
-  transition: 0.3s;
-
-  a {
-    all: unset;
-  }
-  
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .hidden {

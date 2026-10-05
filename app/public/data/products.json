@@ -366,6 +366,107 @@
     "measurement_unit": "pcs"
   },
   {
+    "id": "ice-coffee-caramel",
+    "title": "Айс кофе с карамелью",
+    "description": "Новинка со льдом — холодный напиток с эспрессо, молоком и карамельным сиропом",
+    "type": "coffee-tea",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "single",
+        "size": 0.3,
+        "price": 189,
+        "imageSource": "/images/019d679ff33770019a925ef02bb1c80b.webp",
+        "nutritionFacts": {
+          "calories": 56.9,
+          "proteins": 2,
+          "fats": 2.2,
+          "carbohydrates": 7.2,
+          "weight": 250
+        }
+      },
+      {
+        "kind": "single",
+        "size": 0.2,
+        "price": 159,
+        "imageSource": "/images/019d68560e627146af9fabfc5c8f292d.webp",
+        "nutritionFacts": {
+          "calories": 56.9,
+          "proteins": 2,
+          "fats": 2.2,
+          "carbohydrates": 7.2,
+          "weight": 240
+        }
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 0.3,
+    "measurement_unit": "l"
+  },
+  {
+    "id": "omlet-s-vetchinoi-i-gribami",
+    "title": "Омлет с ветчиной и грибами",
+    "description": "Горячий сытный омлет с поджаристой корочкой, ветчина, шампиньоны и моцарелла",
+    "type": "breakfast",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "no-pite",
+        "size": 1,
+        "price": 205,
+        "imageSource": "/images/019b12c7353b76d988cab1310b627eb4.webp",
+        "nutritionFacts": {
+          "calories": 181.8,
+          "proteins": 15.4,
+          "fats": 12.9,
+          "carbohydrates": 1,
+          "weight": 120
+        }
+      },
+      {
+        "kind": "pite",
+        "size": 1,
+        "price": 249,
+        "imageSource": "/images/019b12c73a8c7414aafcde4b9b9ca642.webp",
+        "nutritionFacts": {
+          "calories": 216.8,
+          "proteins": 12.9,
+          "fats": 12.3,
+          "carbohydrates": 14,
+          "weight": 170
+        }
+      }
+    ],
+    "defaultKind": "no-pite",
+    "defaultSize": 1,
+    "measurement_unit": "pcs"
+  },
+  {
+    "id": "malynovyi-sous",
+    "title": "Малиновый соус",
+    "description": "Идеально к сырникам",
+    "type": "sauce",
+    "isOptionalDescription": false,
+    "options": [
+      {
+        "kind": "single",
+        "size": 1,
+        "price": 45,
+        "imageSource": "/images/019e6e395c6574b6a55d613fa3f06ba8.webp",
+        "nutritionFacts": {
+          "calories": 260,
+          "proteins": 0.3,
+          "fats": 0.2,
+          "carbohydrates": 64,
+          "weight": 25
+        }
+      }
+    ],
+    "defaultKind": "single",
+    "defaultSize": 1,
+    "measurement_unit": "pcs"
+  },
+  {
     "id": "dodo-ot-podvala-do-milliarda",
     "title": "Додо: от подвала до миллиарда",
     "description": "Новая книга Додо: вдохновляющая история успеха и людей, которые сделали это возможным",
