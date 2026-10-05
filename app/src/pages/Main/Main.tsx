@@ -1,7 +1,7 @@
 import "./Main.css"
 import { Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
-import { useState, useEffect, useRef, use } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-scroll";
 import { useInView } from "react-intersection-observer"
 
@@ -72,11 +72,12 @@ async function loadJson<T>(source: string): Promise<T> {
 
 
 // Создание разделов для меню
-function MenuSection({ heading, type, menu, setActiveSection}: { heading: string, type: string, menu: Menu, setActiveSection: (id: string) => void}) {
+function MenuSection({ heading, type, menu, setActiveSection }: { heading: string, type: string, menu: Menu, setActiveSection: (id: string) => void }) {
 
   const { ref, inView } = useInView({
-    threshold: 0.3,
-    rootMargin: "0px 0px -40% 0px",
+    root: document.querySelector("menu"),
+    threshold: 0.8,
+    rootMargin: "-100px 0px",
   })
 
   useEffect(() => {
@@ -253,11 +254,11 @@ export default function Main() {
               )
             })}
             {menu && navbarDropdown &&
-              <li className="menu-navbar-block-more-button"
+              <li className="menu-navbar-block-more-button" key={activeSection}
                 onMouseEnter={() => { setIsDropdownHovered(true) }}
                 onMouseLeave={() => { setIsDropdownHovered(false) }}>
 
-                <Link offset={-180} to={activeSection}>{dropdownTitle}</Link>
+                <a className={navbarDropdown.find(section => section.id === activeSection) ? "active" : ""}>{navbarDropdown.find(section => section.id === activeSection) ? navbarDropdown.find(section => section.id === activeSection)?.heading : dropdownTitle}</a>
 
                 <div className={`menu-navbar-block-more ${isDropdownHovered ? "visible" : "hidden"}`}><ul>
                   {navbarDropdown.map((section) => {
