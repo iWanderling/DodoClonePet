@@ -1,8 +1,9 @@
 import "./Main.css"
 import { Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
-import { useState, useEffect, useRef } from "react";
-import { InView } from "react-intersection-observer"
+import { useState, useEffect, useRef, use } from "react";
+import { Link } from "react-scroll";
+import { useInView } from "react-intersection-observer"
 
 // Тип для меню (повторяет Product)
 type Menu = Product[];
@@ -69,8 +70,18 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 }
 
+
 // Создание разделов для меню
-function MenuSection({ heading, type, menu }: { heading: string, type: string, menu: Menu }) {
+function MenuSection({ heading, type, menu, setActiveSection}: { heading: string, type: string, menu: Menu, setActiveSection: (id: string) => void}) {
+
+  const { ref, inView } = useInView({
+    threshold: 0.3,
+    rootMargin: "0px 0px -40% 0px",
+  })
+
+  useEffect(() => {
+    if (inView) setActiveSection(type);
+  }, [inView, type, setActiveSection])
 
   const sectionProducts: Product[] = menu.filter(p => p.type === type);
   const outputData: MenuSectionOutputData[] = [];
@@ -108,7 +119,7 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
   }
 
   return (
-    <section className="menu-content-section" id={type}>
+    <section ref={ref} className="menu-content-section" id={type}>
       <h1 className="menu-content-heading">{heading}</h1>
       <div className="menu-content">
         {outputData.map((product) => (
@@ -136,14 +147,21 @@ export default function Main() {
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
 
+  // Состояния отображения выпадающей навпанели
   const [navbarDisplayed, setNavbarDisplayed] = useState<{ id: string, heading: string }[]>([]);
   const [navbarDropdown, setNavbarDropdown] = useState<{ id: string, heading: string }[]>([]);
 
+  // Состояния выпадающей навпанели
   const [activeSection, setActiveSection] = useState<string>("more");
   const [dropdownTitle, setDropdownTitle] = useState<string>("Ещё");
   const [isDropdownHovered, setIsDropdownHovered] = useState<boolean>(false);
 
+  // Загрузка меню и секций для навигационной панели
   useEffect(() => {
+    const loader = async () => {
+      setMenu(await loadJson<Menu>("/data/products.json"));
+    };
+    loader();
     if (MENU_SECTIONS.length >= 7) {
       setNavbarDisplayed(MENU_SECTIONS.slice(0, 6));
       setNavbarDropdown(MENU_SECTIONS.slice(6));
@@ -151,61 +169,35 @@ export default function Main() {
     else setNavbarDisplayed(MENU_SECTIONS);
   }, []);
 
-  useEffect(() => {
-    const loader = async () => {
-      setMenu(await loadJson<Menu>("/data/products.json"));
-    };
-    loader();
-  }, []);
+  // Обработка скролл-панели для историй
+  const storiesContentRef = useRef<HTMLDivElement>(null);
+  const storiesFunctions = {
+    // Вычисление позиции для скролл-кнопок
+    checkScrollPosition: () => {
+      if (storiesContentRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = storiesContentRef.current;
 
-  // Переключатели (скролл-панель) для историй
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  // Вычисление позиции для скролл-кнопок
-  const checkScrollPosition = () => {
-    if (contentRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = contentRef.current;
-
-      setShowLeftBtn(scrollLeft > 2);
-      setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
-    }
-  };
-
-  // Обработка скролла для историй влево
-  const handleScrollLeft = () => {
-    if (contentRef.current) {
-      // clientWidth — это ширина видимого "окна" скролла
-      // Добавляем + 7, чтобы учесть один gap между элементами при перелистывании
-      const scrollStep = contentRef.current.clientWidth + 7;
-      contentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-    }
-  };
-
-  // Обработка скролла для историй вправо
-  const handleScrollRight = () => {
-    if (contentRef.current) {
-      const scrollStep = contentRef.current.clientWidth + 7;
-      contentRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
-    }
-  };
-
-  const handleSectionView = (inView: boolean, id: string) => {
-    if (inView) {
-      setActiveSection(id);
-
-      let section = navbarDropdown.find(pair => pair.id === id);
-      if (section) setDropdownTitle(section.heading);
-      else setDropdownTitle("Ещё");
+        setShowLeftBtn(scrollLeft > 2);
+        setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
+      }
+    },
+    // Обработка скролла для историй влево
+    handleScrollLeft: () => {
+      if (storiesContentRef.current) {
+        // clientWidth — это ширина видимого "окна" скролла
+        // Добавляем + 7, чтобы учесть один gap между элементами при перелистывании
+        const scrollStep = storiesContentRef.current.clientWidth + 7;
+        storiesContentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+      }
+    },
+    // Обработка скролла для историй вправо
+    handleScrollRight: () => {
+      if (storiesContentRef.current) {
+        const scrollStep = storiesContentRef.current.clientWidth + 7;
+        storiesContentRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
+      }
     }
   }
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsDropdownHovered(false);
-    }
-  };
 
   return (
     <>
@@ -216,7 +208,7 @@ export default function Main() {
             <img className="header-panel-img" src="/images/dodologo.webp" />
             <div className="header-panel-img-text">
               <div className="title">додо пицца</div>
-              <div className="description">1492 пиццерии в 26 странах</div>
+              <div className="description">1492 пиццерии в 26 странах {activeSection}</div>
             </div>
           </div>
           <div className="header-panel-city-info">
@@ -232,8 +224,8 @@ export default function Main() {
 
       {/* Раздел с историями */}
       <section className="story-block">
-        {showLeftBtn && <button className="story-block-button prev" onClick={handleScrollLeft}>{"<"}</button>}
-        <div className="story-block-content" ref={contentRef} onScroll={checkScrollPosition}>
+        {showLeftBtn && <button className="story-block-button prev" onClick={storiesFunctions.handleScrollLeft}>{"<"}</button>}
+        <div className="story-block-content" ref={storiesContentRef} onScroll={storiesFunctions.checkScrollPosition}>
           <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
@@ -243,7 +235,7 @@ export default function Main() {
           <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
         </div>
-        {showRightBtn && <button className="story-block-button next" onClick={handleScrollRight}>{">"}</button>}
+        {showRightBtn && <button className="story-block-button next" onClick={storiesFunctions.handleScrollRight}>{">"}</button>}
       </section>
 
 
@@ -253,30 +245,31 @@ export default function Main() {
           <ul className="menu-navbar-block-titles">
             {menu && navbarDisplayed.map((section) => {
               return (
-                <li key={section.id}><button onClick={() => scrollToSection(section.id)}>{section.heading}</button></li>
+                <li key={section.id}>
+                  <Link offset={-180} to={section.id} className={activeSection === section.id ? "active" : ""}>
+                    {section.heading}
+                  </Link>
+                </li>
               )
             })}
-            {/* {menu && navbarDropdown &&
+            {menu && navbarDropdown &&
               <li className="menu-navbar-block-more-button"
-                onMouseEnter={() => { setIsMoreBtnHovered(true) }}
-                onMouseLeave={() => { setIsMoreBtnHovered(false) }}>
+                onMouseEnter={() => { setIsDropdownHovered(true) }}
+                onMouseLeave={() => { setIsDropdownHovered(false) }}>
 
-                <ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={0} to={moreBtnId}>{moreBtnText}</ScrollLink>
+                <Link offset={-180} to={activeSection}>{dropdownTitle}</Link>
 
-                <div className={`menu-navbar-block-more ${isMoreBtnHovered ? "visible" : "hidden"}`}><ul>
+                <div className={`menu-navbar-block-more ${isDropdownHovered ? "visible" : "hidden"}`}><ul>
                   {navbarDropdown.map((section) => {
                     return (
-                      <li key={section.id}><ScrollLink spy={true} hashSpy={true} smooth={true} offset={-180} duration={0} onSetActive={() => {
-                        setMoreBtnId(section.id);
-                        setMoreBtnText(section.heading);
-                      }} to={section.id}>{section.heading}</ScrollLink></li>
+                      <li key={section.id}><Link offset={-180} to={section.id}>{section.heading}</Link></li>
                     )
                   })}
                 </ul>
                 </div>
 
               </li>
-            } */}
+            }
           </ul>
         </div>
       </nav >
@@ -294,11 +287,7 @@ export default function Main() {
           <div>
             {menu && MENU_SECTIONS.map((section) => {
               return (
-                <InView key={section.id} as="div" rootMargin="0px 0px -90% 0px" threshold={0}
-                  onChange={(inView) => handleSectionView(inView, section.id)}>
-                  <MenuSection key={section.id} heading={section.heading} type={section.id} menu={menu} />
-                </InView>
-
+                <MenuSection key={section.id} heading={section.heading} type={section.id} menu={menu} setActiveSection={setActiveSection} />
               )
             })}
           </div>
