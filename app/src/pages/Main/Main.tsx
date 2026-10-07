@@ -209,7 +209,7 @@ export default function Main() {
             <img className="header-panel-img" src="/images/dodologo.webp" />
             <div className="header-panel-img-text">
               <div className="title">додо пицца</div>
-              <div className="description">1492 пиццерии в 26 странах</div>
+              <div className="description">1111 пиццерии в 111 странах</div>
             </div>
           </div>
           <div className="header-panel-city-info">
@@ -281,7 +281,7 @@ export default function Main() {
           <button className="popular-products-card">
             <img src="/images/019a8aaa69cc7601b28736b1ebe7fc25.webp" />
             <span className="popular-products-card-title">Песто</span>
-            <span className="popular-products-card-price">245 ₽</span>
+            <button className="popular-products-card-price-btn">245 ₽</button>
           </button>
         </section>
         <div className="menu-container">

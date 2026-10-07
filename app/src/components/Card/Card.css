@@ -23,15 +23,15 @@
     transition: 0.3s;
     cursor: pointer;
     margin-top: 20px;
-    width: 110px;
-    height: 40px;
-    background-color: var(--background-color);
+    width: 104px;
+    height: 41px;
+    background-color: rgb(39, 39, 43);
     border-radius: 20px;
     border: 0px;
   }
 
   button:hover {
-    background-color: rgb(237, 237, 237);
+    background-color: #38383C;
   }
 
 }
