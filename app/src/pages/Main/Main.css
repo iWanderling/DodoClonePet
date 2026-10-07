@@ -17,13 +17,6 @@
   z-index: 90;
 }
 
-.menu-navbar {
-  background-color: var(--background-color);
-  position: sticky;
-  top: 112px;
-  z-index: 90;
-}
-
 .header-panel-city-info {
   cursor: pointer;
   font-size: 17px;
@@ -31,6 +24,13 @@
   a {
     color: var(--dodo-color);
   }
+}
+
+.menu-navbar {
+  background-color: var(--background-color);
+  position: sticky;
+  top: 112px;
+  z-index: 90;
 }
 
 .menu-navbar-block {
@@ -42,7 +42,7 @@
   flex-direction: row;
   align-items: center;
 
-  ul {
+  &>ul {
     display: flex;
     flex-direction: row;
     list-style: none;
@@ -50,19 +50,19 @@
     font-size: 16px;
   }
 
-  a {
+  &>ul>li>a {
     cursor: pointer;
     text-decoration: none;
     color: white;
     padding: 15px 20px;
   }
 
-  a:hover {
+  &>ul>li>a:hover {
     color: var(--dodo-color);
   }
 
-  a:hover,
-  a.active {
+  &>ul>li>a:hover,
+  &>ul>li>a.active {
     justify-content: center;
     background-color: white;
     color: black;
@@ -79,20 +79,6 @@
   background-color: var(--dodo-color);
   color: white;
   transition: 0.3s;
-}
-
-.menu-navbar-more-button {
-  transition: 0.3s;
-  cursor: pointer;
-  width: 75px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0px;
-  background-color: var(--background-color);
-}
-
-.menu-navbar-more-button:hover {
-  color: var(--dodo-color);
 }
 
 .menu-content {
@@ -336,13 +322,43 @@
   border-radius: 30px;
 }
 
-.menu-navbar-block-more {
+.menu-navbar-dropdown {
   position: absolute;
-  margin-top: 10px;
-  text-align: center;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  background-color: #1c1f28;
+  width: 150px;
+  border-radius: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    list-style: none;
+    text-align: left;
+
+  }
+
+  li {
+    display: block;
+  }
+
+  a {
+    padding: 7px;
+    display: block;
+    width: 100%;
+    color: white;
+
+  }
+
+  a:hover {
+    background-color: #27272B;
+  }
+
+  a.active {
+    background-color: rgb(255, 255, 255);
+    color: #1c1f28;
+  }
 }
 
 .hidden {

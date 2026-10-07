@@ -243,7 +243,8 @@ export default function Main() {
       {/* Раздел с навигационной панелью меню */}
       <nav className="menu-navbar">
         <div className="menu-navbar-block">
-          <ul className="menu-navbar-block-titles">
+          <ul>
+            {/* Основная навпанель */}
             {menu && navbarDisplayed.map((section) => {
               return (
                 <li key={section.id}>
@@ -253,22 +254,24 @@ export default function Main() {
                 </li>
               )
             })}
+            {/* Выпадающее меню */}
             {menu && navbarDropdown &&
-              <li className="menu-navbar-block-more-button" key={activeSection}
-                onMouseEnter={() => { setIsDropdownHovered(true) }}
-                onMouseLeave={() => { setIsDropdownHovered(false) }}>
-
-                <a className={navbarDropdown.find(section => section.id === activeSection) ? "active" : ""}>{navbarDropdown.find(section => section.id === activeSection) ? navbarDropdown.find(section => section.id === activeSection)?.heading : dropdownTitle}</a>
-
-                <div className={`menu-navbar-block-more ${isDropdownHovered ? "visible" : "hidden"}`}><ul>
-                  {navbarDropdown.map((section) => {
-                    return (
-                      <li key={section.id}><Link offset={-180} to={section.id}>{section.heading}</Link></li>
-                    )
-                  })}
-                </ul>
+              <li key={activeSection}
+                onMouseEnter={() => { setTimeout(() => setIsDropdownHovered(true), 100)}}
+                onMouseLeave={() => { setTimeout(() => setIsDropdownHovered(false), 100)}}>
+                <a className={navbarDropdown.find(section => section.id === activeSection) ? "active" : ""}>
+                  {navbarDropdown.find(section => section.id === activeSection) ?
+                    navbarDropdown.find(section => section.id === activeSection)?.heading : dropdownTitle}
+                </a>
+                <div className={`menu-navbar-dropdown ${isDropdownHovered ? "visible" : "hidden"}`}>
+                  <ul>
+                    {navbarDropdown.map((section) => {
+                      return (
+                        <li key={section.id}><Link className={section.id === activeSection ? "active" : ""} offset={-180} to={section.id}>{section.heading}</Link></li>
+                      )
+                    })}
+                  </ul>
                 </div>
-
               </li>
             }
           </ul>
