@@ -2,7 +2,8 @@ import "./Main.css"
 import { Outlet, useNavigate } from "react-router-dom"
 import Card from "../../components/Card/Card"
 import { useState, useEffect, useRef } from "react";
-import { Link as ScrollLink } from "react-scroll"
+import { Link } from "react-scroll";
+import { useInView } from "react-intersection-observer"
 
 // Тип для меню (повторяет Product)
 type Menu = Product[];
@@ -44,13 +45,14 @@ interface MenuSectionOutputData {
   title: string,
   imageSource: string,
   price: number,
-  hasOptions: boolean
+  hasOptions: boolean,
+  flag: string | null
 }
 
 // Данные о разделах основного меню
 const MENU_SECTIONS = [
   { id: "pizza", heading: "Пиццы" },
-  { id: "combo", heading: "Комбо" },
+  // { id: "combo", heading: "Комбо" },
   { id: "roman", heading: "Римские пиццы" },
   { id: "appetizer", heading: "Закуски" },
   { id: "coffee-tea", heading: "Кофе и чай" },
@@ -68,8 +70,20 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 }
 
+
 // Создание разделов для меню
-function MenuSection({ heading, type, menu }: { heading: string, type: string, menu: Menu }) {
+function MenuSection({ heading, type, menu, setActiveSection }: { heading: string, type: string, menu: Menu, setActiveSection: (id: string) => void }) {
+
+  const { ref, inView } = useInView({
+    root: document.querySelector("menu"),
+    threshold: 0.8,
+    rootMargin: "-100px 0px",
+  })
+
+  useEffect(() => {
+    if (inView) setActiveSection(type);
+  }, [inView, type, setActiveSection])
+
   const sectionProducts: Product[] = menu.filter(p => p.type === type);
   const outputData: MenuSectionOutputData[] = [];
 
@@ -80,6 +94,7 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
     let productImageSource: string;
     let productPrice: number;
     let hasOptions = false;
+    let flag = sectionProduct.flag;
 
     let indexToFindImgPrice = 0;
 
@@ -88,7 +103,7 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
       hasOptions = true;
     }
 
-    productImageSource = sectionProduct.options[0].imageSource;
+    productImageSource = sectionProduct.options[indexToFindImgPrice].imageSource;
     productPrice = sectionProduct.options[0].price; // отредактировать (минимальная цена);
 
     // Подготовленные данные о товаре
@@ -97,15 +112,16 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
       title: productTitle,
       imageSource: productImageSource,
       price: productPrice,
-      hasOptions: hasOptions
+      hasOptions: hasOptions,
+      flag: flag
     }
 
     outputData.push(productData);
   }
 
   return (
-    <section className="menu-content-section">
-      <h1 className="menu-content-heading" id={type}>{heading}</h1>
+    <section ref={ref} className="menu-content-section" id={type}>
+      <h1 className="menu-content-heading">{heading}</h1>
       <div className="menu-content">
         {outputData.map((product) => (
           <Card
@@ -115,6 +131,7 @@ function MenuSection({ heading, type, menu }: { heading: string, type: string, m
             title={product.title}
             price={product.price}
             hasOptions={product.hasOptions}
+            flag={product.flag}
           />
         ))}
       </div>
@@ -131,45 +148,57 @@ export default function Main() {
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
 
+  // Состояния отображения выпадающей навпанели
+  const [navbarDisplayed, setNavbarDisplayed] = useState<{ id: string, heading: string }[]>([]);
+  const [navbarDropdown, setNavbarDropdown] = useState<{ id: string, heading: string }[]>([]);
+
+  // Состояния выпадающей навпанели
+  const [activeSection, setActiveSection] = useState<string>("more");
+  const [dropdownTitle, setDropdownTitle] = useState<string>("Ещё");
+  const [isDropdownHovered, setIsDropdownHovered] = useState<boolean>(false);
+
+  // Загрузка меню и секций для навигационной панели
   useEffect(() => {
     const loader = async () => {
       setMenu(await loadJson<Menu>("/data/products.json"));
     };
     loader();
+    if (MENU_SECTIONS.length >= 7) {
+      setNavbarDisplayed(MENU_SECTIONS.slice(0, 6));
+      setNavbarDropdown(MENU_SECTIONS.slice(6));
+    }
+    else setNavbarDisplayed(MENU_SECTIONS);
   }, []);
 
-  // Переключатели (скролл-панель) для историй
-  const contentRef = useRef<HTMLDivElement>(null);
+  // Обработка скролл-панели для историй
+  const storiesContentRef = useRef<HTMLDivElement>(null);
+  const storiesFunctions = {
+    // Вычисление позиции для скролл-кнопок
+    checkScrollPosition: () => {
+      if (storiesContentRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = storiesContentRef.current;
 
-  // Вычисление позиции для скролл-кнопок
-  const checkScrollPosition = () => {
-    if (contentRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = contentRef.current;
-
-      setShowLeftBtn(scrollLeft > 2);
-      setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
+        setShowLeftBtn(scrollLeft > 2);
+        setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
+      }
+    },
+    // Обработка скролла для историй влево
+    handleScrollLeft: () => {
+      if (storiesContentRef.current) {
+        // clientWidth — это ширина видимого "окна" скролла
+        // Добавляем + 7, чтобы учесть один gap между элементами при перелистывании
+        const scrollStep = storiesContentRef.current.clientWidth + 7;
+        storiesContentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+      }
+    },
+    // Обработка скролла для историй вправо
+    handleScrollRight: () => {
+      if (storiesContentRef.current) {
+        const scrollStep = storiesContentRef.current.clientWidth + 7;
+        storiesContentRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
+      }
     }
-  };
-
-  // Обработка скролла для историй влево
-  const handleScrollLeft = () => {
-    if (contentRef.current) {
-      // clientWidth — это ширина видимого "окна" скролла
-      // Добавляем + 7, чтобы учесть один gap между элементами при перелистывании
-      const scrollStep = contentRef.current.clientWidth + 7;
-      contentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-      console.log(scrollStep);
-    }
-  };
-
-  // Обработка скролла для историй вправо
-  const handleScrollRight = () => {
-    if (contentRef.current) {
-      const scrollStep = contentRef.current.clientWidth + 7;
-      contentRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
-      console.log(scrollStep + "R");
-    }
-  };
+  }
 
   return (
     <>
@@ -180,7 +209,7 @@ export default function Main() {
             <img className="header-panel-img" src="/images/dodologo.webp" />
             <div className="header-panel-img-text">
               <div className="title">додо пицца</div>
-              <div className="description">1492 пиццерии в 26 странах</div>
+              <div className="description">1111 пиццерии в 111 странах</div>
             </div>
           </div>
           <div className="header-panel-city-info">
@@ -189,14 +218,15 @@ export default function Main() {
           </div>
         </div>
         <div className="right">
+          <button className="menu-navbar-button" onClick={() => navigate("/")}>Корзина</button>
           <button className="header-panel-btn">Войти</button>
         </div>
       </nav>
 
       {/* Раздел с историями */}
       <section className="story-block">
-        {showLeftBtn && <button className="story-block-button prev" onClick={handleScrollLeft}>{"<"}</button>}
-        <div className="story-block-content" ref={contentRef} onScroll={checkScrollPosition}>
+        {showLeftBtn && <button className="story-block-button prev" onClick={storiesFunctions.handleScrollLeft}>{"<"}</button>}
+        <div className="story-block-content" ref={storiesContentRef} onScroll={storiesFunctions.checkScrollPosition}>
           <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
@@ -206,33 +236,63 @@ export default function Main() {
           <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
           <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
         </div>
-        {showRightBtn && <button className="story-block-button next" onClick={handleScrollRight}>{">"}</button>}
+        {showRightBtn && <button className="story-block-button next" onClick={storiesFunctions.handleScrollRight}>{">"}</button>}
       </section>
+
 
       {/* Раздел с навигационной панелью меню */}
       <nav className="menu-navbar">
         <div className="menu-navbar-block">
-          <ul className="menu-navbar-block-titles">
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} activeClass="active" to="pizzas">Пиццы</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="combos">Комбо</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="romes">Римские пиццы</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="appetizers">Закуски</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="coffee-and-tea">Кофе и чай</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="drinks">Напитки</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="breakfasts">Завтраки</ScrollLink></li>
-            <li><ScrollLink spy={true} smooth={true} offset={-130} duration={200} to="desserts">Десерты</ScrollLink></li>
-            <li><button className="menu-navbar-more-button">Ещё</button></li>
+          <ul>
+            {/* Основная навпанель */}
+            {menu && navbarDisplayed.map((section) => {
+              return (
+                <li key={section.id}>
+                  <Link offset={-180} to={section.id} className={activeSection === section.id ? "active" : ""}>
+                    {section.heading}
+                  </Link>
+                </li>
+              )
+            })}
+            {/* Выпадающее меню */}
+            {menu && navbarDropdown &&
+              <li key={activeSection}
+                onMouseEnter={() => { setTimeout(() => setIsDropdownHovered(true), 100)}}
+                onMouseLeave={() => { setTimeout(() => setIsDropdownHovered(false), 100)}}>
+                <a className={navbarDropdown.find(section => section.id === activeSection) ? "active" : ""}>
+                  {navbarDropdown.find(section => section.id === activeSection) ?
+                    navbarDropdown.find(section => section.id === activeSection)?.heading : dropdownTitle}
+                </a>
+                <div className={`menu-navbar-dropdown ${isDropdownHovered ? "visible" : "hidden"}`}>
+                  <ul>
+                    {navbarDropdown.map((section) => {
+                      return (
+                        <li key={section.id}><Link className={section.id === activeSection ? "active" : ""} offset={-180} to={section.id}>{section.heading}</Link></li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              </li>
+            }
           </ul>
-          <button className="menu-navbar-button" onClick={() => navigate("/")}>Корзина</button>
         </div>
-      </nav>
+      </nav >
 
       {/* Раздел с меню */}
-      <main className="menu">
+      <main className="menu" >
+        <section className="popular-products-block">
+          <button className="popular-products-card">
+            <img src="/images/019a8aaa69cc7601b28736b1ebe7fc25.webp" />
+            <span className="popular-products-card-title">Песто</span>
+            <button className="popular-products-card-price-btn">245 ₽</button>
+          </button>
+        </section>
         <div className="menu-container">
           <div>
             {menu && MENU_SECTIONS.map((section) => {
-              return (<MenuSection key={section.id} heading={section.heading} type={section.id} menu={menu} />)
+              return (
+                <MenuSection key={section.id} heading={section.heading} type={section.id} menu={menu} setActiveSection={setActiveSection} />
+              )
             })}
           </div>
           <aside className="sidebar">
@@ -248,7 +308,7 @@ export default function Main() {
       </main>
 
       {/* Сторонние компоненты (ProductPage, Footer) */}
-      <Outlet />
+      < Outlet />
     </>
   )
 }

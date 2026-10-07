@@ -1,7 +1,6 @@
 .menu {
-  background-color: white;
+  background-color: #101217;
   padding: 0 160px;
-  margin-bottom: 25px;
 }
 
 .menu-container {
@@ -18,13 +17,6 @@
   z-index: 90;
 }
 
-.menu-navbar {
-  background-color: var(--background-color);
-  position: sticky;
-  top: 112px;
-  z-index: 90;
-}
-
 .header-panel-city-info {
   cursor: pointer;
   font-size: 17px;
@@ -34,70 +26,59 @@
   }
 }
 
+.menu-navbar {
+  background-color: var(--background-color);
+  position: sticky;
+  top: 112px;
+  z-index: 90;
+}
+
 .menu-navbar-block {
   border-radius: 60px 60px 0 0;
   padding: 25px 160px;
-  background-color: white;
+  background-color: #101217;
 
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
 
-  ul {
+  &>ul {
     display: flex;
     flex-direction: row;
     list-style: none;
     align-items: center;
-    gap: 42px;
     font-size: 16px;
   }
 
-  a {
+  &>ul>li>a {
     cursor: pointer;
-    transition: 0.3s;
     text-decoration: none;
-    color: black;
+    color: white;
+    padding: 15px 20px;
   }
 
-  a:hover {
+  &>ul>li>a:hover {
     color: var(--dodo-color);
   }
 
-  a.active {
-    display: inline-flex;
-    align-items: center;
+  &>ul>li>a:hover,
+  &>ul>li>a.active {
     justify-content: center;
-    background-color: black;
-    color: white;
+    background-color: white;
+    color: black;
     border-radius: 30px;
-    padding: 10px 20px;
   }
 }
 
 .menu-navbar-button {
   cursor: pointer;
   width: 115px;
-  height: 40px;
-  border-radius: 20px;
+  height: 50px;
+  border-radius: 50px;
   border: 0px;
   background-color: var(--dodo-color);
   color: white;
   transition: 0.3s;
-}
-
-.menu-navbar-more-button {
-  transition: 0.3s;
-  cursor: pointer;
-  width: 75px;
-  height: 30px;
-  border-radius: 20px;
-  border: 0px;
-  background-color: var(--background-color);
-}
-
-.menu-navbar-more-button:hover {
-  color: var(--dodo-color);
 }
 
 .menu-content {
@@ -110,7 +91,7 @@
 }
 
 .menu-content-heading {
-  margin: 45px 0px;
+  padding: 40px 0px;
 }
 
 .aside-img-container {
@@ -137,7 +118,6 @@
   top: 25px;
   left: 15px;
   right: 15px;
-
 
   .title {
     font-size: 29px;
@@ -262,7 +242,7 @@
   font-size: 13px;
   font-weight: 600;
   font-style: bold;
-  color: rgb(52, 52, 52);
+  color: rgb(255, 255, 255);
 }
 
 .header-panel-img {
@@ -271,9 +251,116 @@
 }
 
 .header-panel-btn {
+  margin-left: 8px;
   width: 92px;
-  height: 45px;
+  height: 50px;
   border: 0;
-  border-radius: 23px;
-  background-color: white;
+  border-radius: 50px;
+  background-color: #1B1D21;
+}
+
+.popular-products-block {
+  padding-top: 25px;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 12px;
+}
+
+.popular-products-card {
+  cursor: pointer;
+  transition: 0.2s;
+  border-radius: 30px;
+  border: 1px solid rgb(0, 0, 0, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: #27272B;
+
+  img {
+    margin-top: 15px;
+    width: 111px;
+    height: 111px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    transition: 0.3s;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 64px;
+    height: 24px;
+    margin-bottom: 10px;
+    background-color: #1B1D21;
+    border-radius: 20px;
+    border: 0px;
+    font-size: 13px;
+  }
+
+  box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.1);
+}
+
+.popular-products-card.active {
+  border: 1px solid var(--dodo-color);
+}
+
+.popular-products-card:hover {
+  transform: translateY(2px);
+}
+
+.popular-products-card-title {
+  padding: 0 5px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.popular-products-card-price {
+  margin: 15px 0px;
+  font-size: 18px;
+  background-color: #101217;
+  border: none;
+  border-radius: 30px;
+}
+
+.menu-navbar-dropdown {
+  position: absolute;
+  background-color: #1c1f28;
+  width: 150px;
+  border-radius: 10px;
+  margin-top: 20px;
+  overflow: hidden;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    list-style: none;
+    text-align: left;
+
+  }
+
+  li {
+    display: block;
+  }
+
+  a {
+    padding: 7px;
+    display: block;
+    width: 100%;
+    color: white;
+
+  }
+
+  a:hover {
+    background-color: #27272B;
+  }
+
+  a.active {
+    background-color: rgb(255, 255, 255);
+    color: #1c1f28;
+  }
+}
+
+.hidden {
+  display: none;
 }

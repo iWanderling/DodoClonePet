@@ -10,7 +10,7 @@
   font-size: 15px;
 
   flex: 1;
-  border-bottom: 1px solid rgb(212, 212, 212);
+  border-bottom: 1px solid rgb(44, 44, 44);
 
   ul {
     display: flex;
@@ -22,7 +22,7 @@
   a {
     transition: 0.3s;
     text-decoration: none;
-    color: black;
+    color: white;
   }
 
   a:hover {
