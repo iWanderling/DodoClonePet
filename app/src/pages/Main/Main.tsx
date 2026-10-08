@@ -1,15 +1,17 @@
 import "./Main.css"
 import { Outlet, useNavigate } from "react-router-dom"
-import Card from "../../components/Card/Card"
-import { useState, useEffect, useRef } from "react";
+import Stories from "../../components/Stories/Stories"
+import MenuSection from "../../components/MenuSection/MenuSection";
+import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
-import { useInView } from "react-intersection-observer"
+
+
 
 // Тип для меню (повторяет Product)
 type Menu = Product[];
 
 // Универсальное описание для каждого товара
-interface Product {
+export interface Product {
   id: string, // ID
   title: string, // Название
   type: string, // Тип товара (пицца, закуска, напиток)
@@ -39,16 +41,6 @@ type ProductOptions = {
   excludedToppings?: string[] // Исключённые начинки для данной опции
 }
 
-// Тип данных для вывода товаров из определённого раздела меню
-interface MenuSectionOutputData {
-  id: string,
-  title: string,
-  imageSource: string,
-  price: number,
-  hasOptions: boolean,
-  flag: string | null
-}
-
 // Данные о разделах основного меню
 const MENU_SECTIONS = [
   { id: "pizza", heading: "Пиццы" },
@@ -70,83 +62,12 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 }
 
-
-// Создание разделов для меню
-function MenuSection({ heading, type, menu, setActiveSection }: { heading: string, type: string, menu: Menu, setActiveSection: (id: string) => void }) {
-
-  const { ref, inView } = useInView({
-    root: document.querySelector("menu"),
-    threshold: 0.8,
-    rootMargin: "-100px 0px",
-  })
-
-  useEffect(() => {
-    if (inView) setActiveSection(type);
-  }, [inView, type, setActiveSection])
-
-  const sectionProducts: Product[] = menu.filter(p => p.type === type);
-  const outputData: MenuSectionOutputData[] = [];
-
-  // Подготовка данных о товарах к выводу
-  for (let sectionProduct of sectionProducts) {
-    let productID = sectionProduct.id;
-    let productTitle = sectionProduct.title;
-    let productImageSource: string;
-    let productPrice: number;
-    let hasOptions = false;
-    let flag = sectionProduct.flag;
-
-    let indexToFindImgPrice = 0;
-
-    if (sectionProduct.options.length > 1) {
-      indexToFindImgPrice = 1;
-      hasOptions = true;
-    }
-
-    productImageSource = sectionProduct.options[indexToFindImgPrice].imageSource;
-    productPrice = sectionProduct.options[0].price; // отредактировать (минимальная цена);
-
-    // Подготовленные данные о товаре
-    let productData: MenuSectionOutputData = {
-      id: productID,
-      title: productTitle,
-      imageSource: productImageSource,
-      price: productPrice,
-      hasOptions: hasOptions,
-      flag: flag
-    }
-
-    outputData.push(productData);
-  }
-
-  return (
-    <section ref={ref} className="menu-content-section" id={type}>
-      <h1 className="menu-content-heading">{heading}</h1>
-      <div className="menu-content">
-        {outputData.map((product) => (
-          <Card
-            key={product.id}
-            id={product.id}
-            imageSource={product.imageSource}
-            title={product.title}
-            price={product.price}
-            hasOptions={product.hasOptions}
-            flag={product.flag}
-          />
-        ))}
-      </div>
-    </section>
-  )
-}
-
 // Компонент главного окна сайта
 export default function Main() {
 
   // Создание состояний и загрузка данных меню
   const navigate = useNavigate();
   const [menu, setMenu] = useState<Menu>();
-  const [showLeftBtn, setShowLeftBtn] = useState(false);
-  const [showRightBtn, setShowRightBtn] = useState(true);
 
   // Состояния отображения выпадающей навпанели
   const [navbarDisplayed, setNavbarDisplayed] = useState<{ id: string, heading: string }[]>([]);
@@ -154,8 +75,8 @@ export default function Main() {
 
   // Состояния выпадающей навпанели
   const [activeSection, setActiveSection] = useState<string>("more");
-  const [dropdownTitle, setDropdownTitle] = useState<string>("Ещё");
   const [isDropdownHovered, setIsDropdownHovered] = useState<boolean>(false);
+  const dropdownTitle = "Ещё";
 
   // Загрузка меню и секций для навигационной панели
   useEffect(() => {
@@ -169,36 +90,6 @@ export default function Main() {
     }
     else setNavbarDisplayed(MENU_SECTIONS);
   }, []);
-
-  // Обработка скролл-панели для историй
-  const storiesContentRef = useRef<HTMLDivElement>(null);
-  const storiesFunctions = {
-    // Вычисление позиции для скролл-кнопок
-    checkScrollPosition: () => {
-      if (storiesContentRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = storiesContentRef.current;
-
-        setShowLeftBtn(scrollLeft > 2);
-        setShowRightBtn(scrollLeft + clientWidth < scrollWidth - 2);
-      }
-    },
-    // Обработка скролла для историй влево
-    handleScrollLeft: () => {
-      if (storiesContentRef.current) {
-        // clientWidth — это ширина видимого "окна" скролла
-        // Добавляем + 7, чтобы учесть один gap между элементами при перелистывании
-        const scrollStep = storiesContentRef.current.clientWidth + 7;
-        storiesContentRef.current.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-      }
-    },
-    // Обработка скролла для историй вправо
-    handleScrollRight: () => {
-      if (storiesContentRef.current) {
-        const scrollStep = storiesContentRef.current.clientWidth + 7;
-        storiesContentRef.current.scrollBy({ left: scrollStep, behavior: 'smooth' });
-      }
-    }
-  }
 
   return (
     <>
@@ -223,22 +114,7 @@ export default function Main() {
         </div>
       </nav>
 
-      {/* Раздел с историями */}
-      <section className="story-block">
-        {showLeftBtn && <button className="story-block-button prev" onClick={storiesFunctions.handleScrollLeft}>{"<"}</button>}
-        <div className="story-block-content" ref={storiesContentRef} onScroll={storiesFunctions.checkScrollPosition}>
-          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
-        </div>
-        {showRightBtn && <button className="story-block-button next" onClick={storiesFunctions.handleScrollRight}>{">"}</button>}
-      </section>
-
+      <Stories />
 
       {/* Раздел с навигационной панелью меню */}
       <nav className="menu-navbar">
@@ -257,8 +133,8 @@ export default function Main() {
             {/* Выпадающее меню */}
             {menu && navbarDropdown &&
               <li key={activeSection}
-                onMouseEnter={() => { setTimeout(() => setIsDropdownHovered(true), 100)}}
-                onMouseLeave={() => { setTimeout(() => setIsDropdownHovered(false), 100)}}>
+                onMouseEnter={() => { setTimeout(() => setIsDropdownHovered(true), 100) }}
+                onMouseLeave={() => { setTimeout(() => setIsDropdownHovered(false), 100) }}>
                 <a className={navbarDropdown.find(section => section.id === activeSection) ? "active" : ""}>
                   {navbarDropdown.find(section => section.id === activeSection) ?
                     navbarDropdown.find(section => section.id === activeSection)?.heading : dropdownTitle}

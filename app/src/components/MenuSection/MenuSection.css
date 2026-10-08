@@ -1,0 +1,12 @@
+.menu-content {
+  max-width: 900px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: start;
+  row-gap: 20px;
+  column-gap: 15px;
+}
+
+.menu-content-heading {
+  padding: 40px 0px;
+}
