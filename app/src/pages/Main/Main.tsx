@@ -99,7 +99,7 @@ export default function Main() {
           <div className="header-panel-brand-block">
             <img className="header-panel-img" src="/images/dodologo.webp" />
             <div className="header-panel-img-text">
-              <div className="title">додо пицца</div>
+              <div className="title">НЕ додо пицца</div>
               <div className="description">1111 пиццерии в 111 странах</div>
             </div>
           </div>
@@ -202,8 +202,6 @@ export default function Main() {
           </div>
         </section>
       </main>
-
-      {/* Сторонние компоненты (ProductPage, Footer) */}
       < Outlet />
     </>
   )

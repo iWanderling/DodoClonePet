@@ -6,3 +6,166 @@
   border-radius: 0px 0px 60px 60px;
 }
 
+.footer-block {
+  margin: 25px 160px;
+
+  .kitchen-revisor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+
+    background-color: var(--dodo-color);
+
+    padding: 10px 20px;
+    border-radius: 50px;
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+    }
+
+    button {
+      cursor: pointer;
+      transition: 0.3s;
+      background-color: #1B1D21;
+      color: white;
+      border: 0;
+      border-radius: 50px;
+      width: 190px;
+      height: 40px;
+    }
+
+    button:hover {
+      color: rgb(212, 212, 212);
+    }
+  }
+
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .navigation-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 35px;
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 17px;
+
+      h4 {
+        font-weight: 400;
+        color: #ada9aa;
+      }
+
+      a {
+        cursor: pointer;
+        color: white;
+        font-weight: 500;
+      }
+
+      a:hover {
+        color: #e1dcde;
+      }
+    }
+  }
+
+  .apps-gallery {
+    display: flex;
+
+    img {
+      width: 130px;
+      height: 90px;
+    }
+  }
+
+  .middle {
+    margin-top: 70px;
+    display: flex;
+    gap: 50px;
+
+    h2 {
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    span {
+      display: block;
+      color: #ada9aa;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
+
+.footer-line {
+  margin-top: 50px;
+  height: 0.6px;
+  background-color: rgb(255, 255, 255);
+}
+
+.bottom {
+
+  .underline {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+
+    .info,
+    .social-networks {
+      display: flex;
+      gap: 30px;
+    }
+
+    .social-networks {
+      display: flex;
+      gap: 10px;
+
+      a {
+        background-color: #181A1F;
+        border-radius: 25px;
+        padding: 10px;
+        transition: 0.4s;
+        text-align: center;
+        font-weight: 800;
+      }
+
+      a:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    a {
+      cursor: pointer;
+      color: #ada9aa;
+    }
+
+    a:hover {
+      color: white;
+    }
+  }
+
+  .ERID {
+    margin: 40px 0;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 15px;
+
+    span {
+      color: #605e5e;
+      display: block;
+    }
+  }
+
+}
