@@ -8,6 +8,7 @@ import RootLayout from "./layouts/RootLayout"
 import Main from "./pages/Main/Main"
 import ErrorPage from "./pages/ErrorPage/ErrorPage"
 import ProductPage from './pages/ProductPage/ProductPage'
+import Story from './pages/Story/Story'
 
 // Styles
 import './App.css'
@@ -17,6 +18,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<RootLayout />} errorElement={<ErrorPage />}>
       <Route path="/" element={<Main />}>
         <Route path="product/:product" element={<ProductPage />} />
+        <Route path="story/:story" element={<Story />} />
       </Route>
     </Route>
   )

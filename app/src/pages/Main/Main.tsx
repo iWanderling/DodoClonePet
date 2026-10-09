@@ -5,8 +5,6 @@ import MenuSection from "../../components/MenuSection/MenuSection";
 import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
 
-
-
 // Тип для меню (повторяет Product)
 type Menu = Product[];
 
@@ -179,7 +177,7 @@ export default function Main() {
                 <div className="description">Скачайте и получайте бонусы</div>
               </div>
             </div>
-          </aside>A
+          </aside>
         </div>
         <section className="delivery">
           <h1>Доставка пиццы в Казани</h1>

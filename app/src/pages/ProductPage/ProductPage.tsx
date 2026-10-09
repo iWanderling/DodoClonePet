@@ -1,6 +1,6 @@
 import "./ProductPage.css"
 import { useNavigate } from "react-router-dom"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
 
@@ -200,10 +200,10 @@ export default function ProductPage() {
               <h2>{product.title}
                 <button style={{ "width": "inherit", "height": "inherit" }} className="nutrition-facts-button" onClick={() => setNutritionOpened(prev => !prev)}>O</button></h2>
               {nutritionOpened ? <div className="nutrition-facts-block">
-                Пищевая ценность на 100 г <br/>
+                Пищевая ценность на 100 г <br />
                 {currentOption.nutritionFacts &&
                   Object.entries(currentOption.nutritionFacts).map((key, index) => (
-                    <span key={index}>{toCapitalize(translator[key[0]])}: {key[1]} {key[0] === "calories" ? translator["ccal"] : translator["g"]} <br/></span>))
+                    <span key={index}>{toCapitalize(translator[key[0]])}: {key[1]} {key[0] === "calories" ? translator["ccal"] : translator["g"]} <br /></span>))
                 }
               </div> : ""}
               <div className="modal-card-product-panel-type">

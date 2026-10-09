@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import "./Stories.css";
 
 
@@ -42,14 +43,9 @@ export default function Stories() {
       <section className="story-block">
         {showLeftBtn && <button className="story-block-button prev" onClick={storiesFunctions.handleScrollLeft}>{"<"}</button>}
         <div className="story-block-content" ref={storiesContentRef} onScroll={storiesFunctions.checkScrollPosition}>
-          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></div>
-          <div className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></div>
+          <Link to="/story/giveaward-111" className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></Link>
+          <Link to="/story/tom-yam-story" className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></Link>
+          <Link to="/story/dobri-cola" className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></Link>
         </div>
         {showRightBtn && <button className="story-block-button next" onClick={storiesFunctions.handleScrollRight}>{">"}</button>}
       </section>

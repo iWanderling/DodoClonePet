@@ -1,5 +1,4 @@
 .story-block {
-
   margin-bottom: 20px;
 
   padding: 0 160px;
@@ -52,6 +51,7 @@
 }
 
 .story-block-content img {
+  cursor: pointer;
   border-radius: 30px;
   height: 241px;
   flex-shrink: 0;
