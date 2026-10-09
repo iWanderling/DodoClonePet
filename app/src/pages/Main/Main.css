@@ -289,3 +289,55 @@
 .hidden {
   display: none;
 }
+
+.delivery {
+  width: 520px;
+  padding: 45px 0 110px 0;
+  overflow-wrap: break-word;
+  font-weight: 400;
+
+  h1 {
+    margin: 45px 0;
+  }
+
+  h3 {
+    color: var(--dodo-color);
+    margin-bottom: 5px;
+  }
+}
+
+.delivery-content-block {
+  display: flex;
+}
+
+.delivery-zone-container {
+  position: relative;
+}
+
+.delivery-zone {
+  width: 250px;
+
+  img {
+    margin-top: 5px;
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
+  }
+}
+
+.delivery-zone-img-title {
+  position: absolute;
+  color: rgb(50, 50, 50);
+  font-size: 18px;
+  top: 43%;
+  left: 15%;
+}
+
+.delivery-info {
+  width: 300px;
+  font-size: 17px;
+
+  p {
+    margin-bottom: 20px;
+  }
+}

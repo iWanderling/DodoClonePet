@@ -179,8 +179,28 @@ export default function Main() {
                 <div className="description">Скачайте и получайте бонусы</div>
               </div>
             </div>
-          </aside>
+          </aside>A
         </div>
+        <section className="delivery">
+          <h1>Доставка пиццы в Казани</h1>
+          <div className="delivery-content-block">
+            <div className="delivery-zone">
+              <h3>ЗОНА ДОСТАВКИ ОГРАНИЧЕНА</h3>
+              <div className="delivery-zone-container">
+                <img src="/images/911e3a5bc67fc765b604.jpg" />
+                <h4 className="delivery-zone-img-title">Зона доставки</h4>
+              </div>
+            </div>
+            <div className="delivery-info">
+              <h3>От 649 ₽</h3>
+              <p>Минимальная сумма доставки</p>
+              <h3>5 000 ₽</h3>
+              <p>Максимальная сумма при оплате наличными</p>
+              <p>Все цены в меню указаны без учета скидок</p>
+              <p>Изображения продуктов могут отличаться от продуктов в заказе.</p>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Сторонние компоненты (ProductPage, Footer) */}

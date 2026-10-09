@@ -1,4 +1,8 @@
 .footer {
   padding-top: 250px;
-  background-color: white;
 }
+
+.menu {
+  border-radius: 0px 0px 60px 60px;
+}
+
