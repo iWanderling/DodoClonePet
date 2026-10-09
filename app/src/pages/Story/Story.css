@@ -5,10 +5,11 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1000;
-  background-color: rgb(113, 112, 112);
-  background-repeat: no-repeat;
-  background-size: cover;
+  z-index: 200;
+
+  background-color: gray;
+  /* background-position: center;
+  background-size: cover; */
 
   display: flex;
   justify-content: center;
@@ -17,6 +18,7 @@
 
 /* Панель с кнопками и экраном */
 .story-panel {
+  z-index: 201;
   display: flex;
   align-items: center;
   gap: 30px;

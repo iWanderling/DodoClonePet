@@ -1,12 +1,38 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Stories.css";
 
+type Stories = Story[];
+
+interface Story {
+  id: string,
+  previewImageSource: string,
+  content: {
+    imageSource: string,
+    link?: string
+  }[]
+}
+
+// Загрузка JSON-данных
+async function loadJson<T>(source: string): Promise<T> {
+  const response = await fetch(source);
+  if (!response.ok) throw Error("Ошибка загрузки данных :(");
+  return await response.json();
+};
 
 export default function Stories() {
 
   const [showLeftBtn, setShowLeftBtn] = useState(false);
   const [showRightBtn, setShowRightBtn] = useState(true);
+  const [stories, setStories] = useState<Stories>();
+
+  useEffect(() => {
+    const loader = async () => {
+      const stories = await loadJson<Stories>("/data/stories.json");
+      setStories(stories);
+    };
+    loader();
+  }, [])
 
   // Обработка скролл-панели для историй
   const storiesContentRef = useRef<HTMLDivElement>(null);
@@ -38,15 +64,15 @@ export default function Stories() {
     }
   }
 
-  return (
+  return (stories &&
     <>
       <section className="story-block">
         {showLeftBtn && <button className="story-block-button prev" onClick={storiesFunctions.handleScrollLeft}>{"<"}</button>}
-        <div className="story-block-content" ref={storiesContentRef} onScroll={storiesFunctions.checkScrollPosition}>
-          <Link to="/story/giveaward-111" className="scroll-item"><img src="/images/stories/giveaward-111.webp" /></Link>
-          <Link to="/story/tom-yam-story" className="scroll-item"><img src="/images/stories/tom-yam-story.webp" /></Link>
-          <Link to="/story/dobri-cola" className="scroll-item"><img src="/images/stories/dobri-cola.webp" /></Link>
-        </div>
+        {stories.map((story, index) => (
+          <div key={index} className="story-block-content" ref={storiesContentRef} onScroll={storiesFunctions.checkScrollPosition}>
+            <Link to={`/story/${story.id}`} className="scroll-item"><img src={story.previewImageSource} /></Link>
+          </div>
+        ))}
         {showRightBtn && <button className="story-block-button next" onClick={storiesFunctions.handleScrollRight}>{">"}</button>}
       </section>
     </>

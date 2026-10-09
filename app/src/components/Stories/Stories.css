@@ -1,16 +1,13 @@
 .story-block {
   margin-bottom: 20px;
-
   padding: 0 160px;
-  position: relative;
 
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
-
   width: 100%;
-  box-sizing: border-box;
-
+    gap: 10px;
 }
 
 .story-block-button {
@@ -35,18 +32,14 @@
 
 .story-block-content {
   display: flex;
-  overflow-x: hidden;
-  width: 100%;
-  min-width: 0;
-  gap: 7px;
+
+  a {
+    display: block;
+  }
 }
 
 .scroll-item {
-
-  /* Жестко запрещаем сжатие (0) и растяжение (0) */
-  flex: 0 0 calc((100% - (5 * 7px)) / 6);
-
-  /* Дублируем для браузеров, которые игнорируют flex-basis на тегах img */
+  flex: 0 0 calc((100% - (5 * 7px)) / 65);
   width: calc((100% - (5 * 7px)) / 6);
 }
 
@@ -55,6 +48,4 @@
   border-radius: 30px;
   height: 241px;
   flex-shrink: 0;
-  object-fit: cover;
-  scroll-snap-align: start;
 }

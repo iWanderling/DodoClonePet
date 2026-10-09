@@ -200,10 +200,10 @@ export default function ProductPage() {
               <h2>{product.title}
                 <button style={{ "width": "inherit", "height": "inherit" }} className="nutrition-facts-button" onClick={() => setNutritionOpened(prev => !prev)}>O</button></h2>
               {nutritionOpened ? <div className="nutrition-facts-block">
-                Пищевая ценность на 100 г <br />
+                Пищевая ценность на 100 г <br/>
                 {currentOption.nutritionFacts &&
                   Object.entries(currentOption.nutritionFacts).map((key, index) => (
-                    <span key={index}>{toCapitalize(translator[key[0]])}: {key[1]} {key[0] === "calories" ? translator["ccal"] : translator["g"]} <br /></span>))
+                    <span key={index}>{toCapitalize(translator[key[0]])}: {key[1]} {key[0] === "calories" ? translator["ccal"] : translator["g"]} <br/></span>))
                 }
               </div> : ""}
               <div className="modal-card-product-panel-type">
@@ -216,7 +216,7 @@ export default function ProductPage() {
                 {product.isOptionalDescription && Array.isArray(product.description) &&
                   product.description.map((i) => (
                     (product.removableOptionalDescription && product.removableOptionalDescription.find(r => r === i) ?
-                      <a className={(removedOptions.includes(i) ? "removed" : "not-removed")}>{i} <button
+                      <a key={i} className={(removedOptions.includes(i) ? "removed" : "not-removed")}>{i} <button
                         onClick={() => setRemovedOptions((prev) => prev.includes(i) ? prev.filter(ri => ri !== i) : [...prev, i])}
                         style={{ "width": "inherit", "height": "inherit" }}>
                         o</button>, </a> : `${i}, `)))
