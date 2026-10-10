@@ -1,4 +1,3 @@
-/* Задняя часть */
 .story-background {
   position: fixed;
   top: 0;
@@ -7,18 +6,30 @@
   height: 100vh;
   z-index: 200;
 
-  background-color: gray;
-  /* background-position: center;
-  background-size: cover; */
+  background-image: var(--background-img);
+  background-position: center;
+  background-size: cover;
+}
+
+.story-window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 201;
 
   display: flex;
   justify-content: center;
   align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(24px);
 }
 
 /* Панель с кнопками и экраном */
 .story-panel {
-  z-index: 201;
+  z-index: 202;
   display: flex;
   align-items: center;
   gap: 30px;

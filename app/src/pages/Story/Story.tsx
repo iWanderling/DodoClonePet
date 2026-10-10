@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
 import { useEffect, useState } from "react";
 
+
+
 type Stories = Story[];
 
 interface Story {
@@ -40,22 +42,23 @@ export default function Story() {
 
   return (story &&
     <RemoveScroll>
-      {/* style={{ backgroundImage: `url(${story.content[activeImageIndex].imageSource})`}} */}
-      <div className="story-background">
-        <div className="story-panel">
-          <button className="scroll-left" onClick={() => setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev))}>{"<"}</button>
-          <div className="content-block">
-            <div className="sticks">
-              {story.content.map((info, index) => (
-                <div key={index} className="stick"></div>
-              ))
-              }
+      <div className="story-background" style={{ "--background-img": `url(${story.content[activeImageIndex].imageSource})` } as React.CSSProperties}>
+        <div className="story-window">
+          <div className="story-panel">
+            <button className="scroll-left" onClick={() => setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev))}>{"<"}</button>
+            <div className="content-block">
+              <div className="sticks">
+                {story.content.map((info, index) => (
+                  <div key={index} className="stick"></div>
+                ))
+                }
+              </div>
+              <button onClick={() => { }} className="pause">P</button>
+              <img src={story.content[activeImageIndex].imageSource} />
             </div>
-            <button onClick={() => { }} className="pause">P</button>
-            <img src={story.content[activeImageIndex].imageSource} />
+            <button className="scroll-right" onClick={() => setActiveImageIndex(prev => (prev < story.content.length - 1) ? (prev + 1) : (prev))} >{">"}</button>
+            <button className="back" onClick={() => navigate("/")}>X</button>
           </div>
-          <button className="scroll-right" onClick={() => setActiveImageIndex(prev => (prev < story.content.length - 1) ? (prev + 1) : (prev))} >{">"}</button>
-          <button className="back" onClick={() => navigate("/")}>X</button>
         </div>
       </div>
     </RemoveScroll>
