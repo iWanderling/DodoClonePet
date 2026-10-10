@@ -1,7 +1,7 @@
 import "./Story.css"
 import { useNavigate, useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 
 
@@ -27,25 +27,35 @@ export default function Story() {
 
   const navigate = useNavigate();
   const storyID = useParams()["story"];
-  const [stories, setStories] = useState<Stories>();
+  const [stories, setStories] = useState<Stories>([]);
   const [story, setStory] = useState<Story>();
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+  const activeStory = useRef<number>(0);
 
   useEffect(() => {
     const loader = async () => {
       const stories = await loadJson<Stories>("/data/stories.json");
+      const story = stories.find(s => s.id === storyID);
+
+      for (let i = 0; i < stories.length; i++) {
+        if (stories[i] === story) {
+          activeStory.current = i;
+          break;
+        }
+      }
       setStories(stories);
-      setStory(stories.find(s => s.id === storyID));
+      setStory(story);
     };
     loader();
-  }, [])
+  }, [storyID])
 
+  // onClick={() => setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev))}
   return (story &&
     <RemoveScroll>
       <div className="story-background" style={{ "--background-img": `url(${story.content[activeImageIndex].imageSource})` } as React.CSSProperties}>
         <div className="story-window">
           <div className="story-panel">
-            <button className="scroll-left" onClick={() => setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev))}>{"<"}</button>
+            <button className="scroll-left" onClick={() => navigate(`/story/${stories[activeStory.current > 0 ? activeStory.current - 1 : activeStory.current].id}`)}>{"<"}</button>
             <div className="content-block">
               <div className="sticks">
                 {story.content.map((info, index) => (
@@ -56,7 +66,7 @@ export default function Story() {
               <button onClick={() => { }} className="pause">P</button>
               <img src={story.content[activeImageIndex].imageSource} />
             </div>
-            <button className="scroll-right" onClick={() => setActiveImageIndex(prev => (prev < story.content.length - 1) ? (prev + 1) : (prev))} >{">"}</button>
+            <button className="scroll-right" onClick={() => navigate(`/story/${stories[activeStory.current < stories.length - 1 ? activeStory.current + 1 : activeStory.current].id}`)} >{">"}</button>
             <button className="back" onClick={() => navigate("/")}>X</button>
           </div>
         </div>
