@@ -79,6 +79,15 @@
     font-size: 15px;
     font-weight: 800;
   }
+
+  .story-link-block {
+    width: 248px;
+    height: 39px;
+    position: absolute;
+    display: block;
+    bottom: 30px;
+    left: 19%;
+  }
 }
 
 /* Кнопки скролла историй */

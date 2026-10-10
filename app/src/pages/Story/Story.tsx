@@ -23,6 +23,15 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 };
 
+function handleContentBlockClick(event: React.MouseEvent<HTMLDivElement>,
+  setActiveImageIndex: React.Dispatch<React.SetStateAction<number>>, storyLength: number): void {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+
+  if (clickX < rect.width / 2) setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev));
+  else setActiveImageIndex(prev => (prev < storyLength - 1) ? (prev + 1) : (prev));
+}
+
 export default function Story() {
 
   const navigate = useNavigate();
@@ -32,6 +41,7 @@ export default function Story() {
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const activeStory = useRef<number>(0);
 
+  // Bug: error when activeImageIndex > 0 & we're switching to another story
   useEffect(() => {
     const loader = async () => {
       const stories = await loadJson<Stories>("/data/stories.json");
@@ -47,16 +57,16 @@ export default function Story() {
       setStory(story);
     };
     loader();
+    setActiveImageIndex(0);
   }, [storyID])
 
-  // onClick={() => setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev))}
   return (story &&
     <RemoveScroll>
       <div className="story-background" style={{ "--background-img": `url(${story.content[activeImageIndex].imageSource})` } as React.CSSProperties}>
         <div className="story-window">
           <div className="story-panel">
             <button className="scroll-left" onClick={() => navigate(`/story/${stories[activeStory.current > 0 ? activeStory.current - 1 : activeStory.current].id}`)}>{"<"}</button>
-            <div className="content-block">
+            <div className="content-block" onClick={(e) => { handleContentBlockClick(e, setActiveImageIndex, story.content.length) }}>
               <div className="sticks">
                 {story.content.map((info, index) => (
                   <div key={index} className="stick"></div>
@@ -65,6 +75,10 @@ export default function Story() {
               </div>
               <button onClick={() => { }} className="pause">P</button>
               <img src={story.content[activeImageIndex].imageSource} />
+              {story.content[activeImageIndex].link &&
+                <a className="story-link-block" href={story.content[activeImageIndex].link}>
+                </a>
+              }
             </div>
             <button className="scroll-right" onClick={() => navigate(`/story/${stories[activeStory.current < stories.length - 1 ? activeStory.current + 1 : activeStory.current].id}`)} >{">"}</button>
             <button className="back" onClick={() => navigate("/")}>X</button>
