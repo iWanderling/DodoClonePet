@@ -23,13 +23,16 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 };
 
+// Bug: sometimes pause does not working and progress bar continue filling
 function handleContentBlockClick(event: React.MouseEvent<HTMLDivElement>,
   setActiveImageIndex: React.Dispatch<React.SetStateAction<number>>, storyLength: number): void {
-  const rect = event.currentTarget.getBoundingClientRect();
-  const clickX = event.clientX - rect.left;
+  if (event.target instanceof HTMLElement && event.target.id !== "pause") {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
 
-  if (clickX < rect.width / 2) setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev));
-  else setActiveImageIndex(prev => (prev < storyLength - 1) ? (prev + 1) : (prev));
+    if (clickX < rect.width / 2) setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev));
+    else setActiveImageIndex(prev => (prev < storyLength - 1) ? (prev + 1) : (prev));
+  }
 }
 
 export default function Story() {
@@ -42,6 +45,7 @@ export default function Story() {
   const activeStory = useRef<number>(0);
 
   const [storyProgress, setStoryProgress] = useState<number>(0);
+  const paused = useRef<boolean>(false);
   const storyProgressInterval = useRef<number>(0);
 
   useEffect(() => {
@@ -62,24 +66,43 @@ export default function Story() {
     setActiveImageIndex(0);
   }, [storyID])
 
-  useEffect(() => {
-
-    if (storyProgressInterval.current) clearInterval(storyProgressInterval.current);
-
-    storyProgressInterval.current = setInterval(() => {
+  const storyProgressBarInterval = () => {
+    return setInterval(() => {
       setStoryProgress((prev) => {
         if (prev >= 100) {
           clearInterval(storyProgressInterval.current);
-          setActiveImageIndex(prev => (story && prev < story.content.length - 1) ? (prev + 1) : (prev));
-          // navigate( `/story/${stories[activeStory.current < stories.length - 1 ? activeStory.current + 1 : activeStory.current].id}`);
+          if (story && (activeImageIndex < story.content.length - 1)) {
+            setActiveImageIndex(prev => prev + 1);
+          }
+          else if (activeStory.current < stories.length - 1) {
+            navigate(`/story/${stories[activeStory.current + 1].id}`);
+          }
+          else {
+            navigate("/");
+          }
           return 100;
         }
         return prev + 0.1;
       })
-    }, 10)
+    }, 1)
+  }
 
+  useEffect(() => {
+    if (storyProgressInterval.current) clearInterval(storyProgressInterval.current);
+    storyProgressInterval.current = storyProgressBarInterval();
     setStoryProgress(0);
-  }, [storyID, activeImageIndex])
+  }, [story, activeImageIndex])
+
+  const pauseStoryInterval = () => {
+    if (!paused.current) {
+      clearInterval(storyProgressInterval.current);
+      paused.current = true;
+    }
+    else {
+      storyProgressInterval.current = storyProgressBarInterval();
+      paused.current = false;
+    }
+  }
 
   return (story &&
     <RemoveScroll>
@@ -96,7 +119,7 @@ export default function Story() {
                 ))
                 }
               </div>
-              <button onClick={() => { }} className="pause">P</button>
+              <button onClick={pauseStoryInterval} id="pause" className="pause">P</button>
               <img src={story.content[activeImageIndex].imageSource} />
               {story.content[activeImageIndex].link &&
                 <a className="story-link-block" href={story.content[activeImageIndex].link}>
