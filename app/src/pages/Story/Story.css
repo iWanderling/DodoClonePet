@@ -64,6 +64,13 @@
       background-color: rgba(255, 255, 255, 0.7);
       width: 100%;
       border-radius: 35px;
+      overflow: hidden;
+
+      .stick-loading {
+        height: 2px;
+        background-color: white;
+      }
+
     }
   }
 

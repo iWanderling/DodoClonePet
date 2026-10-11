@@ -41,7 +41,9 @@ export default function Story() {
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const activeStory = useRef<number>(0);
 
-  // Bug: error when activeImageIndex > 0 & we're switching to another story
+  const [storyProgress, setStoryProgress] = useState<number>(0);
+  const storyProgressInterval = useRef<number>(0);
+
   useEffect(() => {
     const loader = async () => {
       const stories = await loadJson<Stories>("/data/stories.json");
@@ -60,6 +62,25 @@ export default function Story() {
     setActiveImageIndex(0);
   }, [storyID])
 
+  useEffect(() => {
+
+    if (storyProgressInterval.current) clearInterval(storyProgressInterval.current);
+
+    storyProgressInterval.current = setInterval(() => {
+      setStoryProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(storyProgressInterval.current);
+          setActiveImageIndex(prev => (story && prev < story.content.length - 1) ? (prev + 1) : (prev));
+          // navigate( `/story/${stories[activeStory.current < stories.length - 1 ? activeStory.current + 1 : activeStory.current].id}`);
+          return 100;
+        }
+        return prev + 0.1;
+      })
+    }, 10)
+
+    setStoryProgress(0);
+  }, [storyID, activeImageIndex])
+
   return (story &&
     <RemoveScroll>
       <div className="story-background" style={{ "--background-img": `url(${story.content[activeImageIndex].imageSource})` } as React.CSSProperties}>
@@ -69,7 +90,9 @@ export default function Story() {
             <div className="content-block" onClick={(e) => { handleContentBlockClick(e, setActiveImageIndex, story.content.length) }}>
               <div className="sticks">
                 {story.content.map((info, index) => (
-                  <div key={index} className="stick"></div>
+                  <div key={index} className="stick">
+                    <div className="stick-loading" style={{ width: `${(index === activeImageIndex) ? storyProgress : (activeImageIndex < index) ? 0 : 100}%` }}> </div>
+                  </div>
                 ))
                 }
               </div>
