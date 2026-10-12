@@ -23,14 +23,13 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 };
 
-function handleContentBlockClick(event: React.MouseEvent<HTMLDivElement>,
-  setActiveImageIndex: React.Dispatch<React.SetStateAction<number>>, storyLength: number): void {
+function handleContentBlockClick(event: React.MouseEvent<HTMLDivElement>, handleLeft: () => void, handleRight: () => void): void {
   if (event.target instanceof HTMLElement && event.target.id !== "pause") {
     const rect = event.currentTarget.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
 
-    if (clickX < rect.width / 2) setActiveImageIndex(prev => (prev > 0) ? (prev - 1) : (prev));
-    else setActiveImageIndex(prev => (prev < storyLength - 1) ? (prev + 1) : (prev));
+    if (clickX < rect.width / 2) handleLeft();
+    else handleRight();
   }
 }
 
@@ -86,6 +85,29 @@ export default function Story() {
     }, 1)
   }
 
+  const handleContentLeftClick = () => {
+    if (activeImageIndex > 0) setActiveImageIndex(prev => prev - 1);
+    else {
+      if (activeStory.current > 0) navigate(`/story/${stories[activeStory.current - 1].id}`)
+      else {
+        clearInterval(storyProgressInterval.current);
+        storyProgressInterval.current = storyProgressBarInterval();
+        setStoryProgress(0);
+      }
+    }
+  }
+
+  const handleContentRightClick = () => {
+    if (story && (activeImageIndex < story.content.length - 1)) setActiveImageIndex(prev => prev + 1);
+    else {
+      if (activeStory.current < stories.length - 1) navigate(`/story/${stories[activeStory.current + 1].id}`)
+      else {
+        clearInterval(storyProgressInterval.current);
+        navigate("/");
+      }
+    }
+  }
+
   useEffect(() => {
     if (storyProgressInterval.current) clearInterval(storyProgressInterval.current);
     storyProgressInterval.current = storyProgressBarInterval();
@@ -109,8 +131,9 @@ export default function Story() {
       <div className="story-background" style={{ "--background-img": `url(${story.content[activeImageIndex].imageSource})` } as React.CSSProperties}>
         <div className="story-window">
           <div className="story-panel">
-            <button className="scroll-left" onClick={() => navigate(`/story/${stories[activeStory.current > 0 ? activeStory.current - 1 : activeStory.current].id}`)}>{"<"}</button>
-            <div className="content-block" onClick={(e) => { handleContentBlockClick(e, setActiveImageIndex, story.content.length) }}>
+            <button className={`scroll-left ${activeStory.current === 0 ? "disabled-scroll" : ""}`}
+              onClick={() => navigate(`/story/${stories[activeStory.current > 0 ? activeStory.current - 1 : activeStory.current].id}`)}>{"<"}</button>
+            <div className="content-block" onClick={(e) => { handleContentBlockClick(e, handleContentLeftClick, handleContentRightClick) }}>
               <div className="sticks">
                 {story.content.map((info, index) => (
                   <div key={index} className="stick">
@@ -126,7 +149,8 @@ export default function Story() {
                 </a>
               }
             </div>
-            <button className="scroll-right" onClick={() => navigate(`/story/${stories[activeStory.current < stories.length - 1 ? activeStory.current + 1 : activeStory.current].id}`)} >{">"}</button>
+            <button className={`scroll-right ${activeStory.current === stories.length - 1 ? "disabled-scroll" : ""}`}
+              onClick={() => navigate(`/story/${stories[activeStory.current < stories.length - 1 ? activeStory.current + 1 : activeStory.current].id}`)} >{">"}</button>
             <button className="back" onClick={() => navigate("/")}>X</button>
           </div>
         </div>
