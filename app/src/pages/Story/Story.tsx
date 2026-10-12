@@ -23,7 +23,6 @@ async function loadJson<T>(source: string): Promise<T> {
   return await response.json();
 };
 
-// Bug: sometimes pause does not working and progress bar continue filling
 function handleContentBlockClick(event: React.MouseEvent<HTMLDivElement>,
   setActiveImageIndex: React.Dispatch<React.SetStateAction<number>>, storyLength: number): void {
   if (event.target instanceof HTMLElement && event.target.id !== "pause") {
@@ -91,16 +90,17 @@ export default function Story() {
     if (storyProgressInterval.current) clearInterval(storyProgressInterval.current);
     storyProgressInterval.current = storyProgressBarInterval();
     setStoryProgress(0);
+    paused.current = false;
   }, [story, activeImageIndex])
 
   const pauseStoryInterval = () => {
     if (!paused.current) {
-      clearInterval(storyProgressInterval.current);
       paused.current = true;
+      clearInterval(storyProgressInterval.current);
     }
     else {
-      storyProgressInterval.current = storyProgressBarInterval();
       paused.current = false;
+      storyProgressInterval.current = storyProgressBarInterval();
     }
   }
 
