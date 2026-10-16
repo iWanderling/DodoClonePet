@@ -76,6 +76,8 @@ export default function Main() {
   const [isDropdownHovered, setIsDropdownHovered] = useState<boolean>(false);
   const dropdownTitle = "Ещё";
 
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+
   // Загрузка меню и секций для навигационной панели
   useEffect(() => {
     const loader = async () => {
@@ -88,6 +90,9 @@ export default function Main() {
     }
     else setNavbarDisplayed(MENU_SECTIONS);
   }, []);
+
+  if (isCartOpen) document.body.style.overflow = 'hidden';
+  else document.body.style.overflow = "unset";
 
   return (
     <>
@@ -107,7 +112,7 @@ export default function Main() {
           </div>
         </div>
         <div className="right">
-          <button className="menu-navbar-button" onClick={() => navigate("/")}>Корзина</button>
+          <button className="menu-navbar-button" onClick={() => setIsCartOpen((flag) => !flag)}>Корзина</button>
           <button className="header-panel-btn">Войти</button>
         </div>
       </nav>
@@ -169,7 +174,6 @@ export default function Main() {
               )
             })}
           </div>
-
           <aside className="sidebar">
             <div className="aside-img-container">
               <img src="images/c8d4e73f9a1b6c5e0f2a4b8d7e9f1c3a.webp" />
@@ -183,6 +187,48 @@ export default function Main() {
             </div>
           </aside>
         </div>
+
+        {/* Корзина */}
+        {isCartOpen &&
+          <div className="cart-window">
+            {true &&
+              <div className="cart">
+                <h2>3 товара на 2 047 ₽</h2>
+                <div className="cart-product-card">
+                  <div className="content">
+                    <img src="/images/019a8aaa69cc7601b28736b1ebe7fc25.webp" />
+                    <div className="text-block">
+                      <div className="title">Песто</div>
+                      <div className="description">Описание бла-бла-бла</div>
+                    </div>
+                    <button className="remove">X</button>
+                  </div>
+                  <div className="line"></div>
+                  <div className="change">
+                    <div>
+                      <span className="price">2514 ₽</span>
+                    </div>
+                    <a className="change-product">Изменить</a>
+                    <div className="amount-changer">
+                      <button className="minus">–</button>
+                      <div className="amount">5</div>
+                      <button className="plus">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+            {false &&
+              <div className="cart">
+                <div className="empty">
+                  Пока здесь пусто!
+                </div>
+              </div>
+            }
+            <button className="close-cart-btn" onClick={() => { setIsCartOpen(false) }}>X</button>
+          </div>
+        }
+
         <section className="delivery">
           <h1>Доставка пиццы в Казани</h1>
           <div className="delivery-content-block">
