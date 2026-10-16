@@ -341,3 +341,19 @@
     margin-bottom: 20px;
   }
 }
+
+.support {
+  margin-top: 50px;
+  display: flex;
+  justify-content: right;
+  align-items: center;
+
+  .support-button {
+    cursor: pointer;
+    width: 55px;
+    height: 55px;
+    border: 2px solid white;
+    background-color: var(--dodo-color);
+    border-radius: 30px;
+  }
+}

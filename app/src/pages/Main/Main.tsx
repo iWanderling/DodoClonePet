@@ -169,6 +169,7 @@ export default function Main() {
               )
             })}
           </div>
+
           <aside className="sidebar">
             <div className="aside-img-container">
               <img src="images/c8d4e73f9a1b6c5e0f2a4b8d7e9f1c3a.webp" />
@@ -176,6 +177,9 @@ export default function Main() {
                 <div className="title">В приложении выгоднее</div>
                 <div className="description">Скачайте и получайте бонусы</div>
               </div>
+            </div>
+            <div className="support">
+              <button className="support-button">Help</button>
             </div>
           </aside>
         </div>
