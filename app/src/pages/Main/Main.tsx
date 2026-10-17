@@ -216,6 +216,44 @@ export default function Main() {
                     </div>
                   </div>
                 </div>
+                <div className="add-to-order">
+                  <h3 className="title">Добавить к заказу?</h3>
+                  <div className="cards">
+                    <div className="sauce">
+                      <img src="/images/1a5a6a19cf80b3fd24bf.png" />
+                      <div className="title">Соусы</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="test">
+                  <div className="data-block">
+                    <div className="promocode">
+                      <label className="promocode-label">
+                        <input placeholder="Промокод" />
+                        <a>Применить</a>
+                      </label>
+                    </div>
+                    <div className="line"></div>
+                    <div className="data-prices">
+                      <div className="data-info">
+                        <span>3 товара</span>
+                        <span>2 097 ₽</span>
+                      </div>
+                      <div className="data-info">
+                        <span>Начислим додокоины</span>
+                        <span>+105 D</span>
+                      </div>
+                    </div>
+                    <div className="line"></div>
+                    <div className="total-price">
+                      <span>Сумма заказа</span>
+                      <span>2 097 ₽</span>
+                    </div>
+                  </div>
+                  <div className="create-order">
+                    <button>К оформлению заказа</button>
+                  </div>
+                </div>
               </div>
             }
             {false &&

@@ -387,21 +387,126 @@
   right: 0;
   top: 0;
   height: 100%;
-  width: 29%;
+  width: 28%;
   background-color: #27272B;
 
-  h2 {
+  h2,
+  h3 {
     margin-bottom: 15px;
     padding-top: 23px;
     padding-left: 13px;
   }
 
+  .add-to-order {
+    .cards {
+      padding-left: 13px;
+
+      .sauce {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #17171a;
+        border-radius: 15px;
+        width: fit-content;
+        height: fit-content;
+        padding-bottom: 10px;
+        font-size: 14px;
+        font-weight: 500;
+
+        img {
+          height: 75px;
+          width: 75px;
+        }
+      }
+    }
+
+    .test {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+    }
+  }
+
+  .data-block {
+    margin-top: 10px;
+    padding: 16px;
+    background-color: #181A1F;
+    font-weight: 500;
+    font-size: 12px;
+
+    .promocode {
+
+      .promocode-label {
+        display: flex;
+        justify-content: space-between;
+
+        input {
+          border-style: none;
+          border-image: none;
+          border: 0;
+          background: transparent;
+          outline: none;
+          font-size: 15px;
+          font-weight: 600;
+        }
+
+        a {
+          color: var(--dodo-color);
+          font-size: 13px;
+        }
+      }
+    }
+
+    .line {
+      background-color: #313135;
+      width: 100%;
+      height: 1px;
+      margin: 10px 0;
+    }
+
+    .data-prices {
+      .data-info {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    .total-price {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+    }
+  }
+
+  .create-order {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #181A1F;
+    flex-grow: 1;
+
+    button {
+      margin: 15px;
+      border: 0;
+      background-color: var(--dodo-color);
+      border-radius: 27px;
+      height: 48px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      color: rgb(238, 234, 234);
+    }
+  }
 }
 
 .cart-product-card {
   font-weight: 600;
   background-color: #1c1c1e;
   padding: 16px;
+  margin-top: 7px;
 
   img {
     width: 65px;
@@ -468,6 +573,4 @@
       }
     }
   }
-
-
 }
