@@ -4,18 +4,11 @@ import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
 import type { Product, ProductOptions, Menu, Toppings, ProductToppings } from "../../types/menu"
+import type { InCartProduct } from "../../types/cart"
 import loadJson from '../../utils/loadJson'
 
-// Тип продукта в корзине
-interface InCartProduct {
-  cart_id: number,
-  product_id: string,
-  amount: number,
-  kind: string,
-  size: number,
-  selectedToppings?: Toppings,
-  removedOptions?: string[]
-}
+// import {useAppDispatch, useAppSelector} from "../../app/hooks"
+
 
 // Преобразование описания в строку (если необходимо)
 function descriptionConverter(description: string | string[]): string {
@@ -233,7 +226,7 @@ export default function ProductPage() {
                 </div>
               }
             </div>
-            <button className="button-cart" onClick={() => {addToCart()}}>В корзину за {(!currentOption.toppingSize) ? currentOption.price :
+            <button className="button-cart" onClick={() => { addToCart() }}>В корзину за {(!currentOption.toppingSize) ? currentOption.price :
               currentOption.price + selectedToppings.reduce
                 ((sum, topping) => sum + ((currentOption.toppingSize && currentOption.availableToppings?.includes(topping.id)) ? topping.prices[currentOption.toppingSize] : 0), 0)} ₽</button>
           </div>
