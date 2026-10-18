@@ -2,37 +2,7 @@ import Card from "../../components/Card/Card"
 import { useInView } from "react-intersection-observer"
 import { useEffect } from "react"
 import "./MenuSection.css"
-
-// Универсальное описание для каждого товара
-export interface Product {
-  id: string, // ID
-  title: string, // Название
-  type: string, // Тип товара (пицца, закуска, напиток)
-  inMenu: string[], // В каких разделах меню находится
-  description: string | string[], // Описание товара
-  isOptionalDescription: boolean, // Можно ли удалять ингредиенты из описания
-  removableOptionalDescription?: string[], // Какие ингредиенты можно удалять из описания
-  options: ProductOptions[], // Опции для товара (по размеру, количеству, типу и так далее)
-  measurement_unit: string, // Мера исчисления (в граммах, милилитрах, поштучно)
-  flag: string | null, // Флаг для плашки в меню (суперхит, скидка и так далее)
-}
-
-// Описание опций для каждого товара
-type ProductOptions = {
-  kind: string, // Тип (виды теста, закусок или одиночный тип)
-  price: number, // Цена
-  size: number, // Количество или размер
-  nutritionFacts?: { // Нутриенты ВКБЖУ
-    calories: number,
-    proteins: number,
-    fats: number,
-    carbohydrates: number,
-    weight: number
-  },
-  imageSource: string, // Ссылка на изображение
-  availableToppings?: string[], // Доступные для добавления начинки
-  excludedToppings?: string[] // Исключённые начинки для данной опции
-}
+import type { Product, Menu } from "../../types/menu"
 
 // Тип данных для вывода товаров из определённого раздела меню
 interface MenuSectionOutputData {

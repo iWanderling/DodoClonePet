@@ -1,43 +1,11 @@
 import "./Main.css"
-import { Outlet, useNavigate } from "react-router-dom"
+import { Outlet } from "react-router-dom"
 import Stories from "../../components/Stories/Stories"
 import MenuSection from "../../components/MenuSection/MenuSection";
 import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
-
-// Тип для меню (повторяет Product)
-type Menu = Product[];
-
-// Универсальное описание для каждого товара
-export interface Product {
-  id: string, // ID
-  title: string, // Название
-  type: string, // Тип товара (пицца, закуска, напиток)
-  inMenu: string[], // В каких разделах меню находится
-  description: string | string[], // Описание товара
-  isOptionalDescription: boolean, // Можно ли удалять ингредиенты из описания
-  removableOptionalDescription?: string[], // Какие ингредиенты можно удалять из описания
-  options: ProductOptions[], // Опции для товара (по размеру, количеству, типу и так далее)
-  measurement_unit: string, // Мера исчисления (в граммах, милилитрах, поштучно)
-  flag: string | null, // Флаг для плашки в меню (суперхит, скидка и так далее)
-}
-
-// Описание опций для каждого товара
-type ProductOptions = {
-  kind: string, // Тип (виды теста, закусок или одиночный тип)
-  price: number, // Цена
-  size: number, // Количество или размер
-  nutritionFacts?: { // Нутриенты ВКБЖУ
-    calories: number,
-    proteins: number,
-    fats: number,
-    carbohydrates: number,
-    weight: number
-  },
-  imageSource: string, // Ссылка на изображение
-  availableToppings?: string[], // Доступные для добавления начинки
-  excludedToppings?: string[] // Исключённые начинки для данной опции
-}
+import type { Menu } from "../../types/menu"
+import loadJson from "../../utils/loadJson"
 
 // Данные о разделах основного меню
 const MENU_SECTIONS = [
@@ -53,18 +21,10 @@ const MENU_SECTIONS = [
   { id: "other", heading: "Другие товары" }
 ]
 
-// Загрузка JSON
-async function loadJson<T>(source: string): Promise<T> {
-  const response = await (fetch(source));
-  if (!response.ok) throw Error("Ошибка загрузки данных :(");
-  return await response.json();
-}
-
 // Компонент главного окна сайта
 export default function Main() {
 
-  // Создание состояний и загрузка данных меню
-  const navigate = useNavigate();
+  // Загрузка данных меню
   const [menu, setMenu] = useState<Menu>();
 
   // Состояния отображения выпадающей навпанели

@@ -3,67 +3,19 @@ import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
+import type { Product, ProductOptions, Menu, Toppings, ProductToppings } from "../../types/menu"
+import loadJson from '../../utils/loadJson'
 
-// Тип для меню (повторяет Product)
-type Menu = Product[];
-type Toppings = ProductToppings[];
-
-// Универсальное описание для каждого товара
-interface Product {
-  id: string, // ID
-  title: string, // Название
-  type: string, // Тип товара (пицца, закуска, напиток)
-  inMenu: string[], // В каких разделах меню находится
-  description: string | string[], // Описание товара
-  isOptionalDescription: boolean, // Можно ли удалять ингредиенты из описания
-  removableOptionalDescription?: string[], // Какие ингредиенты можно удалять из описания
-  options: ProductOptions[], // Опции для товара (по размеру, количеству, типу и так далее)
-  defaultKind: string,  // Тип товара по умолчанию
-  defaultSize: number, // Размер / количество по умолчанию
-  measurement_unit: string, // Мера исчисления (в граммах, милилитрах, поштучно)
-  flag: string | null, // Флаг для плашки в меню (суперхит, скидка и так далее)
+// Тип продукта в корзине
+interface InCartProduct {
+  cart_id: number,
+  product_id: string,
+  amount: number,
+  kind: string,
+  size: number,
+  selectedToppings?: Toppings,
+  removedOptions?: string[]
 }
-
-// Описание опций для каждого товара
-type ProductOptions = {
-  kind: string, // Тип (виды теста, закусок или одиночный тип)
-  price: number, // Цена
-  size: number, // Количество или размер
-  nutritionFacts?: { // Нутриенты ВКБЖУ
-    calories: number,
-    proteins?: number,
-    fats?: number,
-    carbohydrates?: number,
-    weight?: number
-  },
-  imageSource: string, // Ссылка на изображение
-  availableToppings?: string[], // Доступные для добавления начинки
-  excludedToppings?: string[] // Исключённые начинки для данной опции
-  toppingSize?: keyof ProductToppings["prices"]; // Размер начинки (для изменения цены)
-  extraDescriptionInfo?: string, // Дополнительная информация для описания
-  imageScale?: number // Дополнительная информация для изменения размера изображения
-}
-
-// Описание топпингов
-type ProductToppings = {
-  id: string,
-  title: string,
-  type: string,
-  imageSource: string,
-  prices: {
-    tiny: number,
-    small: number,
-    medium: number,
-    large: number
-  }
-};
-
-// Загрузка JSON-данных
-async function loadJson<T>(source: string): Promise<T> {
-  const response = await fetch(source);
-  if (!response.ok) throw Error("Ошибка загрузки данных :(");
-  return await response.json();
-};
 
 // Преобразование описания в строку (если необходимо)
 function descriptionConverter(description: string | string[]): string {
@@ -189,6 +141,22 @@ export default function ProductPage() {
     }
   }, [size, kind]);
 
+  function addToCart() {
+    if (productID && kind && size) {
+      const productToCart: InCartProduct = {
+        cart_id: 1,
+        product_id: productID,
+        amount: 1,
+        kind,
+        size,
+        selectedToppings: selectedToppings,
+        removedOptions
+      }
+
+      navigate("/");
+    }
+  }
+
   // HTML
   return (product && currentOption &&
     <RemoveScroll>
@@ -200,10 +168,10 @@ export default function ProductPage() {
               <h2>{product.title}
                 <button style={{ "width": "inherit", "height": "inherit" }} className="nutrition-facts-button" onClick={() => setNutritionOpened(prev => !prev)}>O</button></h2>
               {nutritionOpened ? <div className="nutrition-facts-block">
-                Пищевая ценность на 100 г <br/>
+                Пищевая ценность на 100 г <br />
                 {currentOption.nutritionFacts &&
                   Object.entries(currentOption.nutritionFacts).map((key, index) => (
-                    <span key={index}>{toCapitalize(translator[key[0]])}: {key[1]} {key[0] === "calories" ? translator["ccal"] : translator["g"]} <br/></span>))
+                    <span key={index}>{toCapitalize(translator[key[0]])}: {key[1]} {key[0] === "calories" ? translator["ccal"] : translator["g"]} <br /></span>))
                 }
               </div> : ""}
               <div className="modal-card-product-panel-type">
@@ -265,7 +233,7 @@ export default function ProductPage() {
                 </div>
               }
             </div>
-            <button className="button-cart">В корзину за {(!currentOption.toppingSize) ? currentOption.price :
+            <button className="button-cart" onClick={() => {addToCart()}}>В корзину за {(!currentOption.toppingSize) ? currentOption.price :
               currentOption.price + selectedToppings.reduce
                 ((sum, topping) => sum + ((currentOption.toppingSize && currentOption.availableToppings?.includes(topping.id)) ? topping.prices[currentOption.toppingSize] : 0), 0)} ₽</button>
           </div>
