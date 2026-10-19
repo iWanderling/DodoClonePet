@@ -7,8 +7,8 @@ import type { Product, ProductOptions, Menu, Toppings, ProductToppings } from ".
 import type { InCartProduct } from "../../types/cart"
 import loadJson from '../../utils/loadJson'
 
-// import {useAppDispatch, useAppSelector} from "../../app/hooks"
-
+import { useAppDispatch, useAppSelector,  } from "../../app/hooks"
+import { addProduct, selectProducts } from "../../features/cartSlice"
 
 // Преобразование описания в строку (если необходимо)
 function descriptionConverter(description: string | string[]): string {
@@ -34,6 +34,8 @@ export default function ProductPage() {
   // Для навигации и ID товара
   const navigate = useNavigate();
   const productID = useParams()["product"];
+  const dispatch = useAppDispatch();
+  const check = useAppSelector(selectProducts);
 
   // Хранение списка опций товара и доступных топпингов для него
   const [product, setProduct] = useState<Product>();
@@ -146,6 +148,7 @@ export default function ProductPage() {
         removedOptions
       }
 
+      dispatch(addProduct(productToCart));
       navigate("/");
     }
   }
