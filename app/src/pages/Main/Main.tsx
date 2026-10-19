@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
 import type { Menu } from "../../types/menu"
 import loadJson from "../../utils/loadJson"
+import Cart from "../../components/Cart/Cart";
 
 // Данные о разделах основного меню
 const MENU_SECTIONS = [
@@ -150,81 +151,7 @@ export default function Main() {
 
         {/* Корзина */}
         {isCartOpen &&
-          <div className="cart-window">
-            {true &&
-              <div className="cart">
-                <h2>3 товара на 2 047 ₽</h2>
-                <div className="cart-product-card">
-                  <div className="content">
-                    <img src="/images/019a8aaa69cc7601b28736b1ebe7fc25.webp" />
-                    <div className="text-block">
-                      <div className="title">Песто</div>
-                      <div className="description">Описание бла-бла-бла</div>
-                    </div>
-                    <button className="remove">X</button>
-                  </div>
-                  <div className="line"></div>
-                  <div className="change">
-                    <div>
-                      <span className="price">2514 ₽</span>
-                    </div>
-                    <a className="change-product">Изменить</a>
-                    <div className="amount-changer">
-                      <button className="minus">–</button>
-                      <div className="amount">5</div>
-                      <button className="plus">+</button>
-                    </div>
-                  </div>
-                </div>
-                <div className="add-to-order">
-                  <h3 className="title">Добавить к заказу?</h3>
-                  <div className="cards">
-                    <div className="sauce">
-                      <img src="/images/1a5a6a19cf80b3fd24bf.png" />
-                      <div className="title">Соусы</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="test">
-                  <div className="data-block">
-                    <div className="promocode">
-                      <label className="promocode-label">
-                        <input placeholder="Промокод" />
-                        <a>Применить</a>
-                      </label>
-                    </div>
-                    <div className="line"></div>
-                    <div className="data-prices">
-                      <div className="data-info">
-                        <span>3 товара</span>
-                        <span>2 097 ₽</span>
-                      </div>
-                      <div className="data-info">
-                        <span>Начислим додокоины</span>
-                        <span>+105 D</span>
-                      </div>
-                    </div>
-                    <div className="line"></div>
-                    <div className="total-price">
-                      <span>Сумма заказа</span>
-                      <span>2 097 ₽</span>
-                    </div>
-                  </div>
-                  <div className="create-order">
-                    <button>К оформлению заказа</button>
-                  </div>
-                </div>
-              </div>
-            }
-            {false &&
-              <div className="cart">
-                <div className="empty">
-                  Пока здесь пусто!
-                </div>
-              </div>
-            }
-            <button className="close-cart-btn" onClick={() => { setIsCartOpen(false) }}>X</button>
-          </div>
+          <Cart setIsCartOpen={setIsCartOpen} />
         }
 
         <section className="delivery">

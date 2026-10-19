@@ -7,7 +7,7 @@ import type { Product, ProductOptions, Menu, Toppings, ProductToppings } from ".
 import type { InCartProduct } from "../../types/cart"
 import loadJson from '../../utils/loadJson'
 
-import { useAppDispatch, useAppSelector,  } from "../../app/hooks"
+import { useAppDispatch, useAppSelector, } from "../../app/hooks"
 import { addProduct, selectProducts } from "../../features/cartSlice"
 
 // Преобразование описания в строку (если необходимо)
@@ -136,19 +136,32 @@ export default function ProductPage() {
     }
   }, [size, kind]);
 
+  function getTotalPrice(): number {
+    if (currentOption) {
+      if (!currentOption.toppingSize) return currentOption.price;
+      else {
+        return currentOption.price + selectedToppings.reduce
+          ((sum, topping) => sum + ((currentOption.toppingSize && currentOption.availableToppings?.includes(topping.id)) ? topping.prices[currentOption.toppingSize] : 0), 0)
+      }
+    }
+    return 0;
+  }
+
   function addToCart() {
     if (productID && kind && size) {
       const productToCart: InCartProduct = {
-        cart_id: 1,
+        cart_id: crypto.randomUUID(),
         product_id: productID,
         amount: 1,
         kind,
         size,
+        price: getTotalPrice(),
         selectedToppings: selectedToppings,
         removedOptions
       }
 
       dispatch(addProduct(productToCart));
+      console.log(check);
       navigate("/");
     }
   }
