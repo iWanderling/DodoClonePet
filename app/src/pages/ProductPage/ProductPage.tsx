@@ -187,7 +187,6 @@ export default function ProductPage() {
                 {currentOption.size} {translator[product.measurement_unit]}
                 {currentOption.kind != "single" ? ", " + translator[currentOption.kind] + (currentOption.extraDescriptionInfo ? " " + translator[currentOption.extraDescriptionInfo] : "") : ""}
                 {currentOption.nutritionFacts?.weight ? ", " + currentOption.nutritionFacts.weight + " " + translator["g"] : ""}
-
               </div>
               <div className="modal-card-product-panel-description">
                 {product.isOptionalDescription && Array.isArray(product.description) &&

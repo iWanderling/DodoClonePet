@@ -20,11 +20,21 @@ export const cartSlice = createSlice({
     },
     removeProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
       state.products.filter(product => product.cart_id != action.payload);
+    },
+    incrementProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
+      const product = state.products.find(product => product.cart_id === action.payload);
+      if (product) product.amount += 1;
+    },
+    decrementProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
+      const product = state.products.find(product => product.cart_id === action.payload);
+      if (product) product.amount -= 1;
     }
   }
 })
 
-export const { addProduct, removeProduct } = cartSlice.actions;
+export const { addProduct, removeProduct, incrementProduct, decrementProduct } = cartSlice.actions;
 export default cartSlice.reducer;
 
+export const selectCartAmount = (state: RootState) => state.cart.products.length;
 export const selectProducts = (state: RootState) => state.cart.products;
+export const selectTotalPrice = (state: RootState) => state.cart.products.reduce((sum, product) => (sum + product.price * product.amount), 0);

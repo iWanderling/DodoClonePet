@@ -1,12 +1,24 @@
+// Styles
 import "./Main.css"
+
+// Modules
 import { Outlet } from "react-router-dom"
-import Stories from "../../components/Stories/Stories"
-import MenuSection from "../../components/MenuSection/MenuSection";
 import { useState, useEffect } from "react";
 import { Link } from "react-scroll";
+
+// Components
+import Stories from "../../components/Stories/Stories"
+import MenuSection from "../../components/MenuSection/MenuSection";
+import Cart from "../../components/Cart/Cart";
+
+// Types & Utils
 import type { Menu } from "../../types/menu"
 import loadJson from "../../utils/loadJson"
-import Cart from "../../components/Cart/Cart";
+
+// Redux Slices
+import { useAppDispatch, useAppSelector, } from "../../app/hooks"
+import { getMenuAsync, selectMenu } from "../../features/menuSlice";
+
 
 // Данные о разделах основного меню
 const MENU_SECTIONS = [
@@ -25,8 +37,8 @@ const MENU_SECTIONS = [
 // Компонент главного окна сайта
 export default function Main() {
 
-  // Загрузка данных меню
-  const [menu, setMenu] = useState<Menu>();
+  const dispatch = useAppDispatch();
+  const menu = useAppSelector(selectMenu);
 
   // Состояния отображения выпадающей навпанели
   const [navbarDisplayed, setNavbarDisplayed] = useState<{ id: string, heading: string }[]>([]);
@@ -41,10 +53,7 @@ export default function Main() {
 
   // Загрузка меню и секций для навигационной панели
   useEffect(() => {
-    const loader = async () => {
-      setMenu(await loadJson<Menu>("/data/products.json"));
-    };
-    loader();
+    dispatch(getMenuAsync());
     if (MENU_SECTIONS.length >= 7) {
       setNavbarDisplayed(MENU_SECTIONS.slice(0, 6));
       setNavbarDropdown(MENU_SECTIONS.slice(6));
