@@ -8,6 +8,8 @@ export interface InCartProduct {
   kind: string,
   size: number,
   price: number,
+  imageSource: string,
+  title: string,
   selectedToppings?: Toppings,
   removedOptions?: string[]
 }

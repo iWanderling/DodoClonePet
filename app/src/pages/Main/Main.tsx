@@ -11,16 +11,12 @@ import Stories from "../../components/Stories/Stories"
 import MenuSection from "../../components/MenuSection/MenuSection";
 import Cart from "../../components/Cart/Cart";
 
-// Types & Utils
-import type { Menu } from "../../types/menu"
-import loadJson from "../../utils/loadJson"
-
 // Redux Slices
 import { useAppDispatch, useAppSelector, } from "../../app/hooks"
 import { getMenuAsync, selectMenu } from "../../features/menuSlice";
 
 
-// Данные о разделах основного меню
+// Sections of Menu
 const MENU_SECTIONS = [
   { id: "pizza", heading: "Пиццы" },
   // { id: "combo", heading: "Комбо" },
@@ -34,9 +30,8 @@ const MENU_SECTIONS = [
   { id: "other", heading: "Другие товары" }
 ]
 
-// Компонент главного окна сайта
 export default function Main() {
-
+  
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
 

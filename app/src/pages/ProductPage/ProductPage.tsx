@@ -1,14 +1,21 @@
+// Styles
 import "./ProductPage.css"
-import { useNavigate } from "react-router-dom"
-import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+
+// Modules
+import { useNavigate, useParams } from "react-router-dom"
 import { RemoveScroll } from "react-remove-scroll"
-import type { Product, ProductOptions, Menu, Toppings, ProductToppings } from "../../types/menu"
+import { useState, useEffect } from "react";
+
+// Types & Utils
+import type { Product, ProductOptions, Toppings, ProductToppings } from "../../types/menu"
 import type { InCartProduct } from "../../types/cart"
 import loadJson from '../../utils/loadJson'
 
-import { useAppDispatch, useAppSelector, } from "../../app/hooks"
+// Redux Slices & hooks
+import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { addProduct, selectProducts } from "../../features/cartSlice"
+import { getMenuAsync, selectMenu } from "../../features/menuSlice";
+
 
 // Преобразование описания в строку (если необходимо)
 function descriptionConverter(description: string | string[]): string {
@@ -34,8 +41,10 @@ export default function ProductPage() {
   // Для навигации и ID товара
   const navigate = useNavigate();
   const productID = useParams()["product"];
+
   const dispatch = useAppDispatch();
   const check = useAppSelector(selectProducts);
+  const menu = useAppSelector(selectMenu);
 
   // Хранение списка опций товара и доступных топпингов для него
   const [product, setProduct] = useState<Product>();
@@ -59,7 +68,6 @@ export default function ProductPage() {
   // Загрузка данных о товаре и топпингах (добавить)
   useEffect(() => {
     const loader = async () => {
-      const menu = await loadJson<Menu>("/data/products.json");
       const toppings = await loadJson<Toppings>("/data/toppings.json");
       const translator = await loadJson<any>("/data/translator.json");
 
@@ -67,6 +75,7 @@ export default function ProductPage() {
       setAllToppings(toppings);
       setTranslator(translator);
     };
+    dispatch(getMenuAsync());
     loader();
   }, []);
 
@@ -148,11 +157,13 @@ export default function ProductPage() {
   }
 
   function addToCart() {
-    if (productID && kind && size) {
+    if (productID && product && kind && size && currentOption) {
       const productToCart: InCartProduct = {
         cart_id: crypto.randomUUID(),
         product_id: productID,
         amount: 1,
+        title: product.title,
+        imageSource: currentOption?.imageSource,
         kind,
         size,
         price: getTotalPrice(),
