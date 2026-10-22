@@ -2,8 +2,11 @@ import type { InCartProduct } from "../../types/cart";
 import { removeProduct, decrementProduct, incrementProduct } from "../../features/cartSlice";
 import { useAppDispatch } from "../../app/hooks";
 
-export default function CartProduct({ product, index }: { product: InCartProduct, index: number }) {
+// остановились здесь (работаем над открытием окна товара в корзине со всеми выбранными опциями)
+export default function CartProduct({ product, index, onActiveProduct }:
+  { product: InCartProduct, index: number, onActiveProduct: React.Dispatch<React.SetStateAction<string | null>> }) {
   const dispatch = useAppDispatch();
+
 
   return (
     <div key={index} className="cart-product-card">
@@ -20,7 +23,7 @@ export default function CartProduct({ product, index }: { product: InCartProduct
         <div>
           <span className="price">{product.price} ₽</span>
         </div>
-        <a className="change-product" onClick={() => { }}>Изменить</a>
+        <a className="change-product" onClick={() => onActiveProduct(product.cart_id)}>Изменить</a>
         <div className="amount-changer">
           <button className="minus" onClick={() => dispatch(decrementProduct(product.cart_id))}>–</button>
           <div className="amount">{product.amount}</div>

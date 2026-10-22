@@ -36,15 +36,15 @@ function toCapitalize(string: string) {
   return string[0].toUpperCase() + string.slice(1);
 }
 
-export default function ProductPage() {
+export default function ProductPage({ activeProductID = null }: { activeProductID: string | null }) {
+
+  const dispatch = useAppDispatch();
+  const cart = useAppSelector(selectProducts);
+  const menu = useAppSelector(selectMenu);
 
   // Для навигации и ID товара
   const navigate = useNavigate();
-  const productID = useParams()["product"];
-
-  const dispatch = useAppDispatch();
-  const check = useAppSelector(selectProducts);
-  const menu = useAppSelector(selectMenu);
+  const productID = (activeProductID ? cart.find(product => product.cart_id === activeProductID)?.product_id : useParams()["product"]);
 
   // Хранение списка опций товара и доступных топпингов для него
   const [product, setProduct] = useState<Product>();
@@ -64,6 +64,8 @@ export default function ProductPage() {
 
   const [removedOptions, setRemovedOptions] = useState<string[]>([]);
   const [nutritionOpened, setNutritionOpened] = useState<boolean>(false);
+
+  const [disabledWindow, setDisabledWindow] = useState<boolean>(false);
 
   // Загрузка данных о товаре и топпингах (добавить)
   useEffect(() => {
@@ -91,8 +93,10 @@ export default function ProductPage() {
       let sortedKinds: string[] = [...kinds].sort();
       setAllKinds(sortedKinds);
 
-      setSize(product.defaultSize);
-      setKind(product.defaultKind);
+      if (!activeProductID) {
+        setSize(product.defaultSize);
+        setKind(product.defaultKind);
+      }
 
       if (size && kind) setCurrentOption(optionFinder(product, size, kind));
       if (allToppings && currentOption && currentOption.availableToppings) {
@@ -130,7 +134,6 @@ export default function ProductPage() {
     if (product && size && kind) {
       let notAvailableKinds: string[] = [];
       let foundOption = optionFinder(product, size, kind);
-
       if (foundOption) setCurrentOption(foundOption);
 
       if (allKinds) {
@@ -156,6 +159,22 @@ export default function ProductPage() {
     return 0;
   }
 
+  useEffect(() => {
+    if (activeProductID) {
+      const cartProduct = cart.find(product => product.cart_id === activeProductID);
+      if (cartProduct) {
+        const _product = (menu.find(p => p.id === productID));
+        if (_product) {
+          setCurrentOption(optionFinder(_product, cartProduct.size, cartProduct.kind));
+        }
+        setKind(cartProduct.kind);
+        setSize(cartProduct.size);
+        if (cartProduct.selectedToppings) setSelectedToppings(cartProduct.selectedToppings);
+        if (cartProduct.removedOptions) setRemovedOptions(cartProduct.removedOptions);
+      }
+    }
+  }, [activeProductID])
+
   function addToCart() {
     if (productID && product && kind && size && currentOption) {
       const productToCart: InCartProduct = {
@@ -172,7 +191,6 @@ export default function ProductPage() {
       }
 
       dispatch(addProduct(productToCart));
-      console.log(check);
       navigate("/");
     }
   }
@@ -258,7 +276,7 @@ export default function ProductPage() {
           </div>
         </div>
 
-        <button className="close-modal" onClick={() => navigate("/")}>✖</button>
+        <button className="close-modal" onClick={() => { navigate("/");}}>✖</button>
       </div>
     </RemoveScroll >
   )

@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./Cart.css";
 import { useAppDispatch, useAppSelector, } from "../../app/hooks"
 import { selectProducts, selectTotalPrice, selectCartAmount } from "../../features/cartSlice"
 import { getMenuAsync, selectMenu } from "../../features/menuSlice";
 import CartProduct from "./CartProduct"
+import type { InCartProduct } from "../../types/cart";
+import ProductPage from "../../pages/ProductPage/ProductPage";
 
 export default function Cart({ setIsCartOpen }: { setIsCartOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
 
@@ -14,11 +16,11 @@ export default function Cart({ setIsCartOpen }: { setIsCartOpen: React.Dispatch<
   const amount = useAppSelector(selectCartAmount);
   const totalPrice = useAppSelector(selectTotalPrice);
 
+  const [activeProduct, setActiveProduct] = useState<InCartProduct["cart_id"] | null>(null);
+
   useEffect(() => {
     dispatch(getMenuAsync());
   }, []);
-
-  console.log(cart);
 
   return (menu &&
     <div className="cart-window">
@@ -26,9 +28,8 @@ export default function Cart({ setIsCartOpen }: { setIsCartOpen: React.Dispatch<
         <div className="cart">
           <h2>{amount} {"товар"} на {totalPrice} ₽</h2>
           {cart.map((product, index) =>
-            <CartProduct product={product} index={index} />
+            <CartProduct key={index} product={product} index={index} onActiveProduct={setActiveProduct} />
           )}
-
           <div className="add-to-order">
             <h3 className="title">Добавить к заказу?</h3>
             <div className="cards">
@@ -38,36 +39,39 @@ export default function Cart({ setIsCartOpen }: { setIsCartOpen: React.Dispatch<
               </div>
             </div>
           </div>
-          <div className="test">
-            <div className="data-block">
-              <div className="promocode">
-                <label className="promocode-label">
-                  <input placeholder="Промокод" />
-                  <a>Применить</a>
-                </label>
+
+          <div className="data-block">
+            <div className="promocode">
+              <label className="promocode-label">
+                <input placeholder="Промокод" />
+                <a>Применить</a>
+              </label>
+            </div>
+            <div className="line"></div>
+            <div className="data-prices">
+              <div className="data-info">
+                <span>{amount} товара</span>
+                <span>{totalPrice} ₽</span>
               </div>
-              <div className="line"></div>
-              <div className="data-prices">
-                <div className="data-info">
-                  <span>{amount} товара</span>
-                  <span>{totalPrice} ₽</span>
-                </div>
-                <div className="data-info">
-                  <span>Начислим додокоины</span>
-                  <span>+{Math.round(totalPrice * 0.05)} D</span>
-                </div>
-              </div>
-              <div className="line"></div>
-              <div className="total-price">
-                <span>Сумма заказа</span>
-                <span>{amount} ₽</span>
+              <div className="data-info">
+                <span>Начислим додокоины</span>
+                <span>+{Math.round(totalPrice * 0.05)} D</span>
               </div>
             </div>
-            <div className="create-order">
-              <button>К оформлению заказа</button>
+            <div className="line"></div>
+            <div className="total-price">
+              <span>Сумма заказа</span>
+              <span>{amount} ₽</span>
             </div>
           </div>
+          <div className="create-order">
+            <button>К оформлению заказа</button>
+          </div>
         </div>
+
+      }
+      {activeProduct &&
+        <ProductPage activeProductID={activeProduct} />
       }
       {!cart.length &&
         <div className="cart">
