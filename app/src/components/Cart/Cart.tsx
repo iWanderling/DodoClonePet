@@ -71,7 +71,7 @@ export default function Cart({ setIsCartOpen }: { setIsCartOpen: React.Dispatch<
 
       }
       {activeProduct &&
-        <ProductPage activeProductID={activeProduct} />
+        <ProductPage activeProductID={activeProduct} setActiveProductID={setActiveProduct} />
       }
       {!cart.length &&
         <div className="cart">

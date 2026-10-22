@@ -1,4 +1,4 @@
-import type { Toppings } from "./menu"
+import type { ProductToppings } from "./menu"
 
 // Тип продукта в корзине
 export interface InCartProduct {
@@ -10,6 +10,6 @@ export interface InCartProduct {
   price: number,
   imageSource: string,
   title: string,
-  selectedToppings?: Toppings,
+  selectedToppings?: ProductToppings["id"][],
   removedOptions?: string[]
 }

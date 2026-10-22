@@ -191,6 +191,7 @@
 
     .change-product {
       color: var(--dodo-color);
+      cursor: pointer;
     }
 
     .amount-changer {

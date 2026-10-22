@@ -13,8 +13,8 @@ import loadJson from '../../utils/loadJson'
 
 // Redux Slices & hooks
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
-import { addProduct, selectProducts } from "../../features/cartSlice"
-import { getMenuAsync, selectMenu } from "../../features/menuSlice";
+import { addProduct, changeProduct, selectProducts } from "../../features/cartSlice"
+import { selectMenu } from "../../features/menuSlice";
 
 
 // Преобразование описания в строку (если необходимо)
@@ -36,7 +36,7 @@ function toCapitalize(string: string) {
   return string[0].toUpperCase() + string.slice(1);
 }
 
-export default function ProductPage({ activeProductID = null }: { activeProductID: string | null }) {
+export default function ProductPage({ setActiveProductID, activeProductID = null }: { setActiveProductID: React.Dispatch<React.SetStateAction<string | null>>, activeProductID: string | null }) {
 
   const dispatch = useAppDispatch();
   const cart = useAppSelector(selectProducts);
@@ -51,7 +51,7 @@ export default function ProductPage({ activeProductID = null }: { activeProductI
   const [currentOption, setCurrentOption] = useState<ProductOptions>();
   const [productToppings, setProductToppings] = useState<Toppings>();
   const [allToppings, setAllToppings] = useState<Toppings>();
-  const [selectedToppings, setSelectedToppings] = useState<Toppings>([]);
+  const [selectedToppings, setSelectedToppings] = useState<ProductToppings["id"][]>([]);
   const [translator, setTranslator] = useState<any>();
 
   // Состояния типа товара и его размера/количества
@@ -77,7 +77,6 @@ export default function ProductPage({ activeProductID = null }: { activeProductI
       setAllToppings(toppings);
       setTranslator(translator);
     };
-    dispatch(getMenuAsync());
     loader();
   }, []);
 
@@ -151,9 +150,14 @@ export default function ProductPage({ activeProductID = null }: { activeProductI
   function getTotalPrice(): number {
     if (currentOption) {
       if (!currentOption.toppingSize) return currentOption.price;
-      else {
-        return currentOption.price + selectedToppings.reduce
-          ((sum, topping) => sum + ((currentOption.toppingSize && currentOption.availableToppings?.includes(topping.id)) ? topping.prices[currentOption.toppingSize] : 0), 0)
+      else if (productToppings) {
+        return currentOption.price + productToppings.reduce
+          ((sum, topping) => sum + (
+            (
+              currentOption.toppingSize &&
+              currentOption.availableToppings?.includes(topping.id) &&
+              selectedToppings.includes(topping.id)
+            ) ? topping.prices[currentOption.toppingSize] : 0), 0)
       }
     }
     return 0;
@@ -175,7 +179,7 @@ export default function ProductPage({ activeProductID = null }: { activeProductI
     }
   }, [activeProductID])
 
-  function addToCart() {
+  function toCart() {
     if (productID && product && kind && size && currentOption) {
       const productToCart: InCartProduct = {
         cart_id: crypto.randomUUID(),
@@ -190,13 +194,21 @@ export default function ProductPage({ activeProductID = null }: { activeProductI
         removedOptions
       }
 
-      dispatch(addProduct(productToCart));
-      navigate("/");
+      if (!activeProductID) {
+        dispatch(addProduct(productToCart));
+        navigate("/");
+      }
+      else {
+        productToCart.cart_id = activeProductID;
+        dispatch(changeProduct(productToCart));
+        setDisabledWindow(true);
+        setActiveProductID(null);
+      }
     }
   }
 
   // HTML
-  return (product && currentOption &&
+  return (product && currentOption && !disabledWindow &&
     <RemoveScroll>
       <div className="modal-product-page">
         <div className="modal-card">
@@ -250,14 +262,14 @@ export default function ProductPage({ activeProductID = null }: { activeProductI
                 <div className="add-ingredients-panel">
                   <h3>Добавить по вкусу</h3>
                   <div className="add-ingredients-grid">
-                    {
+                    { // нужно ингредиенты починить
                       productToppings.map((topping, index) => (
                         <button key={index}
-                          className={`add-ingredients-card ${selectedToppings && selectedToppings.find((t) => t === topping) ? "active" : ""}`}
+                          className={`add-ingredients-card ${selectedToppings && selectedToppings.find((t) => t === topping.id) ? "active" : ""}`}
                           onClick={() => {
-                            setSelectedToppings((prev) => prev.includes(topping) ?
-                              prev.filter((t) => t !== topping) :
-                              [...prev, topping])
+                            setSelectedToppings((prev) => prev.includes(topping.id) ?
+                              prev.filter((t) => t !== topping.id) :
+                              [...prev, topping.id])
                           }}>
                           <img src={topping.imageSource} />
                           <span className="add-ingredients-card-title">{topping.title}</span>
@@ -270,13 +282,11 @@ export default function ProductPage({ activeProductID = null }: { activeProductI
                 </div>
               }
             </div>
-            <button className="button-cart" onClick={() => { addToCart() }}>В корзину за {(!currentOption.toppingSize) ? currentOption.price :
-              currentOption.price + selectedToppings.reduce
-                ((sum, topping) => sum + ((currentOption.toppingSize && currentOption.availableToppings?.includes(topping.id)) ? topping.prices[currentOption.toppingSize] : 0), 0)} ₽</button>
+            <button className="button-cart" onClick={() => { toCart() }}>{(!activeProductID) ? ("В корзину за " + getTotalPrice() + "₽") : "Сохранить"}</button>
           </div>
         </div>
 
-        <button className="close-modal" onClick={() => { navigate("/");}}>✖</button>
+        <button className="close-modal" onClick={() => { (!activeProductID ? navigate("/") : setDisabledWindow(true)) }}>✖</button>
       </div>
     </RemoveScroll >
   )

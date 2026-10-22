@@ -21,6 +21,10 @@ export const cartSlice = createSlice({
     removeProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
       state.products = state.products.filter(product => product.cart_id !== action.payload);
     },
+    changeProduct: (state, action: PayloadAction<InCartProduct>) => {
+      const productToChange = state.products.find(product => product.cart_id === action.payload.cart_id);
+      if (productToChange) Object.assign(productToChange, action.payload);
+    },
     incrementProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
       const product = state.products.find(product => product.cart_id === action.payload);
       if (product) product.amount += 1;
@@ -35,7 +39,7 @@ export const cartSlice = createSlice({
   }
 })
 
-export const { addProduct, removeProduct, incrementProduct, decrementProduct } = cartSlice.actions;
+export const { addProduct, removeProduct, changeProduct, incrementProduct, decrementProduct } = cartSlice.actions;
 export default cartSlice.reducer;
 
 export const selectCartAmount = (state: RootState) => state.cart.products.length;
