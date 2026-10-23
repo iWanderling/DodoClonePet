@@ -180,18 +180,27 @@ export default function ProductPage({ setActiveProductID, activeProductID = null
   }, [activeProductID])
 
   function toCart() {
+
     if (productID && product && kind && size && currentOption) {
+
+      let description = String();
+      description += `${currentOption.size} ${translator[product.measurement_unit]}`;
+      description += `${currentOption.kind != "single" ? ", " + translator[currentOption.kind] + (currentOption.extraDescriptionInfo ? " " + translator[currentOption.extraDescriptionInfo] : "") : ""}`
+      if (selectedToppings.length) description += `\n+ ${selectedToppings.toSorted((a, b) => a?.localeCompare(b)).map(topping => productToppings?.find((t) => t.id === topping)?.title).join(", ").toLocaleLowerCase()}`
+      if (removedOptions.length) description += `\n- ${removedOptions.toSorted((a, b) => a?.localeCompare(b)).join(", ")}`
+
       const productToCart: InCartProduct = {
         cart_id: crypto.randomUUID(),
         product_id: productID,
         amount: 1,
         title: product.title,
         imageSource: currentOption?.imageSource,
+        description,
         kind,
         size,
         price: getTotalPrice(),
-        selectedToppings: selectedToppings,
-        removedOptions
+        selectedToppings: selectedToppings.toSorted((a, b) => a?.localeCompare(b)),
+        removedOptions: removedOptions.toSorted((a, b) => a?.localeCompare(b))
       }
 
       if (!activeProductID) {
@@ -200,7 +209,8 @@ export default function ProductPage({ setActiveProductID, activeProductID = null
       }
       else {
         productToCart.cart_id = activeProductID;
-        dispatch(changeProduct(productToCart));
+        productToCart.amount = (cart.find(product => product.cart_id === activeProductID)?.amount || 1);
+        dispatch(changeProduct(productToCart)); 
         setDisabledWindow(true);
         setActiveProductID(null);
       }

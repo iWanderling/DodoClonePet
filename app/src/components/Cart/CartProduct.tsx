@@ -14,7 +14,7 @@ export default function CartProduct({ product, index, onActiveProduct }:
         <img src={product.imageSource} />
         <div className="text-block">
           <div className="title">{product.title}</div>
-          <div className="description">Описание</div>
+          <div className="description">{product.description}</div>
         </div>
         <button className="remove" onClick={() => dispatch(removeProduct(product.cart_id))}>X</button>
       </div>

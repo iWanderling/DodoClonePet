@@ -9,6 +9,7 @@ export interface InCartProduct {
   size: number,
   price: number,
   imageSource: string,
+  description: string,
   title: string,
   selectedToppings?: ProductToppings["id"][],
   removedOptions?: string[]
