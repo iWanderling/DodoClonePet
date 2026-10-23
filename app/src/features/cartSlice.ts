@@ -18,16 +18,15 @@ export const cartSlice = createSlice({
   reducers: {
     addProduct: (state, action: PayloadAction<InCartProduct>) => {
 
+      // action.payload
+      const productEq1: InCartProduct = {
+        ...action.payload,
+        selectedToppings: (action.payload.selectedToppings ? action.payload.selectedToppings : []),
+        removedOptions: (action.payload.removedOptions ? action.payload.removedOptions : [])
+      }
+
       let flag = false;
-
       for (let product of state.products) {
-
-        // action.payload
-        const productEq1: InCartProduct = {
-          ...action.payload,
-          selectedToppings: (action.payload.selectedToppings ? action.payload.selectedToppings : []),
-          removedOptions: (action.payload.removedOptions ? action.payload.removedOptions : [])
-        }
 
         // product from cart
         const productEq2: InCartProduct = {
@@ -51,7 +50,35 @@ export const cartSlice = createSlice({
     },
     changeProduct: (state, action: PayloadAction<InCartProduct>) => {
       const productToChange = state.products.find(product => product.cart_id === action.payload.cart_id);
-      if (productToChange) Object.assign(productToChange, action.payload);
+      if (productToChange) {
+
+        // action.payload
+        const productEq1: InCartProduct = {
+          ...action.payload,
+          selectedToppings: (action.payload.selectedToppings ? action.payload.selectedToppings : []),
+          removedOptions: (action.payload.removedOptions ? action.payload.removedOptions : [])
+        }
+        let flag = false;
+
+        for (let product of state.products) {
+
+          // product from cart
+          const productEq2: InCartProduct = {
+            ...product,
+            cart_id: productEq1.cart_id,
+            amount: productEq1.amount,
+            selectedToppings: (product.selectedToppings ? product.selectedToppings.toSorted((a, b) => a.localeCompare(b)) : []),
+            removedOptions: (product.removedOptions ? product.removedOptions.toSorted((a, b) => a.localeCompare(b)) : [])
+          }
+
+          if (_.isEqual(productEq1, productEq2)) {
+            flag = true;
+            Object.assign(product, { ...action.payload, amount: product.amount + action.payload.amount });
+            state.products = state.products.filter(product => product !== productToChange);
+          }
+        }
+        if (!flag) Object.assign(productToChange, action.payload);;
+      }
     },
     incrementProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
       const product = state.products.find(product => product.cart_id === action.payload);
