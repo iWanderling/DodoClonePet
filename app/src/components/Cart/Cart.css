@@ -29,7 +29,7 @@
   height: 100%;
   width: 28%;
   background-color: #27272B;
-  overflow: auto;
+  overflow-y: auto;
 
   h2,
   h3 {
@@ -159,9 +159,17 @@
     gap: 15px;
 
     .text-block {
+
+      .title {
+        margin-bottom: 2px;
+      }
+
       .description {
         font-size: 13px;
+        font-weight: 600;
         color: #9e9e9f;
+        white-space: pre-line;
+        line-height: 16px;
       }
     }
 
@@ -213,6 +221,29 @@
       .plus {
         color: #9e9e9f;
       }
+    }
+  }
+}
+
+.empty {
+  margin-top: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: space-around;
+
+  .empty-text {
+    margin-bottom: 90px;
+    .t {
+      font-weight:700;
+      font-size: 25px;
+      margin: 70px 0 10px 0;
+    }
+    .s1, .s2 {
+      color: #a7a7a7;
+      font-weight: 400;
+      font-size: 16px;
     }
   }
 }

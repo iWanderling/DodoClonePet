@@ -76,7 +76,15 @@ export default function Cart({ setIsCartOpen }: { setIsCartOpen: React.Dispatch<
       {!cart.length &&
         <div className="cart">
           <div className="empty">
-            Пока здесь пусто!
+            <div>
+            <img src="images/9e51eaf40b5dd1d897e5.png" />
+            </div>
+            <div className="empty-text">
+              <p className="t">Пока тут пусто</p>
+              <p className="s1">Добавьте пиццу. Или две!</p>
+              <p className="s2">А мы доставим ваш заказ от 649 ₽</p>
+            </div>
+            
           </div>
         </div>
       }

@@ -187,7 +187,7 @@ export default function ProductPage({ setActiveProductID, activeProductID = null
       description += `${currentOption.size} ${translator[product.measurement_unit]}`;
       description += `${currentOption.kind != "single" ? ", " + translator[currentOption.kind] + (currentOption.extraDescriptionInfo ? " " + translator[currentOption.extraDescriptionInfo] : "") : ""}`
       if (selectedToppings.length) description += `\n+ ${selectedToppings.toSorted((a, b) => a?.localeCompare(b)).map(topping => productToppings?.find((t) => t.id === topping)?.title).join(", ").toLocaleLowerCase()}`
-      if (removedOptions.length) description += `\n- ${removedOptions.toSorted((a, b) => a?.localeCompare(b)).join(", ")}`
+      if (removedOptions.length) description += `\n– ${removedOptions.toSorted((a, b) => a?.localeCompare(b)).join(", ")}`
 
       const productToCart: InCartProduct = {
         cart_id: crypto.randomUUID(),
