@@ -49,6 +49,7 @@ export const cartSlice = createSlice({
       state.products = state.products.filter(product => product.cart_id !== action.payload);
     },
     changeProduct: (state, action: PayloadAction<InCartProduct>) => {
+
       const productToChange = state.products.find(product => product.cart_id === action.payload.cart_id);
       if (productToChange) {
 
@@ -71,10 +72,10 @@ export const cartSlice = createSlice({
             removedOptions: (product.removedOptions ? product.removedOptions.toSorted((a, b) => a.localeCompare(b)) : [])
           }
 
+
           if (_.isEqual(productEq1, productEq2)) {
             flag = true;
-            Object.assign(product, { ...action.payload, amount: product.amount + action.payload.amount });
-            state.products = state.products.filter(product => product !== productToChange);
+            Object.assign(product, { ...action.payload });
           }
         }
         if (!flag) Object.assign(productToChange, action.payload);;
@@ -88,7 +89,7 @@ export const cartSlice = createSlice({
       const product = state.products.find(product => product.cart_id === action.payload);
       if (product) {
         if (product.amount > 1) product.amount -= 1;
-        else state.products = state.products.filter(product => product !== product);
+        else state.products = state.products.filter(product1 => product1 !== product);
       }
     }
   }

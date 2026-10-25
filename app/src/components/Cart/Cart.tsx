@@ -17,6 +17,7 @@ export default function Cart({ setIsCartOpen }: { setIsCartOpen: React.Dispatch<
   const totalPrice = useAppSelector(selectTotalPrice);
 
   const [activeProduct, setActiveProduct] = useState<InCartProduct["cart_id"] | null>(null);
+  console.log(cart.length);
 
   useEffect(() => {
     dispatch(getMenuAsync());
