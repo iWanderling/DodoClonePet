@@ -22,7 +22,7 @@ export default function CartProduct({ product, index, onActiveProduct }:
         <div>
           <span className="price">{product.price * product.amount} ₽</span>
         </div>
-        <a className="change-product" onClick={() => {onActiveProduct(product.cart_id); console.log(product.cart_id)}}>Изменить</a>
+        <a className="change-product" onClick={() => {onActiveProduct(product.cart_id);}}>Изменить</a>
         <div className="amount-changer">
           <button className="minus" onClick={() => dispatch(decrementProduct(product.cart_id))}>–</button>
           <div className="amount">{product.amount}</div>

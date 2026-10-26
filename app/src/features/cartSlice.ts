@@ -18,78 +18,67 @@ export const cartSlice = createSlice({
   reducers: {
     addProduct: (state, action: PayloadAction<InCartProduct>) => {
 
-      // action.payload
-      const productEq1: InCartProduct = {
-        ...action.payload,
-        selectedToppings: (action.payload.selectedToppings ? action.payload.selectedToppings : []),
-        removedOptions: (action.payload.removedOptions ? action.payload.removedOptions : [])
+      function objToCompare(p: InCartProduct) {
+        return {
+          ...p,
+          cart_id: 1,
+          amount: 1,
+          selectedToppings: (p.selectedToppings ? p.selectedToppings : []),
+          removedOptions: (p.removedOptions ? p.removedOptions : [])
+        }
       }
 
       let flag = false;
       for (let product of state.products) {
-
-        // product from cart
-        const productEq2: InCartProduct = {
-          ...product,
-          cart_id: action.payload.cart_id,
-          amount: action.payload.amount,
-          selectedToppings: (product.selectedToppings ? product.selectedToppings.toSorted((a, b) => a.localeCompare(b)) : []),
-          removedOptions: (product.removedOptions ? product.removedOptions.toSorted((a, b) => a.localeCompare(b)) : [])
-        }
-
-        if (_.isEqual(productEq1, productEq2)) {
+        if (_.isEqual(objToCompare(action.payload), objToCompare(product))) {
           flag = true;
-          Object.assign(product, { ...action.payload, amount: product.amount + 1 });
-
+          product.amount += 1;
+          break;
         }
       }
       if (!flag) state.products.push(action.payload);
     },
     removeProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
-      state.products = state.products.filter(product => product.cart_id !== action.payload);
+      return {
+        ...state,
+        products: state.products.filter(p => p.cart_id !== action.payload)
+      }
     },
     changeProduct: (state, action: PayloadAction<InCartProduct>) => {
-
-      const productToChange = state.products.find(product => product.cart_id === action.payload.cart_id);
+      function objToCompare(p: InCartProduct) {
+        return {
+          ...p,
+          cart_id: 1,
+          amount: 1,
+          selectedToppings: (p.selectedToppings ? p.selectedToppings : []),
+          removedOptions: (p.removedOptions ? p.removedOptions : [])
+        }
+      }
+      const productToChange = state.products.find(p => p.cart_id === action.payload.cart_id);
       if (productToChange) {
-
-        // action.payload
-        const productEq1: InCartProduct = {
-          ...action.payload,
-          selectedToppings: (action.payload.selectedToppings ? action.payload.selectedToppings : []),
-          removedOptions: (action.payload.removedOptions ? action.payload.removedOptions : [])
-        }
         let flag = false;
-
         for (let product of state.products) {
-
-          // product from cart
-          const productEq2: InCartProduct = {
-            ...product,
-            cart_id: productEq1.cart_id,
-            amount: productEq1.amount,
-            selectedToppings: (product.selectedToppings ? product.selectedToppings.toSorted((a, b) => a.localeCompare(b)) : []),
-            removedOptions: (product.removedOptions ? product.removedOptions.toSorted((a, b) => a.localeCompare(b)) : [])
-          }
-
-
-          if (_.isEqual(productEq1, productEq2)) {
+          if (_.isEqual(objToCompare(action.payload), objToCompare(product))) {
             flag = true;
-            Object.assign(product, { ...action.payload });
+            product.amount += action.payload.amount;
+            break;
           }
         }
-        if (!flag) Object.assign(productToChange, action.payload);;
+        if (!flag) Object.assign(productToChange, action.payload);
       }
     },
     incrementProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
-      const product = state.products.find(product => product.cart_id === action.payload);
+      const product = state.products.find(p => p.cart_id === action.payload);
       if (product) product.amount += 1;
     },
     decrementProduct: (state, action: PayloadAction<InCartProduct["cart_id"]>) => {
-      const product = state.products.find(product => product.cart_id === action.payload);
+      const product = state.products.find(p => p.cart_id === action.payload);
       if (product) {
         if (product.amount > 1) product.amount -= 1;
-        else state.products = state.products.filter(product1 => product1 !== product);
+        else return {
+          ...state,
+          products: state.products.filter(p => p.cart_id !== action.payload)
+        }
       }
     }
   }
